@@ -1,0 +1,125 @@
+#!/bin/sh
+#
+# Load aliases and functions
+
+# Avoid weird aliases on public servers
+unalias -a
+
+# Generate a SSH key dynamically in the correct directory
+gen() {
+      if [ "$1" ]; then
+         ssh-keygen -t rsa -b 4096 -C "$EMAIL" -f "$XDG_DATA_HOME/ssh/keys/$1"
+      else
+         echo "You must provide a filename"
+      fi
+}
+
+# Verify that a package is installed
+have() { type "$1" > /dev/null 2>$1; }
+
+# Add colors in man pages
+man() {
+    LESS_TERMCAP_md=$'\e[01;31m' \
+    LESS_TERMCAP_me=$'\e[0m' \
+    LESS_TERMCAP_se=$'\e[0m' \
+    LESS_TERMCAP_so=$'\e[01;44;33m' \
+    LESS_TERMCAP_ue=$'\e[0m' \
+    LESS_TERMCAP_us=$'\e[01;32m' \
+    command man "$@"
+}
+
+# Alias respecting programs.
+alias electrum='electrum --dir $XDG_CONFIG_HOME/electrum'
+alias mbsync='mbsync -c $XDG_CONFIG_HOME/isync/mbsyncrc'
+alias newsboat='newsboat -u $XDG_CONFIG_HOME/newsboat/urls'
+alias ssh='ssh -F $XDG_CONFIG_HOME/ssh/config'
+alias startx='startx $XDG_CONFIG_HOME/X11/xinitrc'
+alias tmux='tmux -f $XDG_CONFIG_HOME/tmux/tmux.conf'
+
+# Convertions
+if have libreoffice; then
+    alias doc2pdf='libreoffice --headless --convert-to pdf *.docx'
+    alias odt2pdf='libreoffice --headless --convert-to pdf *.odt'
+fi
+
+# Display
+alias ls='ls --color=auto'
+
+# Docker
+if have docker; then
+    alias dke='docker exec -it'
+    alias dkr='docker run -d -P --name'
+fi
+
+alias moc='mu cfind --format=org-contact'
+
+# GNU Emacs
+if have emacs; then
+    alias ec="emacsclient -a '' -t"
+fi
+
+# GPG
+alias mygpg='gpg2 --list-secret-keys --keyid-format=LONG terencio.agozzino@gmail.com'
+alias gpgC='gpg2 --recipient $GPGKEY --encrypt'
+alias gpgDP='gpg2 --delete-keys'
+alias gpgDS='gpg2 --delete-secret-keys'
+alias gpgE='gpg2 --edit-key'
+alias gpgG='gpg2 --full-generate-key'
+alias gpgLP='gpg2 --list-keys'
+alias gpgLS='gpg2 -K'
+alias gpgR='gpg-connect-agent reloadagent /bye'
+
+# LaTeX
+alias xelatex='xelatex --shell-escape'
+
+# Navigation
+alias d='cd $XDG_DATA_HOME/docker/'
+alias g='cd $XDG_DATA_HOME/git/'
+alias q='cd $XDG_DATA_HOME/qemu/'
+
+# top
+alias top_cpu='top -b -o +%CPU | head -n 22'
+alias top_mem='top -b -o +%MEM | head -n 22'
+
+# tmux
+alias ta='tmux attach -t'
+alias tad='tmux attach -d -t'
+alias tk='tmux kill-session -t'
+alias tka='tmux kill-server'
+alias tl='tmux list-sessions'
+alias ts='tmux new-session -s'
+
+# Traduction
+if have trans; then
+    alias de='trans --brief :de'
+    alias en='trans --brief :en'
+    alias fr='trans --brief :fr'
+    alias it='trans --brief :it'
+    alias nl='trans --brief :nl'
+fi
+
+# youtube-dl
+if have youtube-dl; then
+    # alias yeam='youtube-dl --embed-thumbnail --extract-audio --audio-format mp3 --audio-quality 0 -o "~/Music/%(title)s.%(ext)s"'
+    alias yeam='youtube-dl --extract-audio --audio-format mp3 --audio-quality 0 -o "~/Music/%(title)s.%(ext)s"'
+fi
+
+# Use `arecord -l` to list recording cards or devices.
+if have ffmpeg; then
+	alias rec="ffmpeg -f alsa -i hw:0 ~/Audio/Records/$(date +'%Y-%m-%d-%H%M%S').mp3"
+fi
+
+if have fzf; then
+    o() { local f; f=$(ls|fzf); [[ ! -z "$f" ]] && ec "$f"; }
+fi
+
+# color picker
+if have grim; then
+    alias cpick='grim -g "$(slurp -p)" -t ppm - | convert - -format "%[pixel:p{0,0}]" txt:-'
+fi
+
+# xbps
+alias xu='sudo xbps-install -Su'
+alias xi='sudo xbps-install -S'
+alias xq='sudo xbps-query -Rs'
+alias xr='sudo xbps-remove -Ro'
