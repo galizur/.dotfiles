@@ -1,0 +1,42 @@
+# Set font for window titles
+font $font
+
+# Set gaps
+gaps inner 6
+gaps outer 6
+smart_gaps on
+
+# Drag floating windows with $mod+mouse
+floating_modifier $mod
+
+# Focus window on event activation
+focus_on_window_activation focus
+
+# Hide the cursor after some time of inactivity
+seat seat0 hide_cursor 5000
+
+# Hide window borders adjacent to the screen edges
+hide_edge_borders both
+
+# Set default window border
+default_floating_border pixel 1
+default_border pixel 1
+
+# Switch back to the previous workspace when repeating a workspace
+workspace_auto_back_and_forth yes
+
+### Idle configuration
+#
+exec swayidle -w \
+         timeout 600 'exec $locker' \
+         timeout 300 'swaymsg "output * dpms off"' \
+	 	 resume 'swaymsg "output * dpms on"' \
+         before-sleep 'exec $locker'
+#
+# This will lock your screen after 600 seconds of inactivity, then turn off
+# your displays after another 300 seconds, and turn your screens back on when
+# resumed. It will also lock your screen before your computer goes to sleep.
+
+### XWayland support
+#
+xwayland enable

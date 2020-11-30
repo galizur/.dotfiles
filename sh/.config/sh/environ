@@ -63,8 +63,10 @@ export PASSWORD_STORE_GENERATED_LENGTH=50
 export PATH="$PATH:$HOME/.local/bin"
 
 # Allows Qt 5 to enable Wayland support.
-export QT_QPA_PLATFORM=wayland
-export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
+if [[ "${WAYLAND_DISPLAY}" ]]; then
+  export QT_QPA_PLATFORM=wayland
+  export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
+fi
 
 # Use evince as default document reader.
 export READER="evince"
@@ -83,3 +85,9 @@ fi
 
 # Flutter
 export PATH="$PATH:$HOME/flutter/bin"
+
+# nnn
+export NNN_PLUG='f:finder;o:fzopen;p:mocplay;d:diffs;t:nmount;v:imgview;g:getplugs'
+
+# Vulkan
+source ~/Vulkan/1.2.154.0/setup-env.sh

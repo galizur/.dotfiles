@@ -1,0 +1,14 @@
+# Include directories
+include configs/sets
+include configs/settings
+include configs/outputs
+include configs/inputs
+include configs/mappings
+include configs/workspaces
+include configs/programs
+include configs/layouts
+include configs/modes
+include configs/swaybar
+
+### Startup programs ###
+exec --no-startup-id [ -f $XDG_BIN_HOME/autostart.sh ] && . "$XDG_BIN_HOME/autostart.sh"
