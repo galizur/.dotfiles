@@ -88,6 +88,3 @@ export PATH="$PATH:$HOME/flutter/bin"
 
 # nnn
 export NNN_PLUG='f:finder;o:fzopen;p:mocplay;d:diffs;t:nmount;v:imgview;g:getplugs'
-
-# Vulkan
-source ~/Vulkan/1.2.154.0/setup-env.sh
