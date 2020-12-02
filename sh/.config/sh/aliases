@@ -8,7 +8,7 @@ unalias -a
 # Generate a SSH key dynamically in the correct directory
 gen() {
       if [ "$1" ]; then
-         ssh-keygen -t rsa -b 4096 -C "$EMAIL" -f "$XDG_DATA_HOME/ssh/keys/$1"
+         ssh-keygen -t ed25519 -C "$EMAIL" -f "$XDG_DATA_HOME/ssh/keys/$1"
       else
          echo "You must provide a filename"
       fi
@@ -59,14 +59,14 @@ if have emacs; then
 fi
 
 # GPG
-alias mygpg='gpg2 --list-secret-keys --keyid-format=LONG terencio.agozzino@gmail.com'
-alias gpgC='gpg2 --recipient $GPGKEY --encrypt'
-alias gpgDP='gpg2 --delete-keys'
-alias gpgDS='gpg2 --delete-secret-keys'
-alias gpgE='gpg2 --edit-key'
-alias gpgG='gpg2 --full-generate-key'
-alias gpgLP='gpg2 --list-keys'
-alias gpgLS='gpg2 -K'
+alias mygpg='gpg --list-secret-keys --keyid-format=LONG karolos.triantafyllou@gmail.com'
+alias gpgC='gpg --recipient $GPGKEY --encrypt'
+alias gpgDP='gpg --delete-keys'
+alias gpgDS='gpg --delete-secret-keys'
+alias gpgE='gpg --edit-key'
+alias gpgG='gpg --full-generate-key'
+alias gpgLP='gpg --list-keys'
+alias gpgLS='gpg -K'
 alias gpgR='gpg-connect-agent reloadagent /bye'
 
 # LaTeX
@@ -76,6 +76,39 @@ alias xelatex='xelatex --shell-escape'
 alias d='cd $XDG_DATA_HOME/docker/'
 alias g='cd $XDG_DATA_HOME/git/'
 alias q='cd $XDG_DATA_HOME/qemu/'
+
+# pacman
+alias inpac='pacman -Qmq | sort'
+alias mymakepkg='makepkg -sirc'
+
+# qutebrowser
+# alias qutebrowser='rm ~/.local/share/qutebrowser/history.sqlite && qutebrowser'
+
+# systemctl
+if have systemctl && [[ -d /run/systemd/system ]]; then
+	alias enable='sudo systemctl enable'
+	alias disable='sudo systemctl disable'
+	alias y='systemctl'
+
+	reload()  { sudo systemctl reload "$@";  _status "$@"; }
+	restart() { sudo systemctl restart "$@"; _status "$@"; }
+	start()   { sudo systemctl start "$@";   _status "$@"; }
+	stop()    { sudo systemctl stop "$@";    _status "$@"; }
+	_status() { sudo SYSTEMD_PAGER='cat' systemctl status -a -n0 "$@"; }
+	status()  { SYSTEMD_PAGER='cat' systemctl status -a "$@"; }
+
+    alias services='systemctl list-unit-files | grep enabled && systemctl --user list-unit-files | grep enabled'
+	alias list='systemctl list-units -t path,service,socket --no-legend'
+	alias userctl='systemctl --user'
+	alias u='systemctl --user'
+
+	ustart()   { userctl start "$@";   userctl status -a "$@"; }
+	ustop()    { userctl stop "$@";    userctl status -a "$@"; }
+	urestart() { userctl restart "$@"; userctl status -a "$@"; }
+	ureload()  { userctl reload "$@";  userctl status -a "$@"; }
+
+	alias ulist='userctl list-units -t path,service,socket --no-legend'
+fi
 
 # top
 alias top_cpu='top -b -o +%CPU | head -n 22'
@@ -119,7 +152,14 @@ if have grim; then
 fi
 
 # xbps
-alias xu='sudo xbps-install -Su'
-alias xi='sudo xbps-install -S'
-alias xq='sudo xbps-query -Rs'
-alias xr='sudo xbps-remove -Ro'
+alias pu='sudo pacman -Syu'
+alias pi='sudo pacman -S'
+alias pq='sudo pacman -Ss'
+alias pr='sudo pacman -Rs'
+alias yi='yay -S'
+
+
+# Update Pacman mirror list.
+if have reflector; then
+    alias reflect='sudo reflector --latest 200 --threads 8 --verbose --protocol http --protocol https --sort rate --save /etc/pacman.d/mirrorlist'
+fi

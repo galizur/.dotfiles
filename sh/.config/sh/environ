@@ -10,6 +10,7 @@ export _JAVA_AWT_WM_NONREPARENTING=1
 
 # Use qutebrowser as default browser.
 export BROWSER="firefox"
+export MOZ_ENABLE_WAYLAND=1
 
 # Tells Ccache to only use compilers in this directory.
 export CCACHE_PATH="/usr/bin"
@@ -26,7 +27,7 @@ export TZ="Europe/Athens"
 export FZF_DEFAULT_OPTS='--layout=reverse --border'
 
 # Identify the private key.
-export GPGKEY="$(gpg2 -K | awk 'NR==4 {print $1}' | sed 's/4096R\///g')"
+export GPGKEY="$(gpg -K | awk 'NR==4 {print $1}' | sed 's/4096R\///g')"
 
 # Used by gpg-agent.
 export GPG_TTY="$(tty)"
@@ -46,8 +47,8 @@ export HISTIGNORE=${HISTIGNORE}:${HISTIGNORE_BASE}:${HISTIGNORE_LOCAL}
 export HISTSIZE=$HISTFILESIZE
 
 # Related to Java.
-export JAVA_HOME="/usr/lib/jvm/java-1.8-openjdk"
-export JDK_HOME="/usr/lib/jvm/java-1.8-openjdk"
+export JAVA_HOME="/usr/lib/jvm/default-runtime"
+export JDK_HOME="/usr/lib/jvm/default"
 
 # Enable code syntax coloring in `less`.
 export LESS='-R '
@@ -63,10 +64,8 @@ export PASSWORD_STORE_GENERATED_LENGTH=50
 export PATH="$PATH:$HOME/.local/bin"
 
 # Allows Qt 5 to enable Wayland support.
-if [[ "${WAYLAND_DISPLAY}" ]]; then
-  export QT_QPA_PLATFORM=wayland
-  export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
-fi
+export QT_QPA_PLATFORM=wayland
+export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
 
 # Use evince as default document reader.
 export READER="evince"
