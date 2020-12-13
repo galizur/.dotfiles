@@ -49,6 +49,8 @@ export HISTSIZE=$HISTFILESIZE
 # Related to Java.
 export JAVA_HOME="/usr/lib/jvm/default-runtime"
 export JDK_HOME="/usr/lib/jvm/default"
+export JAVA_OPTS='-XX:+IgnoreUnrecognizedVMOptions --add-modules java.se.ee'
+export ANDROID_SDK_ROOT='/opt/android-sdk'
 
 # Enable code syntax coloring in `less`.
 export LESS='-R '
@@ -81,9 +83,6 @@ export TMPDIR="/tmp/$USER"
 if [ ! -d "$TMPDIR" ]; then
     mkdir -m 700 "$TMPDIR"
 fi
-
-# Flutter
-export PATH="$PATH:$HOME/flutter/bin"
 
 # nnn
 export NNN_PLUG='f:finder;o:fzopen;p:mocplay;d:diffs;t:nmount;v:imgview;g:getplugs'

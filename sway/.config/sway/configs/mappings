@@ -11,7 +11,7 @@
     # bindsym $mod+d exec $menu
     bindsym $mod+d exec $menu --show drun -p "🍦 Application Manager:"
     bindsym $mod+Shift+f exec ~/.local/bin/wofi-finder
-bindsym $mod+Shift+w exec networkmanager_dmenu
+    bindsym $mod+Shift+w exec networkmanager_dmenu
 
     # Kill focused window
     bindsym $mod+Shift+q kill
@@ -53,8 +53,8 @@ bindsym $mod+Shift+w exec networkmanager_dmenu
     bindsym $mod+Shift+Up move up
     bindsym $mod+Shift+Right move right
 
-bindsym $mod+g focus next
-bindsym $mod+Shift+g focus prev
+    bindsym $mod+g focus next
+    bindsym $mod+Shift+g focus prev
 #
 
 bindsym $mod+Mod1+h workspace prev_on_output

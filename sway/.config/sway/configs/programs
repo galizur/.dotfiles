@@ -1,7 +1,7 @@
 # Assign applications to their own workspace.
 # To find out class, run `xprop` and click on the window.
 assign [app_id="Alacritty"]           → $ws1
-assign [class="^firefox$"]            → $ws2
+assign [app_id="^firefox$"]            → $ws2
 assign [class="^Chromium$"]           → $ws2
 assign [class="^Emacs$"]              → $ws3
 assign [class="^Steam$"]               → $ws4
