@@ -152,14 +152,17 @@ if have grim; then
 fi
 
 # xbps
-alias pu='sudo pacman -Syu'
+alias yu='yay -Syu'
 alias pi='sudo pacman -S'
 alias pq='sudo pacman -Ss'
 alias pr='sudo pacman -Rs'
 alias yi='yay -S'
 
+# Programming
+alias gtp='cd ~/Programming/dev/cpp'
+
 
 # Update Pacman mirror list.
 if have reflector; then
-    alias reflect='sudo reflector --latest 200 --threads 8 --verbose --protocol http --protocol https --sort rate --save /etc/pacman.d/mirrorlist'
+    alias reflect='sudo reflector --latest 200 --verbose --protocol http --protocol https --sort rate --save /etc/pacman.d/mirrorlist'
 fi
