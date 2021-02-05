@@ -20,8 +20,8 @@ if have razercfg; then
     razercfg -r 4 &
 fi
 
-if have redshift-gtk; then
-    redshift-gtk -l `whereami.py` &
+if have gammastep; then
+    gammastep -l `whereami.py` &
 fi
 
 if have syncthing; then
