@@ -49,8 +49,6 @@ export HISTSIZE=$HISTFILESIZE
 # Related to Java.
 export JAVA_HOME="/usr/lib/jvm/default-runtime"
 export JDK_HOME="/usr/lib/jvm/default"
-export JAVA_OPTS='-XX:+IgnoreUnrecognizedVMOptions --add-modules java.se.ee'
-export ANDROID_SDK_ROOT='/opt/android-sdk'
 
 # Enable code syntax coloring in `less`.
 export LESS='-R '

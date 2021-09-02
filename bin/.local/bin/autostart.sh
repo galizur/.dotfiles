@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Started by i3 to launch programs.
+# Started by sway to launch programs.
 
 have() { type "$1" > /dev/null 2>&1; }
 
