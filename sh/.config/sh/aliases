@@ -15,7 +15,7 @@ gen() {
 }
 
 # Verify that a package is installed
-have() { type "$1" > /dev/null 2>$1; }
+have() { type "$1" > /dev/null 2>&1; }
 
 # Add colors in man pages
 man() {
@@ -81,9 +81,6 @@ alias q='cd $XDG_DATA_HOME/qemu/'
 alias inpac='pacman -Qmq | sort'
 alias mymakepkg='makepkg -sirc'
 
-# qutebrowser
-# alias qutebrowser='rm ~/.local/share/qutebrowser/history.sqlite && qutebrowser'
-
 # systemctl
 if have systemctl && [[ -d /run/systemd/system ]]; then
 	alias enable='sudo systemctl enable'
@@ -133,7 +130,6 @@ fi
 
 # youtube-dl
 if have youtube-dl; then
-    # alias yeam='youtube-dl --embed-thumbnail --extract-audio --audio-format mp3 --audio-quality 0 -o "~/Music/%(title)s.%(ext)s"'
     alias yeam='youtube-dl --extract-audio --audio-format mp3 --audio-quality 0 -o "~/Music/%(title)s.%(ext)s"'
 fi
 
@@ -159,8 +155,7 @@ alias pr='sudo pacman -Rs'
 alias yi='yay -S'
 
 # Programming
-alias gtp='cd ~/Programming/dev/cpp'
-
+alias gtp='cd ~/dev/cpp'
 
 # Update Pacman mirror list.
 if have reflector; then
