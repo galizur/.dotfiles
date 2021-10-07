@@ -71,6 +71,6 @@
 [user]
     email = karolos.triantafyllou@gmail.com
     name = Karolos Triantafyllou
-    signingKey = 8BF7DB18FF640A50
+    signingKey = 393BDED4593ED3A1
 [gpg]
     program = gpg

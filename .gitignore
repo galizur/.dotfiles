@@ -6,3 +6,4 @@
 /gnupg/.config/gnupg/*.kbx
 /gnupg/.config/gnupg/*.*~
 /gnupg/.config/gnupg/trustdb.gpg
+/gnupg/.config/gnupg/openpgp-revocs.d
