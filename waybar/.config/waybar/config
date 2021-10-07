@@ -3,36 +3,27 @@
 	"height": 25,
 	"modules-left": ["sway/workspaces", "sway/mode"],
 	"modules-center": ["clock"],
-	"modules-right": ["custom/weather", "idle_inhibitor", "pulseaudio", "backlight", "cpu", "temperature", "memory", "network", "tray"],
-
-    "backlight": {
-      "device": "intel_backlight",
-      "format": "{icon} {percent}%",
-      "format-icons": ["", ""],
-      "on-scroll-up": "light -A 1",
-      "on-scroll-down": "light -U 1"
-    },
+	"modules-right": ["custom/weather", "idle_inhibitor", "pulseaudio", "cpu", "temperature", "memory", "sway/language", "tray"],
 
 	"clock": {
-		 "format": "{:%H:%M:%S %p}",
-         "format-alt": "{:%A, %d %B %Y}",
-		 "interval": 1,
-         "on-click-right": "wl-copy $(date '+%Y-%m-%d %T')",
-		 "tooltip": false
+      "format": "{:%H:%M:%S %p}",
+      "format-alt": "{:%A, %d %B %Y}",
+	  "interval": 1,
+      "on-click-right": "wl-copy $(date '+%Y-%m-%d %T')",
+	  "tooltip": false
 	 },
 
 	 "pulseaudio": {
-      	 "format": "{icon} {volume}%",
-      	 "format-muted": " MUTED",
-      	 "format-icons": {
-         		 "default": ["", ""]
-      	},
-      	"on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
-      	"on-click-middle": "pavucontrol-qt",
-      	"on-click-right": "pactl set-source-mute @DEFAULT_SOURCE@ toggle",
-      	"tooltip": false
+       "format": "{icon} {volume}%",
+       "format-muted": " MUTED",
+       "format-icons": {
+         "default": ["", ""]
+       },
+       "on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
+       "on-click-middle": "pavucontrol-qt",
+       "on-click-right": "pactl set-source-mute @DEFAULT_SOURCE@ toggle",
+       "tooltip": false
     },
-
 
 	"sway/mode": {
       "format": "<span style=\"italic\">{}</span>",
@@ -40,46 +31,46 @@
     },
 
     "custom/weather": {
-    "format": "{}",
-    "format-alt": "{alt}: {}",
-    "format-alt-click": "click-right",
-    "interval": 1800,
-    "return-type": "json",
-    "exec": "~/.config/waybar/modules/weather.sh",
-    "exec-if": "ping wttr.in -c1"
-},
+      "format": "{}",
+      "format-alt": "{alt}: {}",
+      "format-alt-click": "click-right",
+      "interval": 1800,
+      "return-type": "json",
+      "exec": "~/.config/waybar/modules/weather.sh",
+      "exec-if": "ping wttr.in -c1"
+    },
 
-"idle_inhibitor": {
-        "format": "{icon}",
-        "format-icons": {
-            "activated": "",
-            "deactivated": ""
+    "idle_inhibitor": {
+      "format": "{icon}",
+      "format-icons": {
+        "activated": "",
+        "deactivated": ""
         }
     },
 
     "cpu": {
-       "interval": 10,
-       "states": {
-       		 "warning": 60,
-		 "critical": 90
-		 },
-	"format": " {}%",
-	"max-length": 10,
-	"on-click": "alacritty -e htop"
+      "interval": 10,
+      "states": {
+        "warning": 60,
+		"critical": 90
+		},
+      "format": " {}%",
+	  "max-length": 10,
+	  "on-click": "alacritty -e htop"
 	},
 
-"memory": {
+    "memory": {
 	  "interval": 10,
 	  "states": {
-	  	    "warning": 60,
-		    "critical": 90
-		    },
-	"format": " {}%",
-	"max-length": 10,
-	"tooltip": false
+	    "warning": 60,
+		"critical": 90
+		},
+      "format": " {}%",
+	  "max-length": 10,
+	  "tooltip": false
 	},
 
-"network": {
+    "network": {
       "format-wifi": " {essid} ({signalStrength}%)",
       "format-ethernet": " {ifname}: {ipaddr}/{cidr}",
       "format-disconnected": "Disconnected",
@@ -90,7 +81,7 @@
 	  "interval": 10
     },
 
-"sway/workspaces": {
+    "sway/workspaces": {
       "disable-scroll": true,
       "all-outputs": true,
       "format": "{icon}",
@@ -98,8 +89,8 @@
         "1": "",
         "2": "",
         "3": "",
-        "4": "ﭮ",
-        "5": "",
+        "4": "",
+        "5": "",
         "6": "",
         "7": "",
         "urgent": "",
@@ -108,7 +99,7 @@
       }
     },
 
-"temperature": {
+    "temperature": {
 	  "critical-threshold": 70,
 	  "format-critical": " {temperatureC}°C",
 	  "format": " {temperatureC}°C"
@@ -116,5 +107,10 @@
 
     "tray": {
       "spacing": 10
+    },
+
+    "sway/language": {
+      "format": "{}",
+      "tooltip-format": "{long}"
     }
 }

@@ -3,16 +3,16 @@
     border-radius: 0px;
     /* font-family: Source Code Pro Medium, Arial, sans-serif; */
     font-family: Font Awesome, Hack Nerd Font;
-    font-size: 16px;
+    font-size: 14px;
     min-height: 0px;
 }
 
 window#waybar {
-    background-color: #2e3440;
-    border-bottom: 3px solid rgba(76, 86, 105, 0.5);
-    color: #ffffff;
-    transition-property: background-color;
-    transition-duration: 0.5s;
+  background-color: #000000;
+  /* border-bottom: 3px solid rgba(76, 86, 105, 0.5);*/
+  color: #ffffff;
+  transition-property: background-color;
+  transition-duration: 0.5s;
 }
 
 window#waybar.hidden {

@@ -10,3 +10,4 @@
 /mpd/.config/mpd/database
 /mpd/.config/mpd/pid/
 /mpd/.config/mpd/sticker.sql
+/mpd/.config/mpd/pid
