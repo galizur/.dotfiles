@@ -1,0 +1,8 @@
+/gnupg/.config/gnupg/private-keys-v1.d/*.key
+/gnupg/.config/gnupg/sshcontrol
+/gnupg/.config/gnupg/.#*.*-*.*
+/bin/.local/bin/compdb
+/bin/.local/bin/sqlint
+/gnupg/.config/gnupg/*.kbx
+/gnupg/.config/gnupg/*.*~
+/gnupg/.config/gnupg/trustdb.gpg
