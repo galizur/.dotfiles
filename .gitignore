@@ -7,3 +7,6 @@
 /gnupg/.config/gnupg/*.*~
 /gnupg/.config/gnupg/trustdb.gpg
 /gnupg/.config/gnupg/openpgp-revocs.d
+/mpd/.config/mpd/database
+/mpd/.config/mpd/pid/
+/mpd/.config/mpd/sticker.sql
