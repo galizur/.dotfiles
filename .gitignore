@@ -11,3 +11,5 @@
 /mpd/.config/mpd/pid/
 /mpd/.config/mpd/sticker.sql
 /mpd/.config/mpd/pid
+/gnupg/.config/gnupg/random_seed
+/mpd/.config/mpd/state
