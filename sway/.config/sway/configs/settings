@@ -16,11 +16,11 @@ focus_on_window_activation focus
 seat seat0 hide_cursor 5000
 
 # Hide window borders adjacent to the screen edges
-hide_edge_borders both
+hide_edge_borders smart
 
 # Set default window border
 default_floating_border pixel 1
-default_border pixel 1
+default_border pixel 2
 
 # Switch back to the previous workspace when repeating a workspace
 workspace_auto_back_and_forth yes
