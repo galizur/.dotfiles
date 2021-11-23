@@ -13,3 +13,8 @@
 /mpd/.config/mpd/pid
 /gnupg/.config/gnupg/random_seed
 /mpd/.config/mpd/state
+/bin/.local/share/
+/bin/.local/state/
+/systemd/.config/systemd/user/default.target.wants/syncthing.service
+/systemd/.config/systemd/user/pipewire-session-manager.service
+/systemd/.config/systemd/user/pipewire.service.wants/

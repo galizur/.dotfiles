@@ -34,9 +34,9 @@ if __name__ == "__main__":
     if args.directory:
         FOLDER_WALL = args.directory[0]
 
-        wallpapers = glob.glob(FOLDER_WALL + "*")
+    wallpapers = glob.glob(FOLDER_WALL + "*")
 
-        if args.time:
-            interval_wall(wallpapers, args.time[0])
-else:
+    if args.time:
+        interval_wall(wallpapers, args.time[0])
+    else:
         print(random.choice(wallpapers))

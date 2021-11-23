@@ -1,5 +1,5 @@
-output DP-3 resolution 1920x1080@75Hz position 0,0
+output DP-3 mode 1920x1080@75Hz position 0 0
 
-# output * bg `/home/charlie/.local/bin/wallpaper.py` fill
+output * bg `/home/charlie/.local/bin/wallpaper.py` fill
 
 focus output DP-3
