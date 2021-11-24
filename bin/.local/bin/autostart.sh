@@ -31,3 +31,7 @@ fi
 if have xbindkeys; then
     [ -f "$XDG_CONFIG_HOME/X11/xbindkeysrc" ] && xbindkeys -f "$XDG_CONFIG_HOME/X11/xbindkeysrc" &
 fi
+
+if have udiskie; then
+    udiskie --tray &
+fi
