@@ -5,7 +5,7 @@
 have() { type "$1" > /dev/null 2>&1; }
 
 if  pgrep sway && have mako; then
-	mako --background-color "#2e3440" --border-color "#5e81ac" --font "Source Code Pro Medium 12" --padding 20 --default-timeout 10000 &
+	mako --background-color "#2e3440" --border-color "#5e81ac" --font "Source Code Pro Medium 10" --padding 15 --default-timeout 10000 &
 fi
 
 if have emacs; then
