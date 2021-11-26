@@ -18,3 +18,5 @@
 /systemd/.config/systemd/user/default.target.wants/syncthing.service
 /systemd/.config/systemd/user/pipewire-session-manager.service
 /systemd/.config/systemd/user/pipewire.service.wants/
+/gnupg/.config/gnupg/shared/
+/systemd/.config/systemd/user/timers.target.wants/
