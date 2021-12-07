@@ -156,7 +156,7 @@ alias pr='sudo pacman -Rs'
 alias yi='yay -S'
 
 # Programming
-alias gtp='cd ~/dev/cpp'
+alias gtp='cd ~/Programming/cpp'
 
 # Update Pacman mirror list.
 if have reflector; then
