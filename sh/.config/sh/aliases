@@ -76,6 +76,7 @@ alias xelatex='xelatex --shell-escape'
 alias d='cd $XDG_DATA_HOME/docker/'
 alias g='cd $XDG_DATA_HOME/git/'
 alias q='cd $XDG_DATA_HOME/qemu/'
+alias n='cd $XDG_DATA_HOME/notebooks/'
 
 # pacman
 alias inpac='pacman -Qmq | sort'
@@ -162,3 +163,5 @@ alias gtp='cd ~/Programming/cpp'
 if have reflector; then
     alias reflect='sudo reflector --latest 200 --verbose --protocol http --protocol https --sort rate --save /etc/pacman.d/mirrorlist'
 fi
+
+alias log="journalctl -u NetworkManager -b -n 1000"
