@@ -18,7 +18,7 @@ set $browser firefox
 # Default font
 set $font pango:Source Code Pro Medium 9
 set $locker swaylock -f -i '~/Pictures/Wallpapers/1920x1080/arch-splash.png'
-set $menu wofi
+set $menu rofi
 set $term alacritty
 
 # Nord color palette.
