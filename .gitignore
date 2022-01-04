@@ -20,3 +20,5 @@
 /systemd/.config/systemd/user/pipewire.service.wants/
 /gnupg/.config/gnupg/shared/
 /systemd/.config/systemd/user/timers.target.wants/
+/clangd/
+/gnupg/.config/gnupg/crls.d/
