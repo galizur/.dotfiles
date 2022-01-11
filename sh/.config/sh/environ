@@ -65,7 +65,7 @@ export PATH="$PATH:$HOME/.local/bin"
 
 # Allows Qt 5 to enable Wayland support.
 export QT_QPA_PLATFORM=wayland
-export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
+export QT_WAYLAND_DISABLE_WINDOWDECORATION="1"
 
 # Use evince as default document reader.
 export READER="evince"
