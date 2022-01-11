@@ -11,4 +11,6 @@ include configs/modes
 include configs/swaybar
 
 ### Startup programs ###
+exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
+
 exec --no-startup-id [ -f $XDG_BIN_HOME/autostart.sh ] && . "$XDG_BIN_HOME/autostart.sh"
