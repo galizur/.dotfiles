@@ -43,7 +43,9 @@ if have libreoffice; then
 fi
 
 # Display
-alias ls='ls --color=auto'
+if have exa; then
+    alias a='exa -al'
+fi
 
 # Docker
 if have docker; then
@@ -120,7 +122,7 @@ alias tka='tmux kill-server'
 alias tl='tmux list-sessions'
 alias ts='tmux new-session -s'
 
-# Traduction
+# Translation
 if have trans; then
     alias de='trans --brief :de'
     alias en='trans --brief :en'
@@ -131,7 +133,6 @@ fi
 
 # youtube-dl
 if have youtube-dl; then
-    # alias yeam='youtube-dl --extract-audio --audio-format mp3 --audio-quality 0 -o "~/Music/%(title)s.%(ext)s"'
     alias yeam='youtube-dl --embed-thumbnail --extract-audio --audio-format mp3 --audio-quality 0 -o "~/Music/%(title)s.%(ext)s"'
 fi
 
@@ -161,7 +162,8 @@ alias gtp='cd ~/Programming/cpp'
 
 # Update Pacman mirror list.
 if have reflector; then
-    alias reflect='sudo reflector --latest 200 --verbose --protocol http --protocol https --sort rate --save /etc/pacman.d/mirrorlist'
+    alias reflect='sudo reflector --latest 50 --verbose --protocol http --protocol https --sort rate --download-timeout 10 --save /etc/pacman.d/mirrorlist'
 fi
 
 alias log="journalctl -u NetworkManager -b -n 1000"
+alias weather='http wttr.in'
