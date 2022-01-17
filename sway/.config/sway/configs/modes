@@ -24,6 +24,7 @@ mode --pango_markup $mode_power {
 }
 bindsym $mod+Shift+p mode $mode_power
 
+
 set $mode_screenshot "<span foreground='$nord13'>🖼</span>  \
 <span foreground='$nord4'><b>Clipboard</b></span> <span foreground='$nord13'>(<b>c</b>)</span> \
 <span foreground='$nord2'>—</span> \
