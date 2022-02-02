@@ -23,3 +23,7 @@
 /clangd/
 /gnupg/.config/gnupg/crls.d/
 /tmux/.config/tmux/themes/
+/emacs/.config/emacs/eln-cache/
+/emacs/.config/emacs/etc/
+/emacs/.config/emacs/straight/
+/emacs/.config/emacs/var/
