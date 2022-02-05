@@ -36,6 +36,15 @@
   :custom (auto-save-file-name-transforms
            `((".*" ,(no-littering-expand-var-file-name "auto-save/") t))))
 
+(use-package auth-source
+  :straight nil
+  :demand
+  :custom
+  (auth-sources '("~/.config/gnupg/shared/authinfo.gpg"
+                  "~/.authinfo.gpg"
+                  "~/.authinfo"
+                  "~/.netrc")))
+
 (setq-default
  ad-redefinition-action 'accept                      ; Silence warnings for redefinition.
  cursor-in-non-selected-windows t                    ;Hide the cursor in inactive windows.
@@ -139,9 +148,9 @@
   :demand t
   :init (doom-modeline-mode)
   :custom
-  (doom-modeline-icon (display-graphic-p)))
-;; (doom-modeline-mu4e t) ;; Needs mu4e-alert package
-;; (mu4e-alert-enable-mode-line-display) ;; Might need to go with mu4e package?
+  (doom-modeline-icon (display-graphic-p))
+ (doom-modeline-mu4e t)
+ (mu4e-alert-enable-mode-line-display))
 
 (use-package all-the-icons
   :if (display-graphic-p)
@@ -1241,5 +1250,150 @@
   (org-roam-directory "~/.personal/notes")
   :custom (org-roam-graph-viewer "/usr/bin/qutebrowser")
   :config (org-roam-setup))
+
+(use-package mu4e
+    :straight nil
+    :commands mu4e
+    :hook (mu4e-compose-mode . turn-off-auto-fill)
+    :bind (:map mu4e-headers-mode-map
+                ("M-[" . scroll-down-command)
+                ("M-]" . scroll-up-command))
+    :preface
+    (defun my/set-email-account (label letvars)
+      "Registers an email address for mu4e."
+      (setq mu4e-contexts
+            (cl-loop for context in mu4e-contexts
+                     unless (string= (mu4e-context-name context) label)
+                     collect context))
+      (let ((context (make-mu4e-context
+                      :name label
+                      :enter-func (lambda () (mu4e-message "Switched context"))
+                      :leave-func #'mu4e-clear-caches
+                      :match-func
+                      (lambda (msg)
+                        (when msg
+                          (string-prefix-p (format "/%s" msg)
+                                           (mu4e-message-field msg :maildir))))
+                      :vars letvars)))
+        (push context mu4e-contexts)
+        context))
+    :custom
+    (mu4e-attachment-dir "~/Downloads")
+    ;; To avoid synchronization issues/ with mbsync
+    (mu4e-change-filenames-when-moving t)
+    (mu4e-confirm-quit nil)
+    ;; (mu4e-completing-read-function 'ivy-read)
+    (mu4e-compose-complete-only-after (format-time-string
+                                       "%Y-%m-%d"
+                                       (time-subtract (current-time) (days-to-time 150))))
+    (mu4e-compose-context-policy 'ask-if-none)
+    (mu4e-compose-dont-reply-to-self t)
+    (mu4e-compose-format-flowed t)
+    (mu4e-get-mail-command (format "mbsync -c ~/.config/isync/mbsyncrc -a"))
+    (mu4e-headers-date-format "%F")
+    (mu4e-headers-fields
+     '((:account    . 10)
+       (:human-date . 12)
+       (:flags      . 6)
+       (:from       . 22)
+       (:subject    . nil)))
+    (mu4e-headers-time-format "%R")
+    (mu4e-html2text-command "iconv -c -t utf-8 | pandoc -f html -t plain")
+    (mu4e-maildir "~/Mails")
+    (mu4e-org-contacts-file "~/.personal/agenda/contacts.org")
+    (mu4e-update-interval (* 5 60))
+    (mu4e-use-fancy-chars t)
+    (mu4e-view-prefer-html t)
+    (mu4e-view-show-addresses t)
+    (mu4e-view-show-images t)
+    :config
+    (my/set-email-account "karolos-triantafyllou"
+                          '((mu4e-drafts-folder . "/personal/karolos-triantafyllou/drafts")
+                            (mu4e-refile-folder . "/personal/karolos-triantafyllou/all")
+                            (mu4e-sent-folder   . "/personal/karolos-triantafyllou/sent")
+                            (mu4e-trash-folder  . "/personal/karolos-triantafyllou/trash")
+                            (mu4e-maildir-shortcuts . ((:maildir "/personal/karolos-triantafyllou/all"    :key ?a)
+                                                       (:maildir "/personal/karolos-triantafyllou/inbox"  :key ?i)
+                                                       (:maildir "/personal/karolos-triantafyllou/drafts" :key ?d)
+                                                       (:maildir "/personal/karolos-triantafyllou/sent"   :key ?s)
+                                                       (:maildir "/personal/karolos-triantafyllou/trash"  :key ?t)))
+                            (smtpmail-smtp-user . "karolos.triantafyllou@gmail.com")
+                            (smtpmail-smtp-server . "smtp.gmail.com")
+                            (smtpmail-smtp-service . 465)
+                            (smtpmail-stream-type . ssl)
+                            (user-mail-address . "karolos.triantafyllou@gmail.com")
+                            (user-full-name . "Karolos Triantafyllou")))
+    ;; (setq mu4e-headers-attach-mark    `("a" . ,(with-faicon "paperclip" "" 0.75 -0.05 "all-the-icons-lyellow"))
+    ;;       mu4e-headers-draft-mark     `("D" . ,(with-octicon "pencil" "" 0.75 -0.05 "all-the-icons-lsilver"))
+    ;;       mu4e-headers-encrypted-mark `("x" . ,(with-faicon "lock" "" 0.75 -0.05 "all-the-icons-lred"))
+    ;;       mu4e-headers-flagged-mark   `("F" . ,(with-faicon "flag" "" 0.75 -0.05 "all-the-icons-maroon"))
+    ;;       mu4e-headers-new-mark       `("N" . ,(with-faicon "check-circle" "" 0.75 -0.05 "all-the-icons-silver"))
+    ;;       mu4e-headers-passed-mark    `("P" . ,(with-faicon "share" "" 0.75 -0.05 "all-the-icons-purple "))
+    ;;       mu4e-headers-replied-mark   `("R" . ,(with-faicon "reply" "" 0.75 -0.05 "all-the-icons-lgreen"))
+    ;;       mu4e-headers-seen-mark      `("S" . ,(with-octicon "check" "" 1 -0.05 "all-the-icons-lgreen"))
+    ;;       mu4e-headers-signed-mark    `("s" . ,(with-faicon "key" "" 0.75 -0.05 "all-the-icons-cyan"))
+    ;;       mu4e-headers-trashed-mark   `("T" . ,(with-faicon "trash" "" 0.75 -0.05 "all-the-icons-lred"))
+    ;;       mu4e-headers-unread-mark    `("u" . ,(with-faicon "envelope" "" 0.75 -0.05 "all-the-icons-silver")))
+    (add-to-list 'mu4e-header-info-custom
+                 '(:account
+                   :name "Account"
+                   :shortname "Account"
+                   :help "Which account this email belongs to"
+                   :function
+                   (lambda (msg)
+                     (let ((maildir (mu4e-message-field msg :maildir)))
+                       (format "%s" (substring maildir 1 (string-match-p "/" maildir 1)))))))
+    (add-to-list 'mu4e-headers-actions '("org-contact-add" . mu4e-action-add-org-contact) t)
+    (add-to-list 'mu4e-view-actions '("org-contact-add" . mu4e-action-add-org-contact) t))
+
+  (use-package org-mime
+  :after mu4e
+  :hook (message-send . org-mime-htmlize)
+  :bind (:map mu4e-compose-mode-map
+              ("C-c '" . org-mime-edit-mail-in-org-mode))
+  :config
+  (add-hook 'org-mime-html-hook (lambda ()
+                                  (goto-char (point-max))
+                                  (insert "--<br>
+                 <strong>Karolos Triantafyllou</strong><br>")))
+  (add-hook 'org-mime-html-hook (lambda ()
+                                  (org-mime-change-element-style "p" (format "color: %s" "#1a1a1a"))))
+
+  (add-hook 'org-mime-html-hook (lambda ()
+                                  (org-mime-change-element-style "strong" (format "color: %s" "#000"))))
+
+  (add-hook 'org-mime-html-hook (lambda ()
+                                  (org-mime-change-element-style
+                                   "pre" "background: none repeat scroll 0% 0% rgb(61, 61, 61);
+                                                 border-radius: 15px;
+                                                 color: #eceff4;
+                                                 font-family: Courier, 'Courier New', monospace;
+                                                 font-size: small;
+                                                 font-weight: 400;                                                 line-height: 1.3em;
+                                                 padding: 20px;
+                                                 quotes: '«' '»';
+                                                 width: 41%;")))
+  (setq org-mime-export-options '(:preserve-breaks t
+                                                   :section-numbers nil
+                                                   :with-author nil
+                                                   :with-toc nil)))
+
+  (use-package mu4e-alert
+  :hook ((after-init . mu4e-alert-enable-mode-line-display)
+         (after-init . mu4e-alert-enable-notifications))
+  :config (mu4e-alert-set-default-style 'libnotify))
+
+(use-package message
+  :straight nil
+  :after mu4e
+  :custom
+  (message-citation-line-format "On %B %e, %Y at %l:%M %p, %f (%n) wrote:\n")
+  (message-citation-line-function 'message-insert-formatted-citation-line)
+  (message-kill-buffer-on-exit t)
+  (message-send-mail-function 'smtpmail-send-it)
+  (mml-secure-openpgp-signers '("84D878C99B99611D")))
+
+(use-package nov
+  :mode ("\\.epub\\'" . nov-mode))
 
 (setq gc-cons-threshold (* 10 1000 1000))

@@ -100,6 +100,7 @@
 
     "temperature": {
 	  "critical-threshold": 70,
+      "interval": 5,
 	  "format-critical": " {temperatureC}°C",
 	  "format": " {temperatureC}°C"
     },
