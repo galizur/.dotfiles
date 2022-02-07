@@ -13,14 +13,19 @@ include configs/swaybar
 set $WOBSOCK $XDG_RUNTIME_DIR/wob.sock
 exec mkfifo $WOBSOCK && tail -f $WOBSOCK | wob
 
-set $gnome-schema org.gnome.desktop.interface
+# set $gnome-schema org.gnome.desktop.interface
 
-exec_always import-gsettings \
-            gtk-theme:gtk-theme-name \
-            icon-theme:gtk-icon-theme-name \
-            cursor-theme:gtk-cursor-theme-name
+#exec_always import-gsettings \
+            #gtk-theme:gtk-theme-name \
+            #icon-theme:gtk-icon-theme-name \
+            #cursor-theme:gtk-cursor-theme-name
+
+exec {
+     gsettings set org.gnome.desktop.interface gtk-theme 'Nordic'
+     gsettings set org.gnome.desktop.wm.preferences theme 'Nordic'
+     }
 
 ### Startup programs ###
-exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
+# exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
 
 exec --no-startup-id [ -f $XDG_BIN_HOME/autostart.sh ] && . "$XDG_BIN_HOME/autostart.sh"
