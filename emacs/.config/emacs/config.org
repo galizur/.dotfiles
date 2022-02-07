@@ -1991,7 +1991,8 @@ Provides snippets for consult.
 
 #+begin_src emacs-lisp
   (use-package nov
-    :mode ("\\.epub\\'" . nov-mode))
+    :mode ("\\.epub\\'" . nov-mode)
+    :custom (nov-text-width 75))
 #+end_src
 
 * Runtime Performance
