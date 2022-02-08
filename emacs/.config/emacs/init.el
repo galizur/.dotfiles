@@ -1394,6 +1394,22 @@
   (mml-secure-openpgp-signers '("84D878C99B99611D")))
 
 (use-package nov
-  :mode ("\\.epub\\'" . nov-mode))
+  :mode ("\\.epub\\'" . nov-mode)
+  :custom (nov-text-width 75))
 
 (setq gc-cons-threshold (* 10 1000 1000))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(safe-local-variable-values
+   '((projectile-project-test-cmd . "meson test")
+     (projectile-project-compilation-cmd . "meson compile")))
+ '(warning-suppress-types '((comp))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(vertico-current ((t (:background "#1d1f21")))))
