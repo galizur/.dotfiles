@@ -1,68 +1,100 @@
 * {
     border: none;
-    border-radius: 0px;
-    /* font-family: Source Code Pro Medium, Arial, sans-serif; */
-    font-family: Font Awesome, Hack Nerd Font;
+    font-family: Font Awesome, Roboto, Arial, sans-serif;
     font-size: 14px;
-    min-height: 0px;
+    color: #eceff4;
 }
 
+window {
+	/*font-weight: bold;*/
+}
 window#waybar {
-  background-color: #2e3440;
-  border-bottom: 3px solid rgba(66, 65, 74, 0.5);
-  color: #ffffff;
-  transition-property: background-color;
-  transition-duration: 0.5s;
+    background: rgba(46, 52, 64, 0.5);
 }
-
-window#waybar.hidden {
-    opacity: 0.2;
+/*-----module groups----*/
+.modules-right {
+	background-color: rgba(46, 52, 64, 1);
+    margin: 0 0 0 0;
+    border-radius: 0 0 0 15px;
 }
-
+.modules-center {
+	background-color: rgba(46, 52, 64, 1);
+    margin: 0 0 0 0;
+    border-radius: 0 0 15px 15px;
+}
+.modules-left {
+  margin: 0 0 0 0;
+  border-radius: 0 0 15px 0;
+	background-color: rgba(46, 52, 64, 1);
+}
+/*-----modules indv----*/
 #workspaces button {
+    padding: 1px 5px;
     background-color: transparent;
-    border-bottom: 3px solid transparent;
-    color: #ffffff;
-    padding: 0 5px;
 }
-
 #workspaces button:hover {
-  background: rgba(16, 12, 16, 0.2);
-  box-shadow: inherit;
-  border-bottom: 3px solid #a5a294;
-  text-shadow: inherit;
+    box-shadow: inherit;
+	background-color: rgba(143, 188, 187, 1);
 }
 
 #workspaces button.focused {
-  background-color: #42414a;
-  border-bottom: 3px solid #c6baa5;
-}
-
-#workspaces button.urgent {
-    background-color: #bf616a;
+	background-color: rgba(94, 129, 172, 1);
 }
 
 #clock,
+#battery,
 #cpu,
 #memory,
-#mode,
-#custom-weather,
+#temperature,
 #network,
 #pulseaudio,
-#temperature {
-  padding: 0 10px;
-  margin: 0 4px;
-  color: #ffffff;
-  animation-name: blink;
-  animation-duration: 0.5s;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-  animation-direction: alternate;
+#custom-media,
+#tray,
+#mode,
+#custom-power,
+#custom-menu,
+#idle_inhibitor {
+    padding: 0 10px;
+}
+#mode {
+    color: #bf616a;
+    font-weight: bold;
+}
+#custom-power {
+    background-color: rgba(180, 142, 173, 0.6);
+    border-radius: 50px;
+    margin: 5px 5px;
+    padding: 1px 3px;
 }
 
-#network.disconnected { color: #bf616a; }
-
-#pulseaudio.muted { color: #bf616a; }
-
-#temperature { color: #88c0d0; }
-#temperature.critical { color: #bf616a; }
+#custom-menu {
+  background-color: rgba(180, 142, 173, 0.6);
+  margin: 5px 5px;
+  padding: 1px 3px;
+}
+/*-----Indicators----*/
+#idle_inhibitor.activated {
+    color: #a3be8c;
+}
+#pulseaudio.muted {
+    color: #bf616a;
+}
+#battery.charging {
+    color: #a3be8c;
+}
+#battery.warning:not(.charging) {
+	color: #ebcb8b;
+}
+#battery.critical:not(.charging) {
+    color: #bf616a;
+}
+#temperature.critical {
+    color: #bf616a;
+}
+/*-----Colors----*/
+/*
+ *rgba(0,85,102,1),#005566 --> Indigo(dye)
+ *rgba(0,43,51,1),#002B33 --> Dark Green
+ *rgba(0,153,153,1),#009999 --> Persian Green
+ *
+ */

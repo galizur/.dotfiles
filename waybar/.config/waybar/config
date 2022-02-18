@@ -1,127 +1,99 @@
 {
-	"layer": "top",
-	"height": 25,
-	"modules-left": ["sway/workspaces", "sway/mode"],
-	"modules-center": ["clock"],
-	"modules-right": ["custom/weather", "idle_inhibitor", "pulseaudio", "cpu", "temperature", "memory", "sway/language", "network", "tray"],
+    "modules-left": ["sway/workspaces", "sway/mode"],
+    "modules-center": ["clock", "idle_inhibitor"],
+    "modules-right": ["tray", "custom/scratchpad-indicator", "pulseaudio", "temperature", "cpu", "memory", "custom/menu", "custom/power"],
 
-	"clock": {
-      "format": "{:%H:%M:%S %p}",
-      "format-alt": "{:%A, %d %B %Y}",
-	  "interval": 1,
-      "on-click-right": "wl-copy $(date '+%Y-%m-%d %T')",
-	  "tooltip": false
-	 },
-
-	 "pulseaudio": {
-       "format": "{icon} {volume}%",
-       "format-muted": " MUTED",
-       "format-icons": {
-         "default": ["", ""]
-       },
-       "on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
-       "on-click-middle": "pavucontrol-qt",
-       "on-click-right": "pactl set-source-mute @DEFAULT_SOURCE@ toggle",
-       "tooltip": false
+    "sway/mode": {
+        "format": "<span style=\"italic\">{}</span>"
     },
-
-	"sway/mode": {
-      "format": "<span style=\"italic\">{}</span>",
-      "pango_markup": true
+    "network": {
+        "format-wifi": "{essid} ({signalStrength}%) ",
+        "format-ethernet": "{ifname} ",
+        "format-disconnected": "",
+        "max-length": 50,
+        "on-click": "kitty -e 'nmtui'"
     },
-
-    "custom/weather": {
-      "format": "{}",
-      "format-alt": "{alt}: {}",
-      "format-alt-click": "click-right",
-      "interval": 1800,
-      "return-type": "json",
-      "exec": "~/.config/waybar/modules/weather.sh",
-      "exec-if": "ping wttr.in -c1"
-    },
-
     "idle_inhibitor": {
-      "format": "{icon}",
-      "format-icons": {
-        "activated": "",
-        "deactivated": ""
-        }
+        "format": "{icon}",
+        "format-icons": {
+            "activated": "",
+            "deactivated": ""
+        },
+        "tooltip": false
     },
-
-    "cpu": {
-      "interval": 10,
-      "states": {
-        "warning": 60,
-		"critical": 90
-		},
-      "format": " {}%",
-	  "max-length": 10,
-	  "on-click": "alacritty -e htop"
-	},
-
-    "memory": {
-	  "interval": 10,
-	  "states": {
-	    "warning": 60,
-		"critical": 90
-		},
-      "format": " {}%",
-	  "max-length": 10,
-	  "tooltip": false
-	},
-
-    "network": {
-      "format-wifi": " {essid} ({signalStrength}%)",
-      "format-ethernet": " {ifname}: {ipaddr}/{cidr}",
-      "format-disconnected": "Disconnected",
-      "on-click": "wl-copy $(ip address show up scope global | grep inet | head -n1 | cut -d/ -f 1 | tr -d [:space:] | cut -c5-)",
-      "on-click-right": "wl-copy $(ip address show up scope global | grep inet6 | head -n1 | cut -d/ -f 1 | tr -d [:space:] | cut -c6-)",
-      "tooltip-format": "{ifname}\n{ipaddr}/{cidr}\n",
-      "tooltip-format-wifi": "{essid} {frequency}MHz\nStrength: {signaldBm}dBm ({signalStrength}%)\nIP: {ipaddr}/{cidr}\n⬆: {bandwidthUpBits} ⬇: {bandwidthDownBits}",
-	  "interval": 10
-    },
-
-    "sway/workspaces": {
-      "all-outputs": true,
-      "format": "{icon}",
-      "format-icons": {
-        "1": "",
-        "2": "",
-        "3": "",
-        "4": "",
-        "5": "",
-        "6": "",
-        "7": "",
-        "urgent": "",
-        "focused": "",
-        "default": ""
-      }
-    },
-
-    "temperature": {
-	  "critical-threshold": 70,
-      "interval": 5,
-	  "format-critical": " {temperatureC}°C",
-	  "format": " {temperatureC}°C"
-    },
-
     "tray": {
-      "spacing": 10
+        "icon-size": 15,
+        "spacing": 10
     },
-
-    "sway/language": {
-      "format": "{}",
-      "tooltip-format": "{long}"
+    "clock": {
+        "format": "{:%H:%M:%S}",
+        "format-alt": "{:%A, %d %B %Y}",
+        "interval": 1,
+		"on-click-right": "wl-copy $(date '+%Y-%m-%d %T')",
+        "tooltip": false
     },
-
-    "network": {
-    "format-wifi": " {essid} ({signalStrength}%)",
-      "format-ethernet": " {ifname}: {ipaddr}/{cidr}",
-      "format-disconnected": "Disconnected",
-      "on-click": "wl-copy $(ip address show up scope global | grep inet | head -n1 | cut -d/ -f 1 | tr -d [:space:] | cut -c5-)",
-      "on-click-right": "wl-copy $(ip address show up scope global | grep inet6 | head -n1 | cut -d/ -f 1 | tr -d [:space:] | cut -c6-)",
-      "tooltip-format": "{ifname}\n{ipaddr}/{cidr}\n",
-      "tooltip-format-wifi": "{essid} {frequency}MHz\nStrength: {signaldBm}dBm ({signalStrength}%)\nIP: {ipaddr}/{cidr}\n⬆: {bandwidthUpBits} ⬇: {bandwidthDownBits}",
-	  "interval": 10
-}
+     "cpu": {
+         "interval": 10,
+         "format": "{usage}% ",
+         "states": {
+                   "warning": 60,
+                   "critical": 90
+                   },
+         "on-click": "alacritty -e htop",
+         "tooltip": false
+     },
+     "memory": {
+         "interval": 10,
+         "states": {
+                   "warning": 60,
+                   "critical": 90
+                   },
+         "format": "{}% ",
+         "tooltip": false
+     },
+    "temperature": {
+        "interval": 10,
+        "hwmon-path": "/sys/class/hwmon/hwmon2/temp1_input",
+        "critical-threshold": 82,
+        "format-critical": "{temperatureC}°C {icon}",
+        "format": "{temperatureC}°C {icon}",
+        "format-icons": [""]
+    },
+    "pulseaudio": {
+        // "scroll-step": 1, // %, can be a float
+        "format": "{volume}% {icon} ",
+        "format-bluetooth": "{volume}% {icon} {format_source}",
+        "format-bluetooth-muted": " {icon} {format_source}",
+        "format-muted": "0% {icon} ",
+        "format-source": "{volume}% ",
+        "format-source-muted": "",
+        "format-icons": {
+            "headphone": "",
+            "hands-free": "",
+            "headset": "",
+            "default": ["", "", ""]
+        },
+        "on-click": "pamixer -t",
+        "on-click-middle": "pavucontrol",
+        "on-click-right": "pamixer --get-default-source -t"
+    },
+	"custom/power": {
+		"format": "",
+		"on-click": "wlogout",
+        "tooltip": false
+	},
+    "custom/scratchpad-indicator": {
+        "format-text": "{}",
+        "return-type": "json",
+        "interval": 3,
+        "exec": "~/.local/bin/scratchpad-indicator 2> /dev/null",
+        "exec-if": "exit 0",
+        "on-click": "swaymsg 'scratchpad show'",
+        "on-click-right": "swaymsg 'move scratchpad'"
+    },
+    "custom/menu": {
+        "format": "",
+        "on-click": "kickoff",
+        "tooltip": false
+    }
 }
