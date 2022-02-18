@@ -72,6 +72,7 @@
   - [[#parentheses][Parentheses]]
   - [[#pdf][PDF]]
   - [[#projectile][Projectile]]
+  - [[#perspective][Perspective]]
   - [[#yasnippet][Yasnippet]]
   - [[#version-control][Version Control]]
   - [[#whitespace-and-kill][Whitespace and Kill]]
@@ -183,7 +184,7 @@ We use the package [[https://github.com/emacscollective/no-littering][no-litteri
 #+begin_src emacs-lisp
   (use-package auth-source
     :straight nil
-    :demand
+    :demand t
     :custom
     (auth-sources '("~/.config/gnupg/shared/authinfo.gpg"
                     "~/.authinfo.gpg"
@@ -256,13 +257,13 @@ Set our favorite fonts! We just must make sure the font is installed on the syst
 
 #+begin_src emacs-lisp
   ;; Set default font
-  (set-face-attribute 'default nil :font "Fira Code")
+  (set-face-attribute 'default nil :font "Iosevka" :height 110)
   ;; Set fixed pitch face
-  (set-face-attribute 'fixed-pitch nil :font "Fira Code")
+  (set-face-attribute 'fixed-pitch nil :font "Iosevka")
   ;; Set emoji font
   (set-fontset-font t 'symbol (font-spec :family "Noto Color Emoji") nil 'prepend)
   ;; Set variable pitch face
-  (set-face-attribute 'variable-pitch nil :font "Cantarell" :weight 'regular :height 1.3)
+  (set-face-attribute 'variable-pitch nil :font "Cantarell" :weight 'regular :height 1.35)
 #+end_src
 
 *** Mixed Pitch Fonts
@@ -282,7 +283,7 @@ Since GNU Emacs doesn't automatically enable ligatures, we enable them ourselves
   (use-package ligature
     :straight (ligature :type git :host github :repo
                         "mickeynp/ligature.el" :branch "master")
-    :defer t
+    :demand t
     :config
     ;; Enable the "www" ligature in every possible major mode
     (ligature-set-ligatures 't '("www"))
@@ -325,7 +326,7 @@ Solaire-mode can help us differentiate between our actual buffers, from ones tha
 
 #+begin_src emacs-lisp
   (use-package solaire-mode
-    :defer 0.1
+    :demand t
     :custom (solaire-mode-remap-fringe t)
     :config (solaire-global-mode))
 #+end_src
@@ -556,10 +557,11 @@ To get candidate icons and thus being able to differentiate a function from a va
 #+begin_src emacs-lisp
   (use-package emacs
     :straight nil
+    :demand t
     :init
     (setq completion-cycle-threshold 3)
     (setq read-extended-command-predicate
-	  #'command-completion-default-include-p)
+      #'command-completion-default-include-p)
     (setq tab-always-indent 'complete))
 #+end_src
 
@@ -652,14 +654,15 @@ Finally, in order to manage folders with large amounts of files, we can filter i
 
 #+begin_src emacs-lisp
   (use-package ibuffer
+    :demand t
     :preface
     (defvar protected-buffers '("*scratch*" "*Messages*")
       "Buffers that cannot be killed.")
     (defun my/protected-buffers ()
       "Protects some buffers from being killed."
       (dolist (buffer protected-buffers)
-	(with-current-buffer buffer
-	  (emacs-lock-mode 'kill)))))
+    (with-current-buffer buffer
+      (emacs-lock-mode 'kill)))))
 #+end_src
 
 ** IMenu
@@ -708,6 +711,7 @@ Finally, in order to manage folders with large amounts of files, we can filter i
 #+begin_src emacs-lisp
   (use-package autorevert
     :straight nil
+    :demand t
     :delight auto-revert-mode
     :bind ("C-x R" . revert-buffer)
     :custom (auto-revert-verbose nil)
@@ -723,6 +727,7 @@ Most of the times, when we split a window, we want to focus it and perform some 
 #+begin_src emacs-lisp
   (use-package window
     :straight nil
+    :demand t
     :bind (("C-x 3" . hsplit-last-buffer)
            ("C-x 2" . vsplit-last-buffer)
            ;; Don't ask before killing a buffer.
@@ -748,7 +753,7 @@ Sole windows are centered within GNU Emacs with the help of [[https://github.com
   (use-package centered-window
     :demand t
     :custom
-    (cwm-centered-window-width 130)
+    (cwm-centered-window-width 140)
     (cwm-frame-internal-border 0)
     (cwm-incremental-padding t)
     (cwm-incremental-padding-% 2)
@@ -774,6 +779,7 @@ Sometimes, we would like to bring back a window layout with their content. We ca
 #+begin_src emacs-lisp
   (use-package winner
     :straight nil
+    :demand t
     :config (winner-mode))
 #+end_src
 
@@ -1127,7 +1133,7 @@ To automatically display a color when typing a color or a hex code value, the [[
     (dashboard-center-content t)
     (dashboard-items '((agenda)
                        (projects . 5)))
-    (dashboard-projects-switch-function 'projectile-dired)
+    (dashboard-projects-switch-function 'projectile-persp-switch-project)
     (dashboard-set-file-icons t)
     (dashboard-set-footer nil)
     (dashboard-set-heading-icons t)
@@ -1278,6 +1284,17 @@ To have a more user-friendly documentation we will use the [[https://github.com/
     :hook (ibuffer . my/ibuffer-projectile))
 #+end_src
 
+** Perspective
+
+#+begin_src emacs-lisp
+  (use-package perspective
+    :demand t
+    :config (persp-mode))
+
+  (use-package persp-projectile
+    :after (perspective))
+#+end_src
+
 ** Yasnippet
 
 #+begin_src emacs-lisp
@@ -1366,6 +1383,7 @@ Provides snippets for consult.
     :custom (set-mark-command-repeat-pop t))
 
   (use-package hungry-delete
+    :demand t
     :delight
     :config (global-hungry-delete-mode))
 #+end_src

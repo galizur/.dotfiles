@@ -38,7 +38,7 @@
 
 (use-package auth-source
   :straight nil
-  :demand
+  :demand t
   :custom
   (auth-sources '("~/.config/gnupg/shared/authinfo.gpg"
                   "~/.authinfo.gpg"
@@ -91,13 +91,13 @@
   (menu-bar-mode -1))     ; Disable menu bar
 
 ;; Set default font
-(set-face-attribute 'default nil :font "Fira Code")
+(set-face-attribute 'default nil :font "Iosevka" :height 110)
 ;; Set fixed pitch face
-(set-face-attribute 'fixed-pitch nil :font "Fira Code")
+(set-face-attribute 'fixed-pitch nil :font "Iosevka")
 ;; Set emoji font
 (set-fontset-font t 'symbol (font-spec :family "Noto Color Emoji") nil 'prepend)
 ;; Set variable pitch face
-(set-face-attribute 'variable-pitch nil :font "Cantarell" :weight 'regular :height 1.3)
+(set-face-attribute 'variable-pitch nil :font "Cantarell" :weight 'regular :height 1.35)
 
 (use-package mixed-pitch
   :hook (text-mode . mixed-pitch-mode))
@@ -105,7 +105,7 @@
 (use-package ligature
   :straight (ligature :type git :host github :repo
                       "mickeynp/ligature.el" :branch "master")
-  :defer t
+  :demand t
   :config
   ;; Enable the "www" ligature in every possible major mode
   (ligature-set-ligatures 't '("www"))
@@ -140,7 +140,7 @@
   (doom-themes-org-config))
 
 (use-package solaire-mode
-  :defer 0.1
+  :demand t
   :custom (solaire-mode-remap-fringe t)
   :config (solaire-global-mode))
 
@@ -279,10 +279,11 @@
 
 (use-package emacs
   :straight nil
+  :demand t
   :init
   (setq completion-cycle-threshold 3)
   (setq read-extended-command-predicate
-	#'command-completion-default-include-p)
+    #'command-completion-default-include-p)
   (setq tab-always-indent 'complete))
 
 ;;  (when (equal tab-always-indent 'complete)
@@ -335,14 +336,15 @@
          ("C-c C-f" . dired-narrow-fuzzy)))
 
 (use-package ibuffer
+  :demand t
   :preface
   (defvar protected-buffers '("*scratch*" "*Messages*")
     "Buffers that cannot be killed.")
   (defun my/protected-buffers ()
     "Protects some buffers from being killed."
     (dolist (buffer protected-buffers)
-      (with-current-buffer buffer
-	(emacs-lock-mode 'kill)))))
+  (with-current-buffer buffer
+    (emacs-lock-mode 'kill)))))
 
 (use-package imenu
   :straight nil
@@ -379,6 +381,7 @@
 
 (use-package autorevert
   :straight nil
+  :demand t
   :delight auto-revert-mode
   :bind ("C-x R" . revert-buffer)
   :custom (auto-revert-verbose nil)
@@ -386,6 +389,7 @@
 
 (use-package window
   :straight nil
+  :demand t
   :bind (("C-x 3" . hsplit-last-buffer)
          ("C-x 2" . vsplit-last-buffer)
          ;; Don't ask before killing a buffer.
@@ -405,7 +409,7 @@
 (use-package centered-window
   :demand t
   :custom
-  (cwm-centered-window-width 130)
+  (cwm-centered-window-width 140)
   (cwm-frame-internal-border 0)
   (cwm-incremental-padding t)
   (cwm-incremental-padding-% 2)
@@ -419,6 +423,7 @@
 
 (use-package winner
   :straight nil
+  :demand t
   :config (winner-mode))
 
 (use-package term
@@ -639,7 +644,7 @@
   (dashboard-center-content t)
   (dashboard-items '((agenda)
                      (projects . 5)))
-  (dashboard-projects-switch-function 'projectile-dired)
+  (dashboard-projects-switch-function 'projectile-persp-switch-project)
   (dashboard-set-file-icons t)
   (dashboard-set-footer nil)
   (dashboard-set-heading-icons t)
@@ -751,6 +756,13 @@
       (ibuffer-do-sort-by-alphabetic)))
   :hook (ibuffer . my/ibuffer-projectile))
 
+(use-package perspective
+  :demand t
+  :config (persp-mode))
+
+(use-package persp-projectile
+  :after (perspective))
+
 (use-package yasnippet-snippets
     :after yasnippet
     :config (yasnippet-snippets-initialize))
@@ -823,6 +835,7 @@
   :custom (set-mark-command-repeat-pop t))
 
 (use-package hungry-delete
+  :demand t
   :delight
   :config (global-hungry-delete-mode))
 
@@ -1398,18 +1411,3 @@
   :custom (nov-text-width 75))
 
 (setq gc-cons-threshold (* 10 1000 1000))
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(safe-local-variable-values
-   '((projectile-project-test-cmd . "meson test")
-     (projectile-project-compilation-cmd . "meson compile")))
- '(warning-suppress-types '((comp))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(vertico-current ((t (:background "#1d1f21")))))
