@@ -1,6 +1,4 @@
 #!/bin/sh
-#
-# Started by sway to launch programs.
 
 have() { type "$1" > /dev/null 2>&1; }
 
@@ -35,3 +33,14 @@ fi
 if have udiskie; then
     udiskie --tray &
 fi
+
+if have sworkstyle; then
+    [ -f "$XDG_CONFIG_HOME/sworkstyle/config.toml" ] && sworkstyle -c "$XDG_CONFIG_HOME/sworkstyle/config.toml" &> /tmp/sworkstyle.log
+    #sworkstyle -c ~/.con&> /tmp/sworkstyle.log
+    #-c /home/charlie/.config/sworkstyle/config.toml &
+fi
+
+#if have wob; then
+ #   set $WOBSOCK $XDG_RUNTIME_DIR/wob.sock
+  #  mkfifo $WOBSOCK && tail -f $WOBSOCK | wob
+#fi
