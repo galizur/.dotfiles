@@ -5,7 +5,7 @@ set -e
 have() { type "$1" > /dev/null 2>&1; }
 
 if [ ! -z "$PASSWORD_STORE_DIR" ]; then
-    pw_store=$(find "PASSWORD_STORE_DIR")
+    pw_store=$(find "$PASSWORD_STORE_DIR")
 else
     pw_store=$(find ~/.password-store/)
 fi
