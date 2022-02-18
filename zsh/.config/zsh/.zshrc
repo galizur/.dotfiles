@@ -2,7 +2,7 @@
 #
 # Executed by zsh(1) for interactive shells.
 
-ZSH_THEME="geoffgarside"
+ZSH_THEME="skaro"
 
 [ -f "$XDG_CONFIG_HOME/sh/aliases" ] && . "$XDG_CONFIG_HOME/sh/aliases"
 
