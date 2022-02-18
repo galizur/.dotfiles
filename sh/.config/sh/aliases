@@ -57,7 +57,7 @@ alias moc='mu cfind --format=org-contact'
 
 # GNU Emacs
 if have emacs; then
-    alias ec="emacsclient -a '' -t"
+    alias ec="emacsclient -cn"
 fi
 
 # GPG
@@ -167,3 +167,6 @@ fi
 
 alias log="journalctl -u NetworkManager -b -n 1000"
 alias weather='http --print=b wttr.in'
+
+
+alias obs="VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/amd_pro_icd64.json:/usr/share/vulkan/icd.d/amd_pro_icd32.json obs"
