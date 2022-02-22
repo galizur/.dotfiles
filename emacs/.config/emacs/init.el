@@ -273,6 +273,9 @@
   :config (dap-mode t)
   (dap-ui-mode t))
 
+(require 'dap-cpptools)
+(require 'dap-lldb)
+
 (use-package consult-lsp
   :after (consult lsp)
   :commands (consult-lsp-diagnostics consult-lsp-symbols))
@@ -846,6 +849,72 @@
   :custom
   (undo-tree-visualizer-timestamps t)
   (undo-tree-visualizer-diff t))
+
+(use-package hydra
+  :bind (("C-c f" . hydra-flycheck/body)
+         ("C-c p" . hydra-projectile/body)
+         ("C-c m" . hydra-magit/body)))
+
+(use-package major-mode-hydra
+  :after hydra
+  :preface
+  (defun with-alltheicon (icon str &optional height v-adjust face)
+    "Display an icon from all-the-icons."
+    (s-concat (all-the-icons-alltheicon icon :v-adjust (or v-adjust 0) :height (or height 1) :face face) " " str))
+  (defun with-faicon (icon str &optional height v-adjust face)
+    "Display an icon from Font Awesome."
+    (s-concat (all-the-icons-faicon icon :v-adjust (or v-adjust 0) :height (or height 1) :face face) " " str))
+  (defun with-fileicon (icon str &optional height v-adjust face)
+    "Display an icon from Atome File Icons."
+    (s-concat (all-the-icons-fileicon icon :v-adjust (or v-adjust 0) :height (or height 1) :face face) " " str))
+  (defun with-octicon (icon str &optional height v-adjust face)
+    "Display an icon from GitHub Octicons."
+    (s-concat (all-the-icons-octicon icon :v-adjust (or v-adjust 0) :height (or height 1) :face face) " " str))
+  )
+
+(pretty-hydra-define hydra-flycheck
+                     (:hint nil :color teal :quit-key "q" :title (with-faicon " plane" "Flycheck" 1 -0.05))
+                     ("Checker"
+                      (("?" flycheck-describe-checker "describe")
+                       ("d" flycheck-disable-checker "disable")
+                       ("m" flycheck-mode "mode")
+                       ("s" flycheck-select-checker "select"))
+                      "Errors"
+                      (("<" flycheck-previous-error "previous" :color pink)
+                       (">" flycheck-next-error "next" :color pink)
+                       ("f" flycheck-buffer "check")
+                       ("l" flycheck-list-errors "list"))
+                      "Other"
+                      (("M" flycheck-manual "manual")
+                       ("v" flycheck-verify-setup "verify setup"))))
+
+(pretty-hydra-define hydra-projectile
+                     (:hint nil :color teal :quit-key "q" :title (with-faicon "rocket" "Projectile" 1 -0.05))
+                     ("Buffers"
+                      (("b" projectile-switch-to-buffer "list")
+                       ("k" projectile-kill-buffers "kill all")
+                       ("S" projectile-save-project-buffers "save all"))
+                      "Find"
+                      (("d" projectile-find-dir "directory")
+                       ("D" projectile-dired "root")
+                       ("f" projectile-find-file "file")
+                       ("p" projectile-persp-switch-project "project"))
+                      "Other"
+                      (("i" projectile-invalidate-cache "reset cache"))
+                      "Search"
+                      (("r" projectile-replace "replace")
+                       ("R" projectile-replace-regexp "regex replace")
+                       ("s" consult-ripgrep "search"))))
+
+(pretty-hydra-define hydra-magit
+                     (:hint nil :color teal :quit-key "q" :title (with-octicon "mark-github" "Magit" 1 -0.05))
+                     ("Action"
+                      (("b" magit-blame "blame")
+                       ("c" magit-clone "clone")
+                       ("i" magit-init "init")
+                       ("l" magit-log-buffer-file "commit log (current file)")
+                       ("L" magit-log-current "commit log (project)")
+                       ("s" magit-status "status"))))
 
 (use-package org-contrib)
 
