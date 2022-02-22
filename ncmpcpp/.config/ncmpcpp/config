@@ -1,7 +1,7 @@
 lyrics_directory = "~/.local/share/lyrics"
 ncmpcpp_directory = "~/.config/ncmpcpp"
 mpd_host = "charlie@localhost"
-mpd_music_dir = ~/Music
+mpd_music_dir = "~/Music"
 mpd_port = 6600
 
 audio_output {
@@ -12,9 +12,10 @@ audio_output {
 }
 
 visualizer_color = blue, cyan, green, yellow, magenta, red
-visualizer_fifo_path = /tmp/mpd.fifo
+visualizer_data_source = /tmp/mpd.fifo
 visualizer_in_stereo = yes
 visualizer_look = ●▮
 visualizer_output_name = Visualizer feed
-visualizer_sync_interval = 30
 visualizer_type = wave
+
+execute_on_song_change = notify-send "Now Playing" "$(mpc --format '%title% \n%artist% - %album%' current)"

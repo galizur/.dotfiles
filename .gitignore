@@ -27,3 +27,4 @@
 /emacs/.config/emacs/etc/
 /emacs/.config/emacs/straight/
 /emacs/.config/emacs/var/
+*.log
