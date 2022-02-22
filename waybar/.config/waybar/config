@@ -1,17 +1,17 @@
 {
     "modules-left": ["sway/workspaces", "sway/mode"],
-    "modules-center": ["clock", "idle_inhibitor"],
-    "modules-right": ["tray", "custom/scratchpad-indicator", "pulseaudio", "temperature", "cpu", "memory", "custom/menu", "custom/power"],
+    "modules-center": ["clock", "idle_inhibitor", "mpd"],
+    "modules-right": ["tray", "custom/scratchpad-indicator", "pulseaudio", "temperature", "cpu", "memory", "disk", "custom/menu", "custom/power"],
 
     "sway/mode": {
         "format": "<span style=\"italic\">{}</span>"
     },
-    "network": {
-        "format-wifi": "{essid} ({signalStrength}%) ",
-        "format-ethernet": "{ifname} ",
-        "format-disconnected": "",
-        "max-length": 50,
-        "on-click": "kitty -e 'nmtui'"
+    "clock": {
+        "format": "{:%H:%M:%S}",
+        "format-alt": "{:%A, %d %B %Y}",
+        "interval": 1,
+		"on-click-right": "wl-copy $(date '+%Y-%m-%d %T')",
+        "tooltip": false
     },
     "idle_inhibitor": {
         "format": "{icon}",
@@ -21,46 +21,15 @@
         },
         "tooltip": false
     },
+    "mpd": {
+        "server": "localhost",
+        "port": 6600,
+    },
     "tray": {
         "icon-size": 15,
         "spacing": 10
     },
-    "clock": {
-        "format": "{:%H:%M:%S}",
-        "format-alt": "{:%A, %d %B %Y}",
-        "interval": 1,
-		"on-click-right": "wl-copy $(date '+%Y-%m-%d %T')",
-        "tooltip": false
-    },
-     "cpu": {
-         "interval": 10,
-         "format": "{usage}% ",
-         "states": {
-                   "warning": 60,
-                   "critical": 90
-                   },
-         "on-click": "alacritty -e htop",
-         "tooltip": false
-     },
-     "memory": {
-         "interval": 10,
-         "states": {
-                   "warning": 60,
-                   "critical": 90
-                   },
-         "format": "{}% ",
-         "tooltip": false
-     },
-    "temperature": {
-        "interval": 10,
-        "hwmon-path": "/sys/class/hwmon/hwmon2/temp1_input",
-        "critical-threshold": 82,
-        "format-critical": "{temperatureC}°C {icon}",
-        "format": "{temperatureC}°C {icon}",
-        "format-icons": [""]
-    },
     "pulseaudio": {
-        // "scroll-step": 1, // %, can be a float
         "format": "{volume}% {icon} ",
         "format-bluetooth": "{volume}% {icon} {format_source}",
         "format-bluetooth-muted": " {icon} {format_source}",
@@ -77,11 +46,36 @@
         "on-click-middle": "pavucontrol",
         "on-click-right": "pamixer --get-default-source -t"
     },
-	"custom/power": {
-		"format": "",
-		"on-click": "wlogout",
+    "temperature": {
+        "interval": 10,
+        "hwmon-path": "/sys/class/hwmon/hwmon1/temp1_input",
+        "critical-threshold": 82,
+        "format-critical": "{temperatureC}°C {icon}",
+        "format": "{temperatureC}°C {icon}",
+        "format-icons": [""]
+    },
+    "cpu": {
+        "interval": 10,
+        "format": "{usage}% ",
+        "states": {
+            "warning": 60,
+            "critical": 90
+        },
+        "on-click": "alacritty -e htop",
         "tooltip": false
-	},
+    },
+    "memory": {
+        "interval": 10,
+        "states": {
+            "warning": 60,
+            "critical": 90
+        },
+        "format": "{}% ",
+        "tooltip": false
+    },
+    "disk": {
+        "format": "{percentage_used}% ",
+    },
     "custom/scratchpad-indicator": {
         "format-text": "{}",
         "return-type": "json",
@@ -93,7 +87,12 @@
     },
     "custom/menu": {
         "format": "",
-        "on-click": "kickoff",
+        "on-click": "wofi -m -S drun --allow-images -p 'Applications:'",
         "tooltip": false
-    }
+    },
+	"custom/power": {
+		"format": "",
+		"on-click": "wlogout",
+        "tooltip": false
+	},
 }

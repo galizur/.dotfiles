@@ -43,18 +43,22 @@ window#waybar {
 
 #clock,
 #battery,
-#cpu,
-#memory,
-#temperature,
-#network,
 #pulseaudio,
+#mpd,
 #custom-media,
 #tray,
 #mode,
+#language,
 #custom-power,
 #custom-menu,
 #idle_inhibitor {
     padding: 0 10px;
+}
+#cpu,
+#memory,
+#temperature,
+#disk {
+  padding: 0 5px;
 }
 #mode {
     color: #bf616a;
@@ -66,7 +70,6 @@ window#waybar {
     margin: 5px 5px;
     padding: 1px 3px;
 }
-
 #custom-menu {
   background-color: rgba(180, 142, 173, 0.6);
   margin: 5px 5px;
