@@ -133,7 +133,7 @@ fi
 
 # youtube-dl
 if have youtube-dl; then
-    alias yeam='youtube-dl --embed-thumbnail --extract-audio --audio-format best --audio-quality 0 -o "~/Music/%(title)s.%(ext)s"'
+    alias yeam='yt-dlp --embed-thumbnail --extract-audio --audio-format m4a --audio-quality 0 -o "~/Music/%(title)s.%(ext)s"'
 fi
 
 # Use `arecord -l` to list recording cards or devices.
@@ -151,11 +151,11 @@ if have grim; then
 fi
 
 # xbps
-alias yu='yay -Syu'
+alias pu='paru -Syu'
 alias pi='sudo pacman -S'
 alias pq='sudo pacman -Ss'
 alias pr='sudo pacman -Rs'
-alias yi='yay -S'
+alias pi='paru -S'
 
 # Programming
 alias gtp='cd ~/Programming/cpp'
