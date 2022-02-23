@@ -18,4 +18,4 @@ visualizer_look = ●▮
 visualizer_output_name = Visualizer feed
 visualizer_type = wave
 
-execute_on_song_change = notify-send "Now Playing" "$(mpc --format '%title% \n%artist% - %album%' current)"
+execute_on_song_change = notify-send "Now Playing" "$(mpc --format ['%title% \n%artist% - %album%'] current)"

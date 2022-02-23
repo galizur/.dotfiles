@@ -2,7 +2,7 @@
 
 have() { type "$1" > /dev/null 2>&1; }
 
-if  pgrep sway && have mako; then
+if pgrep sway && have mako; then
 	mako --background-color "#2e3440" --border-color "#5e81ac" --font "Source Code Pro Medium 10" --padding 10 --default-timeout 10000 &
 fi
 
@@ -35,9 +35,7 @@ if have udiskie; then
 fi
 
 if have sworkstyle; then
-    [ -f "$XDG_CONFIG_HOME/sworkstyle/config.toml" ] && sworkstyle -c "$XDG_CONFIG_HOME/sworkstyle/config.toml" &> /tmp/sworkstyle.log
-    #sworkstyle -c ~/.con&> /tmp/sworkstyle.log
-    #-c /home/charlie/.config/sworkstyle/config.toml &
+    [ -f "$XDG_CONFIG_HOME/sworkstyle/config.toml" ] && sworkstyle -c "$XDG_CONFIG_HOME/sworkstyle/config.toml" &
 fi
 
 #if have wob; then
