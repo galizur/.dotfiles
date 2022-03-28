@@ -40,7 +40,7 @@
   :straight nil
   :demand t
   :custom
-  (auth-sources '("~/.config/gnupg/shared/authinfo.gpg"
+  (auth-sources '("~/.gnupg/shared/authinfo.gpg"
                   "~/.authinfo.gpg"
                   "~/.authinfo"
                   "~/.netrc")))
@@ -99,35 +99,29 @@
 ;; Set variable pitch face
 (set-face-attribute 'variable-pitch nil :font "Cantarell" :weight 'regular :height 1.35)
 
-(use-package mixed-pitch
-  :hook (text-mode . mixed-pitch-mode))
+;;  (use-package mixed-pitch
+;;    :hook (text-mode . mixed-pitch-mode))
 
 (use-package ligature
   :straight (ligature :type git :host github :repo
                       "mickeynp/ligature.el" :branch "master")
   :demand t
   :config
-  ;; Enable the "www" ligature in every possible major mode
   (ligature-set-ligatures 't '("www"))
-  ;; Enable traditional ligature support in eww-mode, if the
-  ;; `variable-pitch' face supports it
   (ligature-set-ligatures 'eww-mode '("ff" "fi" "ffi"))
-  ;; Enable all Cascadia Code ligatures in programming modes
   (ligature-set-ligatures 'prog-mode '("|||>" "<|||" "<==>" "<!--" "####" "~~>" "***" "||=" "||>"
-                   ":::" "::=" "=:=" "===" "==>" "=!=" "=>>" "=<<" "=/=" "!=="
-                   "!!." ">=>" ">>=" ">>>" ">>-" ">->" "->>" "-->" "---" "-<<"
-                   "<~~" "<~>" "<*>" "<||" "<|>" "<$>" "<==" "<=>" "<=<" "<->"
-                   "<--" "<-<" "<<=" "<<-" "<<<" "<+>" "</>" "###" "#_(" "..<"
-                   "..." "+++" "/==" "///" "_|_" "www" "&&" "^=" "~~" "~@" "~="
-                   "~>" "~-" "**" "*>" "*/" "||" "|}" "|]" "|=" "|>" "|-" "{|"
-                   "[|" "]#" "::" ":=" ":>" ":<" "$>" "==" "=>" "!=" "!!" ">:"
-                   ">=" ">>" ">-" "-~" "-|" "->" "--" "-<" "<~" "<*" "<|" "<:"
-                   "<$" "<=" "<>" "<-" "<<" "<+" "</" "#{" "#[" "#:" "#=" "#!"
-                   "##" "#(" "#?" "#_" "%%" ".=" ".-" ".." ".?" "+>" "++" "?:"
-                   "?=" "?." "??" ";;" "/*" "/=" "/>" "//" "__" "~~" "(*" "*)"
-                   "\\\\" "://"))
-  ;; Enables ligature checks globally in all buffers. You can also do it
-  ;; per mode with `ligature-mode'.
+                                       ":::" "::=" "=:=" "===" "==>" "=!=" "=>>" "=<<" "=/=" "!=="
+                                       "!!." ">=>" ">>=" ">>>" ">>-" ">->" "->>" "-->" "---" "-<<"
+                                       "<~~" "<~>" "<*>" "<||" "<|>" "<$>" "<==" "<=>" "<=<" "<->"
+                                       "<--" "<-<" "<<=" "<<-" "<<<" "<+>" "</>" "###" "#_(" "..<"
+                                       "..." "+++" "/==" "///" "_|_" "www" "&&" "^=" "~~" "~@" "~="
+                                       "~>" "~-" "**" "*>" "*/" "||" "|}" "|]" "|=" "|>" "|-" "{|"
+                                       "[|" "]#" "::" ":=" ":>" ":<" "$>" "==" "=>" "!=" "!!" ">:"
+                                       ">=" ">>" ">-" "-~" "-|" "->" "--" "-<" "<~" "<*" "<|" "<:"
+                                       "<$" "<=" "<>" "<-" "<<" "<+" "</" "#{" "#[" "#:" "#=" "#!"
+                                       "##" "#(" "#?" "#_" "%%" ".=" ".-" ".." ".?" "+>" "++" "?:"
+                                       "?=" "?." "??" ";;" "/*" "/=" "/>" "//" "__" "~~" "(*" "*)"
+                                       "\\\\" "://"))
   (global-ligature-mode t))
 
 (use-package doom-themes
@@ -149,14 +143,21 @@
   :init (doom-modeline-mode)
   :custom
   (doom-modeline-icon (display-graphic-p))
- (doom-modeline-mu4e t)
- (mu4e-alert-enable-mode-line-display))
+  (doom-modeline-mu4e t)
+  (mu4e-alert-enable-mode-line-display))
 
 (use-package all-the-icons
   :if (display-graphic-p)
   :commands all-the-icons-install-fonts
   :config (unless (find-font (font-spec :name "all-the-icons"))
-            (all-the-icons-install-fonts t)))
+            (all-the-icons-install-fonts t))
+  ;; Use 'prepend for the NS and Mac ports or Emacs will crash.
+  (set-fontset-font t 'unicode (font-spec :family "all-the-icons") nil 'append)
+  (set-fontset-font t 'unicode (font-spec :family "file-icons") nil 'append)
+  (set-fontset-font t 'unicode (font-spec :family "Material Icons") nil 'append)
+  (set-fontset-font t 'unicode (font-spec :family "github-octicons") nil 'append)
+  (set-fontset-font t 'unicode (font-spec :family "FontAwesome") nil 'append)
+  (set-fontset-font t 'unicode (font-spec :family "Weather Icons") nil 'append))
 
 (use-package all-the-icons-dired
   :if (display-graphic-p)
@@ -167,6 +168,14 @@
   :hook (marginalia-mode . all-the-icons-completion-marginalia-setup)
   :init
   (all-the-icons-completion-mode 1))
+
+(use-package kind-icon
+      :demand t
+      :after corfu
+      :custom
+      (kind-icon-default-face 'corfu-default) ; to compute blended backgrounds correctly
+      :config
+      (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 
 (use-package vertico
   :straight (:files (:defaults "extensions/*"))
@@ -239,25 +248,75 @@
   :hook
   (embark-collect-mode . consult-preview-at-point-mode))
 
-(use-package company
-  :after lsp-mode
-  :hook (lsp-mode . company-mode)
+(use-package corfu
+  ;; Optional customizations
   :custom
-  (company-begin-commands '(self-insert-command))
-  (company-idle-delay 0.5)
-  (company-minimum-prefix-length 1)
-  (company-show-quick-access t)
-  (company-tooltip-align-annotations 't))
+  (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
+  (corfu-auto t)                 ;; Enable auto completion
+  ;; (corfu-separator ?\s)          ;; Orderless field separator
+  ;; (corfu-quit-no-match nil)      ;; Never quit, even if there is no match
+  ;; (corfu-preview-current nil)    ;; Disable current candidate preview
+  ;; (corfu-preselect-first nil)    ;; Disable candidate preselection
+  ;; (corfu-on-exact-match nil)     ;; Configure handling of exact matches
+  ;; (corfu-echo-documentation nil) ;; Disable documentation in the echo area
+  ;; (corfu-scroll-margin 5)        ;; Use scroll margin
 
-(use-package company-box
-  :if (display-graphic-p)
-  :after company
-  :hook (company-mode . company-box-mode))
+  ;; You may want to enable Corfu only for certain modes.
+  ;; :hook ((prog-mode . corfu-mode)
+  ;;        (shell-mode . corfu-mode)
+  ;;        (eshell-mode . corfu-mode))
+
+  ;; Recommended: Enable Corfu globally.
+  ;; This is recommended since dabbrev can be used globally (M-/).
+  :init
+  (corfu-global-mode))
+
+(use-package cape
+  ;; Bind dedicated completion commands
+  :bind (("C-c c p" . completion-at-point) ;; capf
+         ("C-c c t" . complete-tag)        ;; etags
+         ("C-c c d" . cape-dabbrev)        ;; or dabbrev-completion
+         ("C-c c f" . cape-file)
+         ("C-c c k" . cape-keyword)
+         ("C-c c s" . cape-symbol)
+         ("C-c c a" . cape-abbrev)
+         ("C-c c i" . cape-ispell)
+         ("C-c c l" . cape-line)
+         ("C-c c w" . cape-dict)
+         ("C-c c \\" . cape-tex)
+         ("C-c c _" . cape-tex)
+         ("C-c c ^" . cape-tex)
+         ("C-c c &" . cape-sgml)
+         ("C-c c r" . cape-rfc1345))
+  :init
+  ;; Add `completion-at-point-functions', used by `completion-at-point'.
+  (add-to-list 'completion-at-point-functions #'cape-file)
+  (add-to-list 'completion-at-point-functions #'cape-tex)
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+  (add-to-list 'completion-at-point-functions #'cape-keyword)
+  ;;(add-to-list 'completion-at-point-functions #'cape-sgml)
+  ;;(add-to-list 'completion-at-point-functions #'cape-rfc1345)
+  ;;(add-to-list 'completion-at-point-functions #'cape-abbrev)
+  ;;(add-to-list 'completion-at-point-functions #'cape-ispell)
+  ;;(add-to-list 'completion-at-point-functions #'cape-dict)
+  ;;(add-to-list 'completion-at-point-functions #'cape-symbol)
+  ;;(add-to-list 'completion-at-point-functions #'cape-line)
+  )
 
 (use-package lsp-mode
+  :custom (lsp-completion-provider :none) ;; We use corfu
+  :init
+  (defun my/orderless-dispatch-flex-first (_pattern index _total)
+    (and (eq index 0) 'orderless-flex))
+  (defun my/lsp-mode-setup-completion ()
+    (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
+          '(orderless)))
+  (add-hook 'orderless-style-dispatchers #'my/orderless-dispatch-flex-first nil 'local)
+  (setq-local completion-at-point-functions (list (cape-capf-buster #'lsp-completion-at-point)))
   :commands (lsp lsp-deferred)
   :hook ((prog-mode . lsp-deferred)
-         (lsp-mode . lsp-enable-which-key-integration))
+         (lsp-mode . lsp-enable-which-key-integration)
+         (lsp-completion-mode . my/lsp-mode-setup-completion))
   :custom
   (lsp-server-install-dir (expand-file-name (format "%s/etc/lsp" user-emacs-directory)))
   (lsp-keymap-prefix "C-c ;"))
@@ -285,15 +344,12 @@
   :demand t
   :init
   (setq completion-cycle-threshold 3)
+  (setq completion-prefix-min-length 1)
   (setq read-extended-command-predicate
-    #'command-completion-default-include-p)
+        #'command-completion-default-include-p)
   (setq tab-always-indent 'complete))
 
-;;  (when (equal tab-always-indent 'complete)
-;;    (define-key c-mode-base-map [remap c-indent-line-or-region] #'completion-at-point))
-
-(use-package meson-mode
-  :hook (meson-mode . company-mode))
+(use-package meson-mode)
 
 (use-package dired
   :straight nil
@@ -539,7 +595,86 @@
 (use-package cmake-font-lock
   :hook (cmake-mode . cmake-font-lock-activate))
 
+(use-package cmake-ide
+:after projectile
+:init (cmake-ide-setup)
+;; :hook (c++-mode . my/cmake-ide-find-project)
+:preface
+(defun my/cmake-ide-find-project ()
+  "Find the directory of the project for cmake-ide."
+  (with-eval-after-load 'projectile
+    (setq cmake-ide-project-dir (projectile-project-root))
+    (setq cmake-ide-build-dir (concat cmake-ide-project-dir "build")))
+  (setq cmake-ide-compile-command
+        (concat "cd " cmake-ide-build-dir " && cmake .. && make"))
+  (cmake-ide-load-db))
+
+(defun my/switch-to-compilation-window ()
+  "Switch to the *compilation* buffer after compilation."
+  (other-window 1))
+:bind ([remap comment-region] . cmake-ide-compile)
+:config (advice-add 'cmake-ide-compile :after #'my/switch-to-compilation-window))
+
 (use-package csv-mode :mode ("\\.\\(csv\\|tsv\\)\\'"))
+
+(use-package dart-mode
+  :after projectile
+  :mode "\\.dart\\'"
+  :config
+  (add-to-list 'projectile-project-root-files-bottom-up "pubspec.yaml")
+  (add-to-list 'projectile-project-root-files-bottom-up "BUILD"))
+
+(use-package lsp-dart
+  :hook (dart-mode . lsp-deferred)
+  :custom
+  (lsp-dart-dap-flutter-hot-reload-on-save t)
+  (lsp-dart-sdk-dir "/opt/flutter/bin/cache/dart-sdk/"))
+
+(use-package dockerfile-mode :delight "δ" :mode "Dockerfile\\'")
+
+(use-package gnuplot
+  :mode "\\.\\(gp\\|gpi\\|plt\\)'"
+  :bind (:map gnuplot-mode-map
+              ("C-c C-c" . gnuplot-send-buffer-to-gnuplot)))
+
+(use-package ini-mode :mode "\\.ini\\'")
+
+(use-package lsp-java
+  :hook (java-mode . lsp-deferred))
+
+(use-package gradle-mode
+  :hook (java-mode . gradle-mode)
+  :preface
+  (defun my/switch-to-compilation-window ()
+    "Switch to the *compilation* buffer after compilation."
+    (other-window 1))
+  :bind (:map gradle-mode-map
+              ("C-c C-c" . gradle-build)
+              ("C-c C-t" . gradle-test))
+  :config
+  (advice-add 'gradle-build :after #'my/switch-to-compilation-window)
+  (advice-add 'gradle-test :after #'my/switch-to-compilation-window))
+
+(use-package js2-mode
+  :mode "\\.js\\'"
+  :hook ((js2-mode . js2-imenu-extras-mode)
+         (js2-mode . prettier-js-mode))
+  :custom (js-indent-level 2)
+  :config (flycheck-add-mode 'javascript-eslint 'js2-mode))
+
+(use-package prettier-js
+  :delight
+  :custom (prettier-js-args '("--print-width" "100"
+                              "--single-quote" "true"
+                              "--trailing-comma" "all")))
+
+(use-package js2-refactor
+  :hook (js2-mode . js2-refactor-mode)
+  :bind (:map js2-mode-map
+              ("C-k" . js2r-kill)
+              ("M-." . lsp-find-definition)))
+
+(use-package yarn-mode :mode "yarn\\.lock\\'")
 
 (use-package json-mode
   :delight "J "
@@ -559,17 +694,156 @@
       (funcall encode array)))
   :config (advice-add 'json-encode-array :around #'my/json-array-of-numbers-on-one-line))
 
-(use-package css-mode
-  :after flycheck
-  :mode "\\.css\\'"
-  :custom (css-indent-offset 2)
-  (flycheck-stylelintrc "~/Programming/web/.stylelintrc.json"))
+(use-package lua-mode :delight "Λ" :mode "\\.lua\\'")
 
-(use-package scss-mode
-  :after (flycheck lsp)
-  :hook (scss-mode . lsp)
-  :mode "\\.scss\\'"
-  :config (setq scss-sass-command dart-p))
+(use-package markdown-mode
+:delight "μ"
+:mode ("\\.\\(md\\|markdown\\)\\'")
+:custom (markdown-command "/usr/bin/pandoc"))
+
+(use-package markdown-preview-mode
+:commands markdown-preview-mode
+:custom
+(markdown-preview-javascript
+ (list (concat "https://github.com/highlightjs/highlight.js/"
+               "9.15.6/highlight.min.js")
+       "<script>
+          $(document).on('mdContentChange', function() {
+            $('pre code').each(function(i, block)  {
+              hljs.highlightBlock(block);
+            });
+          });
+        </script>"))
+(markdown-preview-stylesheets
+ (list (concat "https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/"
+               "3.0.1/github-markdown.min.css")
+       (concat "https://github.com/highlightjs/highlight.js/"
+               "9.15.6/styles/github.min.css")
+
+       "<style>
+          .markdown-body {
+            box-sizing: border-box;
+            min-width: 200px;
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 45px;
+          }
+
+          @media (max-width: 767px) { .markdown-body { padding: 15px; } }
+        </style>")))
+
+;; (use-package web-mode
+;;  :delight ""
+;;  :preface
+  ;; (defun enable-minor-mode (my-pair)
+  ;;   "Enable minor mode if filename match the regexp."
+  ;;   (if (buffer-file-name)
+  ;;       (if (string-match (car my-pair) buffer-file-name)
+  ;;           (funcall (cdr my-pair)))))
+  ;; :mode ("\\.\\(html\\|jsx\\|php\\|css\\)\\'" . web-mode)
+  ;; :hook (web-mode . (lambda ()
+  ;;                     (enable-minor-mode
+  ;;                      '("\\.jsx?\\'" . prettier-js-mode))))
+  ;;
+  ;; (defun my/web-mode-hook ()
+  ;;   "Hooks for web-mode."
+  ;;   (setq web-mode-markup-indent-offset 2)
+  ;;   (setq web-mode-attr-indent-offset 2)
+  ;;   (setq web-mode-block-padding 2)
+  ;;   (setq web-mode-css-indent-offset 2)
+  ;;   (setq web-mode-code-indent-offset 2)
+  ;;   (setq web-mode-comment-style 2))
+  ;; :hook (web-mode . my/web-mode-hook)
+  ;; :config
+  ;; (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+  ;; (add-to-list 'auto-mode-alist '("\\.css?\\'" . web-mode))
+  ;; (setq web-mode-enable-current-element-highlight t)
+  ;; )
+
+(use-package python
+  :delight "π"
+  :preface
+  (defun python-remove-unused-imports()
+    "Remove unused imports and unused variables with autoflake."
+    (interactive)
+    (if (executable-find "autoflake")
+        (progn
+          (shell-command (format "autoflake --remove-all-unused-imports -i %s"
+                                 (shell-quote-argument (buffer-file-name))))
+          (revert-buffer t t t))
+      (warn "[✗] python-mode: Cannot find autoflake executable.")))
+  :bind (:map python-mode-map
+              ("M-[" . python-nav-backward-block)
+              ("M-]" . python-nav-forward-block)
+              ("M-|" . python-remove-unused-imports))
+  :custom
+  (flycheck-pylintrc "~/.pylintrc")
+  (flycheck-python-pylint-executable "/usr/bin/pylint"))
+
+(use-package lsp-pyright
+  :if (executable-find "pyright")
+  ;; To properly load `lsp-pyrigt', the `require' instruction is important.
+  :hook (python-mode . (lambda ()
+                         (require 'lsp-pyright)
+                         (lsp-deferred)))
+  :custom
+  (lsp-pyright-python-executable-cmd "python3")
+  (lsp-pyright-venv-path "~/.cache/pypoetry/virtualenvs/"))
+
+(use-package blacken
+  :delight
+  :hook (python-mode . blacken-mode)
+  :custom (blacken-line-length 79))
+
+(use-package py-isort
+  :hook ((before-save . py-isort-before-save)
+         (python-mode . pyvenv-mode)))
+
+(use-package pyvenv
+  :after python
+  :custom
+  (pyvenv-default-virtual-env-name (expand-file-name (format "%s/myenv/" xdg-data)))
+  (pyvenv-workon (expand-file-name (format "%s/myenv/" xdg-data)))
+  :config (pyvenv-tracking-mode))
+
+(use-package pyenv-mode
+  :hook ((python-mode . pyenv-mode)
+         (projectile-switch-project . projectile-pyenv-mode-set))
+  :custom (pyenv-mode-set "3.8.5")
+  :preface
+  (defun projectile-pyenv-mode-set ()
+    "Set pyenv version matching project name."
+    (let ((project (projectile-project-name)))
+      (if (member project (pyenv-mode-versions))
+          (pyenv-mode-set project)
+        (pyenv-mode-unset)))))
+
+;;(use-package css-mode
+;;    :after flycheck
+    ;;:mode "\\.css\\'"
+    ;;:custom (css-indent-offset 2))
+
+(use-package typescript-mode
+  :hook ((typescript-mode . prettier-js-mode)
+       (typescript-mode . lsp-deferred))
+:mode ("\\.\\(ts\\|tsx\\)\\'")
+:custom
+;; TSLint is depreciated in favor of ESLint.
+(flycheck-disable-checker 'typescript-tslint)
+(lsp-clients-typescript-server-args '("--stdio" "--tsserver-log-file" "/dev/stderr"))
+(typescript-indent-level 2)
+:config
+(flycheck-add-mode 'javascript-eslint 'typescript-mode))
+
+(use-package nxml-mode
+:straight nil
+:hook (nxml-mode . lsp-deferred)
+:mode ("\\.\\(xml\\|xsd\\|wsdl\\)\\'"))
+
+(use-package yaml-mode
+:delight "ψ"
+:hook (yaml-mode . lsp-deferred)
+:mode ("\\.\\(yaml\\|yml\\)\\'"))
 
 (use-package browse-url
   :straight nil
@@ -646,7 +920,7 @@
   (dashboard-banner-logo-title "With Great Power Comes Great Responsibility")
   (dashboard-center-content t)
   (dashboard-items '((agenda)
-                     (projects . 5)))
+                     (projects . 10)))
   (dashboard-projects-switch-function 'projectile-persp-switch-project)
   (dashboard-set-file-icons t)
   (dashboard-set-footer nil)
@@ -690,7 +964,10 @@
   :bind (:map flycheck-mode-map
               ("M-'" . flycheck-previous-error)
               ("M-\\" . flycheck-next-error))
-  :custom (flycheck-display-errors-delay 0.3))
+  :custom
+  (flycheck-display-errors-delay 0.3)
+  (flycheck-stylelintrc "~/.stylelintrc.json")
+  (flycheck-scss-stylelint-executable "~/node_modules/stylelint/bin/stylelint.js"))
 
 (use-package faces
   :straight nil
@@ -770,14 +1047,15 @@
     :after yasnippet
     :config (yasnippet-snippets-initialize))
 
-  (use-package yasnippet
-    :delight yas-minor-mode "υ"
-    :hook (yas-minor-mode . my/disable-yas-if-no-snippets)
-    :config (yas-global-mode)
-    :preface
-    (defun my/disable-yas-if-no-snippets ()
-      (when (and yas-minor-mode (null (yas--get-snippet-tables)))
-        (yas-minor-mode -1))))
+(use-package yasnippet
+  :demand t
+  :delight yas-minor-mode "υ"
+  :hook (yas-minor-mode . my/disable-yas-if-no-snippets)
+  :config (yas-global-mode)
+  :preface
+  (defun my/disable-yas-if-no-snippets ()
+    (when (and yas-minor-mode (null (yas--get-snippet-tables)))
+      (yas-minor-mode -1))))
 
 (use-package consult-yasnippet
   :straight (consult-yasnippet
@@ -872,8 +1150,86 @@
     (s-concat (all-the-icons-octicon icon :v-adjust (or v-adjust 0) :height (or height 1) :face face) " " str))
   )
 
+(pretty-hydra-define hydra-btoggle
+(:hint nil :color amaranth :quit-key "q" :title (with-faicon "toggle-on" "Toggle" 1 -0.05))
+("Basic"
+ (("a" abbrev-mode "abbrev" :toggle t)
+  ("h" global-hungry-delete-mode "hungry delete" :toggle t))
+ "Coding"
+ (("e" electric-operator-mode "electric operator" :toggle t)
+  ("F" flyspell-mode "flyspell" :toggle t)
+  ("f" flycheck-mode "flycheck" :toggle t)
+  ("l" lsp-mode "lsp" :toggle t)
+  ("s" smartparens-mode "smartparens" :toggle t))
+ "UI"
+ (("i" ivy-rich-mode "ivy-rich" :toggle t))))
+
+(pretty-hydra-define hydra-clock
+(:hint nil :color teal :quit-key "q" :title (with-faicon "clock-o" "Clock" 1 -0.05))
+("Action"
+ (("c" org-clock-cancel "cancel")
+  ("d" org-clock-display "display")
+  ("e" org-clock-modify-effort-estimate "effort")
+  ("i" org-clock-in "in")
+  ("j" org-clock-goto "jump")
+  ("o" org-clock-out "out")
+  ("p" org-pomodoro "pomodoro")
+  ("r" org-clock-report "report"))))
+
+(pretty-hydra-define hydra-go-to-file
+(:hint nil :color teal :quit-key "q" :title (with-octicon "file-symlink-file" "Go To" 1 -0.05))
+("Agenda"
+ (("ac" (find-file "~/.personal/agenda/contacts.org") "contacts")
+  ("ah" (find-file "~/.personal/agenda/home.org") "home")
+  ("ai" (find-file "~/.personal/agenda/inbox.org") "inbox")
+  ("ap" (find-file "~/.personal/agenda/people.org") "people")
+  ("ar" (find-file "~/.personal/agenda/routine.org") "routine")
+  ("aw" (find-file "~/.personal/agenda/work.org") "work"))
+ "Config"
+ (("ca" (find-file (format "%s/alacritty/alacritty.yml" xdg-config)) "alacritty")
+  ("cA" (find-file (format "%s/sh/aliases" xdg-config)) "aliases")
+  ("ce" (find-file "~/.emacs.d/config.org") "emacs")
+  ("cE" (find-file (format "%s/sh/environ" xdg-config)) "environ")
+  ("cn" (find-file (format "%s/neofetch/config.conf" xdg-config)) "neofetch")
+  ("cq" (find-file (format "%s/qutebrowser/config.py" xdg-config)) "qutebrowser")
+  ("cr" (find-file (format "%s/ranger/rc.conf" xdg-config)) "ranger")
+  ("cs" (find-file (format "%s/sway/config" xdg-config)) "sway")
+  ("ct" (find-file (format "%s/tmux/tmux.conf" xdg-config)) "tmux")
+  ("cw" (find-file (format "%s/waybar/config" xdg-config)) "waybar")
+  ("cW" (find-file (format "%s/wofi/config" xdg-config)) "wofi")
+  ("cx" (find-file (format "%s/sh/xdg" xdg-config)) "xdg"))
+ "Notes"
+ (("na" (find-file (format "~/.personal/notes/affirmations.pdf" xdg-config)) "Affirmations"))
+ "Other"
+ (("ob" (find-file "~/.personal/other/books.org") "book")
+  ("ol" (find-file "~/.personal/other/long-goals.org") "long-terms goals")
+  ("om" (find-file "~/.personal/other/movies.org"))
+  ("op" (find-file "~/.personal/other/purchases.org") "purchase")
+  ("os" (find-file "~/.personal/other/short-goals.org") "short-terms goals")
+  ("ou" (find-file "~/.personal/other/usb.org") "usb")
+  ("oL" (find-file "~/.personal/other/learning.org") "learning"))))
+
+(pretty-hydra-define hydra-image
+(:hint nil :color pink :quit-key "q" :title (with-faicon "file-image-o" "Images" 1 -0.05))
+("Action"
+ (("r" image-rotate "rotate")
+  ("s" image-save "save" :color teal))
+  "Zoom"
+  (("-" image-decrease-size "out")
+   ("+" image-increase-size "in")
+   ("=" image-transform-reset "reset"))))
+
+(pretty-hydra-define hydra-ledger
+(:hint nil :color teal :quit-key "q" :title (with-faicon "usd" "Ledger" 1 -0.05))
+("Action"
+ (("b" leadger-add-transaction "add")
+  ("c" ledger-mode-clean-buffer "clear")
+  ("i" ledger-copy-transaction-at-point "copy")
+  ("s" ledger-delete-current-transaction "delete")
+  ("r" ledger-report "report"))))
+
 (pretty-hydra-define hydra-flycheck
-                     (:hint nil :color teal :quit-key "q" :title (with-faicon " plane" "Flycheck" 1 -0.05))
+                     (:hint nil :color teal :quit-key "q" :title (with-faicon "plane" "Flycheck" 1 -0.05))
                      ("Checker"
                       (("?" flycheck-describe-checker "describe")
                        ("d" flycheck-disable-checker "disable")
@@ -915,6 +1271,89 @@
                        ("l" magit-log-buffer-file "commit log (current file)")
                        ("L" magit-log-current "commit log (project)")
                        ("s" magit-status "status"))))
+
+(pretty-hydra-define hydra-merge
+(:hint nil :color pink :quit-key "q" :title (with-octicon "mark-github" "Magit" 1 -0.05))
+("Move"
+ (("n" smerge-next "next")
+  ("p" smerge-prev "previous"))
+ "Keep"
+ (("RET" smerge-keep-current "current")
+  ("a" smerge-keep-all "all")
+  ("b" smerge-keep-base "base")
+  ("l" smerge-keep-lower "lower")
+  ("u" smerge-keep-upper "upper"))
+ "Diff"
+ (("<" smerge-diff-base-upper "upper/base")
+  ("=" smerge-diff-upper-lower "upper/lower")
+  (">" smerge-diff-base-lower "base/lower")
+  ("R" smerge-refine "redefine")
+  ("E" smerge-ediff "ediff"))
+ "Other"
+ (("C" smerge-combine-with-next "combine")
+  ("r" smerge-resolve "resolve")
+  ("k" smerge-kill-current "kill current"))))
+
+(pretty-hydra-define hydra-org
+(:hint nil :color teal :quit-key "q" :title (with-fileicon "org" "Org" 1 -0.05))
+("Action"
+ (("A" my/org-archive-done-tasks "archive")
+  ("a" org-agenda "agenda")
+  ("c" org-capture "capture")
+  ("d" org-decrypt-entry "decrypt")
+  ("i" org-insert-link-global "insert-link")
+  ("j" my/org-jump "jump-task")
+  ("k" org-cut-subtree "cut-subtree")
+  ("o" org-open-at-point-global "open-link")
+  ("r" org-refile "refile")
+  ("s" org-store-link "store-link")
+  ("t" org-show-todo-tree "todo-tree"))))
+
+(pretty-hydra-define hydra-notes
+(:hint nil :color teal :quit-key "q" :title (with-octicon "pencil" "Notes" 1 -0.05))
+("Notes"
+ (("c" org-roam-dailies-capture-today "capture")
+  ("C" org-roam-dailies-capture-tomorrow "capture tomorrow")
+  ("g" org-roam-graph "graph")
+  ("f" org-roam-node-find "find")
+  ("i" org-roam-node-insert "insert"))
+ "Go To"
+ ((">" org-roam-dailies-goto-next-note "next note")
+  ("<" org-roam-dailies-goto-previous-note "previous note")
+  ("d" org-roam-dailies-goto-date "date")
+  ("t" org-roam-dailies-goto-today "today")
+  ("T" org-roam-dailies-goto-tomorrow "tomorrow")
+  ("y" org-roam-dailies-goto-yesterday "yesterday"))))
+
+(pretty-hydra-define hydra-spelling
+(:hint nil :color teal :quit-key "q" :title (with-faicon "magic" "Spelling" 1 -0.05))
+("Checker"
+ (("c" langtool-correct-buffer "correction")
+  ("C" langtool-check-done "clear")
+  ("d" ispell-change-dictionary "dictionary")
+  ("l" (message "Current language: %s (%s)" langtool-default-language ispell-current-dictionary) "language")
+  ("s" my/switch-language "switch")
+  ("w" wiki-summary "wiki"))
+ "Errors"
+ (("<" flyspell-correct-previous "previous" :color pink)
+  (">" flyspell-correct-next "next" :color pink)
+  ("f" langtool-check "find"))))
+
+(pretty-hydra-define hydra-windows
+(:hint nil :forein-keys warn :quit-key "q" :title (with-faicon "windows" "Windows" 1 -0.05))
+("Window"
+ (("b" balance-windows "balance")
+  ("i" enlarge-window "heighten")
+  ("j" shrink-window-horizontally "narrow")
+  ("k" shrink-window "lower")
+  ("u" winner-undo "undo")
+  ("r" winner-redo "redo")
+  ("l" enlarge-window-horizontally "widen")
+  ("s" switch-window-then-swap-buffer "swap" :color teal))
+ "Zoom"
+ (("-" text-scale-decrease "out")
+  ("+" text-scale-increase "in")
+  ("=" (text-scale-increase 0) "reset"))))
 
 (use-package org-contrib)
 
@@ -1165,9 +1604,12 @@
   (org-wild-notifier-notification-title "Agenda Reminder")
   :config (org-wild-notifier-mode))
 
-(use-package org-bullets
-  :hook (org-mode . org-bullets-mode)
-  :custom (org-bullets-bullet-list '("●" "►" "▸")))
+;;(use-package org-bullets
+;;    :hook (org-mode . org-bullets-mode)
+    ;;:custom (org-bullets-bullet-list '("●" "►" "▸")))
+(use-package org-modern
+  :straight (org-modern :type git :host github :repo "minad/org-modern" :branch "main")
+  :hook (org-mode . org-modern-mode))
 
 (use-package org-capture
   :straight nil
