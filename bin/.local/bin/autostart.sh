@@ -6,10 +6,6 @@ if pgrep sway && have mako; then
 	mako --background-color "#2e3440" --border-color "#5e81ac" --font "Source Code Pro Medium 10" --padding 10 --default-timeout 10000 &
 fi
 
-if have emacs; then
-    emacs --daemon &
-fi
-
 if have mpd; then
     [ ! -s ~/.config/mpd/pid ] && mpd &
 fi
@@ -36,6 +32,13 @@ fi
 
 if have sworkstyle; then
     [ -f "$XDG_CONFIG_HOME/sworkstyle/config.toml" ] && sworkstyle -c "$XDG_CONFIG_HOME/sworkstyle/config.toml" &
+fi
+
+if have fcitx5; then
+    fcitx5 &
+
+if have emacs; then
+    emacs --daemon &
 fi
 
 #if have wob; then
