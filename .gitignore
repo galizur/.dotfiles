@@ -28,3 +28,4 @@
 /emacs/.config/emacs/straight/
 /emacs/.config/emacs/var/
 *.log
+/emacs/.config/emacs/.cache/
