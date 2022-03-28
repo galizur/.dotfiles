@@ -4,7 +4,8 @@
     "modules-right": ["tray", "custom/scratchpad-indicator", "pulseaudio", "temperature", "cpu", "memory", "disk", "custom/menu", "custom/power"],
 
     "sway/mode": {
-        "format": "<span style=\"italic\">{}</span>"
+        "format": "<span style=\"italic\">{}</span>",
+        "pango_markup": true,
     },
     "clock": {
         "format": "{:%H:%M:%S}",
@@ -27,7 +28,7 @@
         "format-stopped": "{consumeIcon}{randomIcon}{repeatIcon}{singleIcon}Stopped ",
         "interval": 10,
         "consume-icons": {
-            "on": "",
+            "on": " ",
         },
         "random-icons": {
             "off": "<span color=\"#222222\"></span> ",
@@ -40,10 +41,15 @@
             "on": "1 ",
         },
         "state-icons": {
-            "paused": "",
-            "playing": ""
+            "paused": " ",
+            "playing": " "
         },
-        "tooltip-format": "MPD (connected)",
+        "on-click": "mpc toggle",
+        "on-click-right": "mpc stop",
+        "on-click-middle": "mpc consume && mpc random",
+        "on-scroll-up": "mpc volume +5",
+        "on-scroll-down": "mpc volume -5",
+        "tooltip-format": "Volume: {volume}% - {elapsedTime}/{totalTime}",
         "tooltip-format-disconnected": "MPD (disconnected)",
         "server": "localhost",
         "port": 6600,
