@@ -1,6 +1,0 @@
-#!/bin/sh
-
-set -e
-
-target=$(locate -q home media | wofi --dmenu -i -p "📁 Find:")
-emacs -q "$target"

@@ -1,4 +1,0 @@
-#!/bin/sh
-
-[ $(echo -e "No\nYes" | wofi -dmenu -lines 2 -i -p "$1") \
-== "Yes" ] && $2

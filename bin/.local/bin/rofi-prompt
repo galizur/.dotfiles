@@ -1,0 +1,4 @@
+#!/bin/bash
+
+[ $(echo -e "No\nYes" | rofi -dmenu -lines 2 -i -p "$1") \
+    == "Yes" ] && $2
