@@ -57,7 +57,7 @@ alias moc='mu cfind --format=org-contact'
 
 # GNU Emacs
 if have emacs; then
-    alias ec="emacsclient -cn"
+    alias ec="emacsclient -a '' -t"
 fi
 
 # GPG
@@ -132,7 +132,7 @@ if have trans; then
 fi
 
 # youtube-dl
-if have youtube-dl; then
+if have yt-dlp; then
     alias yeam='yt-dlp --embed-thumbnail --extract-audio --audio-format m4a --audio-quality 0 -o "~/Music/%(title)s.%(ext)s"'
 fi
 
@@ -150,13 +150,6 @@ if have grim; then
     alias cpick='grim -g "$(slurp -p)" -t ppm - | convert - -format "%[pixel:p{0,0}]" txt:-'
 fi
 
-# xbps
-alias pu='paru -Syu'
-alias pi='sudo pacman -S'
-alias pq='sudo pacman -Ss'
-alias pr='sudo pacman -Rs'
-alias pi='paru -S'
-
 # Programming
 alias gtp='cd ~/Programming/cpp'
 
@@ -165,8 +158,11 @@ if have reflector; then
     alias reflect='sudo reflector --latest 50 --verbose --protocol http --protocol https --sort rate --download-timeout 10 --save /etc/pacman.d/mirrorlist'
 fi
 
+# Journal
 alias log="journalctl -u NetworkManager -b -n 1000"
+
+# Weather
 alias weather='http --print=b wttr.in'
 
-
+# OBS
 alias obs="VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/amd_pro_icd64.json:/usr/share/vulkan/icd.d/amd_pro_icd32.json obs"

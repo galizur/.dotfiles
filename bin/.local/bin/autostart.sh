@@ -36,12 +36,8 @@ fi
 
 if have fcitx5; then
     fcitx5 &
+fi
 
 if have emacs; then
     emacs --daemon &
 fi
-
-#if have wob; then
- #   set $WOBSOCK $XDG_RUNTIME_DIR/wob.sock
-  #  mkfifo $WOBSOCK && tail -f $WOBSOCK | wob
-#fi

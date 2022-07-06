@@ -8,6 +8,7 @@ import time
 # DEFAULT FOLDER
 FOLDER_WALL = "/home/charlie/Pictures/Wallpapers/1920x1080/"
 
+
 def interval_wall(wallpapers, seconds):
     while True:
         time.sleep(seconds)
@@ -27,7 +28,11 @@ if __name__ == "__main__":
         "-d", "--directory", type=str, nargs=1, help="specific the main folder"
     )
     parser.add_argument(
-        "-t", "--time", type=int, nargs=1, help="interval of background changes"
+        "-t",
+        "--time",
+        type=int,
+        nargs=1,
+        help="interval of background changes",
     )
     args = parser.parse_args()
 

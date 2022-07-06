@@ -82,7 +82,7 @@ export READER="evince"
 export SAVEHIST=10000
 
 # Use alacritty as default terminal.
-export TERMINAL="alacritty"
+export TERMINAL="foot"
 
 # Add temporary files according to the user.
 export TMPDIR="/tmp/$USER"
@@ -92,12 +92,6 @@ fi
 
 # nnn
 export NNN_PLUG='f:finder;o:fzopen;p:mocplay;d:diffs;t:nmount;v:imgview;g:getplugs'
-
-# Japanese
-export QT_IM_MODULE=fcitx
-export XMODIFIERS=@im=fcitx
-export GTK_IM_MODULE=fcitx
-export SDL_IM_MODULE=fcitx
 
 # AMD stuff
 export AMD_VULKAN_ICD=RADV
