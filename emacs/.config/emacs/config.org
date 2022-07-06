@@ -93,6 +93,7 @@
   - [[#whitespace-and-kill][Whitespace and Kill]]
   - [[#undo-tree][Undo-tree]]
   - [[#hydra][Hydra]]
+- [[#ledger][Ledger]]
 - [[#org-mode-configuration][Org Mode Configuration]]
 - [[#agenda][Agenda]]
   - [[#bullets][Bullets]]
@@ -287,8 +288,8 @@ Set our favorite fonts! We just must make sure the font is installed on the syst
 In order to used multiple fonts, we use the the package [[https://gitlab.com/jabranham/mixed-pitch][mixed-pitch]].
 
 #+begin_src emacs-lisp
-;;  (use-package mixed-pitch
-;;    :hook (text-mode . mixed-pitch-mode))
+  (use-package mixed-pitch
+    :hook (text-mode . mixed-pitch-mode))
 #+end_src
 
 *** Ligatures
@@ -426,14 +427,16 @@ We use =vertico=, because it is quite minimal and unobtrusive.
   (use-package vertico
     :straight (:files (:defaults "extensions/*"))
     :init (vertico-mode)
+    :bind (:map vertico-map
+                ("C-<backspace>" . vertico-directory-up))
     :custom (vertico-cycle t)
     :custom-face (vertico-current ((t (:background "#1d1f21")))))
 
-  (use-package vertico-directory
-    :after (vertico)
-    :straight nil
-    :bind (:map vertico-map
-                ("C-<backspace>" . vertico-directory-up)))
+  ;;(use-package vertico-directory
+;;    :after (vertico)
+    ;;:straight nil
+    ;;:bind (:map vertico-map
+                ;;("C-<backspace>" . vertico-directory-up)))
 #+end_src
 
 ** Marginalia
@@ -553,7 +556,7 @@ We used [[https://github.com/company-mode/company-mode][company-mode]] as our co
     ;; Recommended: Enable Corfu globally.
     ;; This is recommended since dabbrev can be used globally (M-/).
     :init
-    (corfu-global-mode))
+    (global-corfu-mode))
 #+end_src
 
 [[https://github.com/minad/cape][cape]] provides more completion-at-point extensions that can be used with =corfu=.
@@ -1378,7 +1381,7 @@ If we ever wanted to change =Meson=, we could use [[https://github.com/atilaneve
 
   (use-package lsp-pyright
     :if (executable-find "pyright")
-    ;; To properly load `lsp-pyrigt', the `require' instruction is important.
+    ;; To properly load `lsp-pyright', the `require' instruction is important.
     :hook (python-mode . (lambda ()
                            (require 'lsp-pyright)
                            (lsp-deferred)))
@@ -1728,7 +1731,8 @@ To have a more user-friendly documentation we will use the [[https://github.com/
 #+begin_src emacs-lisp
   (use-package perspective
     :demand t
-    :config (persp-mode))
+    :custom (persp-mode-prefix-key (kbd "C-c M-p"))
+    :init (persp-mode))
 
   (use-package persp-projectile
     :after (perspective))
@@ -1844,9 +1848,21 @@ Provides snippets for consult.
 
 #+begin_src emacs-lisp
   (use-package hydra
-    :bind (("C-c f" . hydra-flycheck/body)
+    :bind (("C-c I" . hydra-image/body)
+           ("C-c L" . hydra-ledger/body)
+           ("C-c M" . hydra-merge/body)
+           ("C-c T" . hydra-tool/body)
+           ("C-c b" . hydra-btoggle/body)
+           ("C-c c" . hydra-clock/body)
+           ("C-c f" . hydra-flycheck/body)
+           ("C-c g" . hydra-go-to-file/body)
+           ("C-c m" . hydra-magit/body)
+           ("C-c o" . hydra-org/body)
            ("C-c p" . hydra-projectile/body)
-           ("C-c m" . hydra-magit/body)))
+           ("C-c s" . hydra-spelling/body)
+           ("C-c t" . hydra-tex/body)
+           ("C-c u" . hydra-upload/body)
+           ("C-c w" . hydra-windows/body)))
 
   (use-package major-mode-hydra
     :after hydra
@@ -1864,7 +1880,11 @@ Provides snippets for consult.
       "Display an icon from GitHub Octicons."
       (s-concat (all-the-icons-octicon icon :v-adjust (or v-adjust 0) :height (or height 1) :face face) " " str))
     )
+#+end_src
 
+*** Hydra BToggle
+
+#+begin_src emacs-lisp
   (pretty-hydra-define hydra-btoggle
   (:hint nil :color amaranth :quit-key "q" :title (with-faicon "toggle-on" "Toggle" 1 -0.05))
   ("Basic"
@@ -1878,7 +1898,11 @@ Provides snippets for consult.
     ("s" smartparens-mode "smartparens" :toggle t))
    "UI"
    (("i" ivy-rich-mode "ivy-rich" :toggle t))))
+#+end_src
 
+*** Hydra Clock
+
+#+begin_src emacs-lisp
   (pretty-hydra-define hydra-clock
   (:hint nil :color teal :quit-key "q" :title (with-faicon "clock-o" "Clock" 1 -0.05))
   ("Action"
@@ -1890,40 +1914,70 @@ Provides snippets for consult.
     ("o" org-clock-out "out")
     ("p" org-pomodoro "pomodoro")
     ("r" org-clock-report "report"))))
+#+end_src
 
+*** Hydra Flycheck
+
+#+begin_src emacs-lisp
+  (pretty-hydra-define hydra-flycheck
+    (:hint nil :color teal :quit-key "q" :title (with-faicon "plane" "Flycheck" 1 -0.05))
+    ("Checker"
+     (("?" flycheck-describe-checker "describe")
+      ("d" flycheck-disable-checker "disable")
+      ("m" flycheck-mode "mode")
+      ("s" flycheck-select-checker "select"))
+     "Errors"
+     (("<" flycheck-previous-error "previous" :color pink)
+      (">" flycheck-next-error "next" :color pink)
+      ("f" flycheck-buffer "check")
+      ("l" flycheck-list-errors "list"))
+     "Other"
+     (("M" flycheck-manual "manual")
+      ("v" flycheck-verify-setup "verify setup"))))
+#+end_src
+
+*** Hydra Go-to
+
+#+begin_src emacs-lisp
   (pretty-hydra-define hydra-go-to-file
   (:hint nil :color teal :quit-key "q" :title (with-octicon "file-symlink-file" "Go To" 1 -0.05))
   ("Agenda"
    (("ac" (find-file "~/.personal/agenda/contacts.org") "contacts")
     ("ah" (find-file "~/.personal/agenda/home.org") "home")
     ("ai" (find-file "~/.personal/agenda/inbox.org") "inbox")
+    ("ag" (find-file "~/.personal/agenda/goals.org") "goals")
     ("ap" (find-file "~/.personal/agenda/people.org") "people")
     ("ar" (find-file "~/.personal/agenda/routine.org") "routine")
+    ("aR" (find-file "~/.personal/agenda/review.org") "review")
+    ("as" (find-file "~/.personal/agenda/someday.org") "someday")
     ("aw" (find-file "~/.personal/agenda/work.org") "work"))
    "Config"
-   (("ca" (find-file (format "%s/alacritty/alacritty.yml" xdg-config)) "alacritty")
-    ("cA" (find-file (format "%s/sh/aliases" xdg-config)) "aliases")
-    ("ce" (find-file "~/.emacs.d/config.org") "emacs")
+   (("cA" (find-file (format "%s/sh/aliases" xdg-config)) "aliases")
+    ("ce" (find-file (format "%s/emacs/config.org" xdg-config)) "emacs")
     ("cE" (find-file (format "%s/sh/environ" xdg-config)) "environ")
+    ("cf" (find-file (format "%s/foot/foot.ini" xdg-config)) "foot")
     ("cn" (find-file (format "%s/neofetch/config.conf" xdg-config)) "neofetch")
-    ("cq" (find-file (format "%s/qutebrowser/config.py" xdg-config)) "qutebrowser")
     ("cr" (find-file (format "%s/ranger/rc.conf" xdg-config)) "ranger")
     ("cs" (find-file (format "%s/sway/config" xdg-config)) "sway")
     ("ct" (find-file (format "%s/tmux/tmux.conf" xdg-config)) "tmux")
     ("cw" (find-file (format "%s/waybar/config" xdg-config)) "waybar")
-    ("cW" (find-file (format "%s/wofi/config" xdg-config)) "wofi")
     ("cx" (find-file (format "%s/sh/xdg" xdg-config)) "xdg"))
-   "Notes"
-   (("na" (find-file (format "~/.personal/notes/affirmations.pdf" xdg-config)) "Affirmations"))
-   "Other"
-   (("ob" (find-file "~/.personal/other/books.org") "book")
-    ("ol" (find-file "~/.personal/other/long-goals.org") "long-terms goals")
-    ("om" (find-file "~/.personal/other/movies.org"))
-    ("op" (find-file "~/.personal/other/purchases.org") "purchase")
+   "Items"
+    (("ib" (find-file "~/.personal/items/books.org") "book")
+     ("il" (find-file "~/.personal/items/learning.org") "learning")
+     ("im" (find-file "~/.personal/items/movies.org"))
+     ("ip" (find-file "~/.personal/items/purchases.org") "purchase"))
+    "Notes"
+    (("na" (find-file (format "~/.personal/notes/affirmations.pdf" xdg-config)) "Affirmations"))
+    "Other"
+   (("ol" (find-file "~/.personal/other/long-goals.org") "long-terms goals")
     ("os" (find-file "~/.personal/other/short-goals.org") "short-terms goals")
-    ("ou" (find-file "~/.personal/other/usb.org") "usb")
-    ("oL" (find-file "~/.personal/other/learning.org") "learning"))))
+    ("ou" (find-file "~/.personal/other/usb.org") "usb"))))
+#+end_src
 
+*** Hydra Image
+
+#+begin_src emacs-lisp
   (pretty-hydra-define hydra-image
   (:hint nil :color pink :quit-key "q" :title (with-faicon "file-image-o" "Images" 1 -0.05))
   ("Action"
@@ -1933,7 +1987,11 @@ Provides snippets for consult.
     (("-" image-decrease-size "out")
      ("+" image-increase-size "in")
      ("=" image-transform-reset "reset"))))
+#+end_src
 
+*** Hydra Ledger
+
+#+begin_src emacs-lisp
   (pretty-hydra-define hydra-ledger
   (:hint nil :color teal :quit-key "q" :title (with-faicon "usd" "Ledger" 1 -0.05))
   ("Action"
@@ -1942,73 +2000,73 @@ Provides snippets for consult.
     ("i" ledger-copy-transaction-at-point "copy")
     ("s" ledger-delete-current-transaction "delete")
     ("r" ledger-report "report"))))
+#+end_src
 
-  (pretty-hydra-define hydra-flycheck
-                       (:hint nil :color teal :quit-key "q" :title (with-faicon "plane" "Flycheck" 1 -0.05))
-                       ("Checker"
-                        (("?" flycheck-describe-checker "describe")
-                         ("d" flycheck-disable-checker "disable")
-                         ("m" flycheck-mode "mode")
-                         ("s" flycheck-select-checker "select"))
-                        "Errors"
-                        (("<" flycheck-previous-error "previous" :color pink)
-                         (">" flycheck-next-error "next" :color pink)
-                         ("f" flycheck-buffer "check")
-                         ("l" flycheck-list-errors "list"))
-                        "Other"
-                        (("M" flycheck-manual "manual")
-                         ("v" flycheck-verify-setup "verify setup"))))
+*** Hydra Projectile
 
+#+begin_src emacs-lisp
   (pretty-hydra-define hydra-projectile
-                       (:hint nil :color teal :quit-key "q" :title (with-faicon "rocket" "Projectile" 1 -0.05))
-                       ("Buffers"
-                        (("b" projectile-switch-to-buffer "list")
-                         ("k" projectile-kill-buffers "kill all")
-                         ("S" projectile-save-project-buffers "save all"))
-                        "Find"
-                        (("d" projectile-find-dir "directory")
-                         ("D" projectile-dired "root")
-                         ("f" projectile-find-file "file")
-                         ("p" projectile-persp-switch-project "project"))
-                        "Other"
-                        (("i" projectile-invalidate-cache "reset cache"))
-                        "Search"
-                        (("r" projectile-replace "replace")
-                         ("R" projectile-replace-regexp "regex replace")
-                         ("s" consult-ripgrep "search"))))
+    (:hint nil :color teal :quit-key "q" :title (with-faicon "rocket" "Projectile" 1 -0.05))
+    ("Buffers"
+     (("b" projectile-switch-to-buffer "list")
+      ("k" projectile-kill-buffers "kill all")
+      ("S" projectile-save-project-buffers "save all"))
+     "Find"
+     (("d" projectile-find-dir "directory")
+      ("D" projectile-dired "root")
+      ("f" projectile-find-file "file")
+      ("p" projectile-persp-switch-project "project"))
+     "Other"
+     (("i" projectile-invalidate-cache "reset cache"))
+     "Search"
+     (("r" projectile-replace "replace")
+      ("R" projectile-replace-regexp "regex replace")
+      ("s" consult-git-grep "search"))))
+#+end_src
 
-  (pretty-hydra-define hydra-magit
-                       (:hint nil :color teal :quit-key "q" :title (with-octicon "mark-github" "Magit" 1 -0.05))
-                       ("Action"
-                        (("b" magit-blame "blame")
-                         ("c" magit-clone "clone")
-                         ("i" magit-init "init")
-                         ("l" magit-log-buffer-file "commit log (current file)")
-                         ("L" magit-log-current "commit log (project)")
-                         ("s" magit-status "status"))))
+*** Hydra Magit
 
-  (pretty-hydra-define hydra-merge
-  (:hint nil :color pink :quit-key "q" :title (with-octicon "mark-github" "Magit" 1 -0.05))
-  ("Move"
-   (("n" smerge-next "next")
-    ("p" smerge-prev "previous"))
-   "Keep"
-   (("RET" smerge-keep-current "current")
-    ("a" smerge-keep-all "all")
-    ("b" smerge-keep-base "base")
-    ("l" smerge-keep-lower "lower")
-    ("u" smerge-keep-upper "upper"))
-   "Diff"
-   (("<" smerge-diff-base-upper "upper/base")
-    ("=" smerge-diff-upper-lower "upper/lower")
-    (">" smerge-diff-base-lower "base/lower")
-    ("R" smerge-refine "redefine")
-    ("E" smerge-ediff "ediff"))
-   "Other"
-   (("C" smerge-combine-with-next "combine")
-    ("r" smerge-resolve "resolve")
-    ("k" smerge-kill-current "kill current"))))
+  #+begin_src emacs-lisp
+    (pretty-hydra-define hydra-magit
+      (:hint nil :color teal :quit-key "q" :title (with-octicon "mark-github" "Magit" 1 -0.05))
+      ("Action"
+       (("b" magit-blame "blame")
+        ("c" magit-clone "clone")
+        ("i" magit-init "init")
+        ("l" magit-log-buffer-file "commit log (current file)")
+        ("L" magit-log-current "commit log (project)")
+        ("s" magit-status "status"))))
+#+end_src
 
+*** Hydra Merge
+
+#+begin_src emacs-lisp
+    (pretty-hydra-define hydra-merge
+    (:hint nil :color pink :quit-key "q" :title (with-octicon "mark-github" "Magit" 1 -0.05))
+    ("Move"
+     (("n" smerge-next "next")
+      ("p" smerge-prev "previous"))
+     "Keep"
+     (("RET" smerge-keep-current "current")
+      ("a" smerge-keep-all "all")
+      ("b" smerge-keep-base "base")
+      ("l" smerge-keep-lower "lower")
+      ("u" smerge-keep-upper "upper"))
+     "Diff"
+     (("<" smerge-diff-base-upper "upper/base")
+      ("=" smerge-diff-upper-lower "upper/lower")
+      (">" smerge-diff-base-lower "base/lower")
+      ("R" smerge-refine "redefine")
+      ("E" smerge-ediff "ediff"))
+     "Other"
+     (("C" smerge-combine-with-next "combine")
+      ("r" smerge-resolve "resolve")
+      ("k" smerge-kill-current "kill current"))))
+#+end_src
+
+*** Hydra Org
+
+#+begin_src emacs-lisp
   (pretty-hydra-define hydra-org
   (:hint nil :color teal :quit-key "q" :title (with-fileicon "org" "Org" 1 -0.05))
   ("Action"
@@ -2017,29 +2075,37 @@ Provides snippets for consult.
     ("c" org-capture "capture")
     ("d" org-decrypt-entry "decrypt")
     ("i" org-insert-link-global "insert-link")
-    ("j" my/org-jump "jump-task")
+    ("j" org-capture-goto-last-stored "jump-capture")
     ("k" org-cut-subtree "cut-subtree")
     ("o" org-open-at-point-global "open-link")
     ("r" org-refile "refile")
     ("s" org-store-link "store-link")
     ("t" org-show-todo-tree "todo-tree"))))
+  #+end_src
 
-  (pretty-hydra-define hydra-notes
-  (:hint nil :color teal :quit-key "q" :title (with-octicon "pencil" "Notes" 1 -0.05))
-  ("Notes"
-   (("c" org-roam-dailies-capture-today "capture")
-    ("C" org-roam-dailies-capture-tomorrow "capture tomorrow")
-    ("g" org-roam-graph "graph")
-    ("f" org-roam-node-find "find")
-    ("i" org-roam-node-insert "insert"))
-   "Go To"
-   ((">" org-roam-dailies-goto-next-note "next note")
-    ("<" org-roam-dailies-goto-previous-note "previous note")
-    ("d" org-roam-dailies-goto-date "date")
-    ("t" org-roam-dailies-goto-today "today")
-    ("T" org-roam-dailies-goto-tomorrow "tomorrow")
-    ("y" org-roam-dailies-goto-yesterday "yesterday"))))
+*** Hydra Roam
 
+  #+begin_src emacs-lisp
+    (pretty-hydra-define hydra-notes
+    (:hint nil :color teal :quit-key "q" :title (with-octicon "pencil" "Notes" 1 -0.05))
+    ("Notes"
+     (("c" org-roam-dailies-capture-today "capture")
+      ("C" org-roam-dailies-capture-tomorrow "capture tomorrow")
+      ("g" org-roam-graph "graph")
+      ("f" org-roam-node-find "find")
+      ("i" org-roam-node-insert "insert"))
+     "Go To"
+     ((">" org-roam-dailies-goto-next-note "next note")
+      ("<" org-roam-dailies-goto-previous-note "previous note")
+      ("d" org-roam-dailies-goto-date "date")
+      ("t" org-roam-dailies-goto-today "today")
+      ("T" org-roam-dailies-goto-tomorrow "tomorrow")
+      ("y" org-roam-dailies-goto-yesterday "yesterday"))))
+    #+end_src
+
+*** Hydra Spelling
+
+#+begin_src emacs-lisp
   (pretty-hydra-define hydra-spelling
   (:hint nil :color teal :quit-key "q" :title (with-faicon "magic" "Spelling" 1 -0.05))
   ("Checker"
@@ -2053,23 +2119,116 @@ Provides snippets for consult.
    (("<" flyspell-correct-previous "previous" :color pink)
     (">" flyspell-correct-next "next" :color pink)
     ("f" langtool-check "find"))))
+  #+end_src
 
+*** Hydra Windows
+
+#+begin_src emacs-lisp
   (pretty-hydra-define hydra-windows
-  (:hint nil :forein-keys warn :quit-key "q" :title (with-faicon "windows" "Windows" 1 -0.05))
-  ("Window"
-   (("b" balance-windows "balance")
-    ("i" enlarge-window "heighten")
-    ("j" shrink-window-horizontally "narrow")
-    ("k" shrink-window "lower")
-    ("u" winner-undo "undo")
-    ("r" winner-redo "redo")
-    ("l" enlarge-window-horizontally "widen")
-    ("s" switch-window-then-swap-buffer "swap" :color teal))
-   "Zoom"
-   (("-" text-scale-decrease "out")
-    ("+" text-scale-increase "in")
-    ("=" (text-scale-increase 0) "reset"))))
+    (:hint nil :forein-keys warn :quit-key "q" :title (with-faicon "windows" "Windows" 1 -0.05))
+    ("Window"
+     (("b" balance-windows "balance")
+      ("c" centered-window-mode "center")
+      ("i" enlarge-window "heighten")
+      ("j" shrink-window-horizontally "narrow")
+      ("k" shrink-window "lower")
+      ("u" winner-undo "undo")
+      ("r" winner-redo "redo")
+      ("l" enlarge-window-horizontally "widen")
+      ("s" switch-window-then-swap-buffer "swap" :color teal))
+     "Zoom"
+     (("-" text-scale-decrease "out")
+      ("+" text-scale-increase "in")
+      ("=" (text-scale-increase 0) "reset"))))
 #+end_src
+
+*** Hydra TeX
+
+#+begin_src emacs-lisp
+(pretty-hydra-define hydra-tex
+  (:hint nil :color teal :quit-key "q" :title (with-fileicon "tex" "LaTeX" 1 -0.05))
+  ("Action"
+   (("g" reftex-goto-label "goto")
+    ("r" reftex-query-replace-document "replace")
+    ("s" counsel-rg "search")
+    ("t" reftex-toc "table of content"))))
+    #+end_src
+
+*** Hydra Tool
+
+#+begin_src emacs-lisp
+(pretty-hydra-define hydra-tool
+  (:hint nil :color teal :quit-key "q" :title (with-faicon "briefcase" "Tool" 1 -0.05))
+  ("Network"
+   (("c" ipcalc "subnet calculator")
+    ("i" ipinfo "ip info"))))
+    #+end_src
+
+*** Hydra Typescript
+
+#+begin_src emacs-lisp
+(defhydra hydra-typescript (:color blue)
+  "
+  ^
+  ^TypeScript^          ^Do^
+  ^──────────^──────────^──^───────────
+  _q_ quit             _b_ back
+  ^^                   _e_ errors
+  ^^                   _j_ jump
+  ^^                   _r_ references
+  ^^                   _R_ restart
+  ^^                   ^^
+  "
+  ("q" nil)
+  ("b" tide-jump-back)
+  ("e" tide-project-errors)
+  ("j" tide-jump-to-definition)
+  ("r" tide-references)
+  ("R" tide-restart-server))
+  #+end_src
+
+*** Hydra Upload
+
+#+begin_src emacs-lisp
+(pretty-hydra-define hydra-upload
+  (:hint nil :color teal :quit-key "q" :title (with-faicon "cloud-upload" "Upload" 1 -0.05))
+  ("Action"
+   (("b" webpaste-paste-buffer "buffer")
+    ("i" imgbb-upload "image")
+    ("r" webpaste-paste-region "region"))))
+    #+end_src
+
+* Ledger
+
+#+begin_src emacs-lisp
+(use-package ledger-mode
+  :mode ("\\.\\(dat\\|ledger\\)\\'")
+  :preface
+  (defun my/ledger-save ()
+    "Clean the ledger buffer at each save."
+    (interactive)
+    (ledger-mode-clean-buffer)
+    (save-buffer))
+  :bind (:map ledger-mode-map
+              ("C-x C-s" . my/ledger-save))
+  :hook (ledger-mode . ledger-flymake-enable)
+  :custom
+  (ledger-clear-whole-transactions t)
+  (ledger-reconcile-default-commodity "EUR")
+  (ledger-reports
+   '(("account statement" "%(binary) reg --real [[ledger-mode-flags]] -f %(ledger-file) ^%(account)")
+     ("balance sheet" "%(binary) --real [[ledger-mode-flags]] -f %(ledger-file) bal ^assets ^liabilities ^equity")
+     ("budget" "%(binary) --empty -S -T [[ledger-mode-flags]] -f %(ledger-file) bal ^assets:bank ^assets:receivables ^assets:cash ^assets:budget")
+     ("budget goals" "%(binary) --empty -S -T [[ledger-mode-flags]] -f %(ledger-file) bal ^assets:bank ^assets:receivables ^assets:cash ^assets:'budget goals'")
+     ("budget obligations" "%(binary) --empty -S -T [[ledger-mode-flags]] -f %(ledger-file) bal ^assets:bank ^assets:receivables ^assets:cash ^assets:'budget obligations'")
+     ("budget debts" "%(binary) --empty -S -T [[ledger-mode-flags]] -f %(ledger-file) bal ^assets:bank ^assets:receivables ^assets:cash ^assets:'budget debts'")
+     ("cleared" "%(binary) cleared [[ledger-mode-flags]] -f %(ledger-file)")
+     ("equity" "%(binary) --real [[ledger-mode-flags]] -f %(ledger-file) equity")
+     ("income statement" "%(binary) --invert --real -S -T [[ledger-mode-flags]] -f %(ledger-file) bal ^income ^expenses -p \"this month\""))
+   (ledger-report-use-header-line nil)))
+
+   (use-package flycheck-ledger :after ledger-mode)
+   #+end_src
 
 * Org Mode Configuration
 
@@ -2106,7 +2265,6 @@ Provides snippets for consult.
       `(lambda (&rest _rest)
          (funcall ,fnc)))
     :hook ((after-save . my/config-tangle)
-           (org-mode . org-indent-mode)
            (org-mode . visual-line-mode))
     :custom
     (org-archive-location "~/.personal/archives/%s::")
@@ -2124,10 +2282,12 @@ Provides snippets for consult.
                    org-protocol
                    org-tempo))
     (org-refile-allow-creating-parent-nodes 'confirm)
+    (org-refile-targets '((org-agenda-files :maxlevel . 1)
+                          ("~/.personal/agenda/home.org" :maxlevel . 2)
+                          ("~/.personal/agenda/work.org" :maxlevel . 2)))
     (org-refile-use-cache nil)
     (org-refile-use-outline-path nil)
-    (org-refile-targets '((org-agenda-files . (:maxlevel . 1))))
-    (org-startup-folded nil)
+    (org-startup-indented t)
     (org-startup-with-inline-images t)
     (org-tag-alist '((:startgroup . "Context")
                      ("@errands" . ?e)
@@ -2158,8 +2318,8 @@ Provides snippets for consult.
                      ("trip" . ?I)
                      ("thinking" . ?i)
                      ("update" . ?u)
-                     ("watch" . ?W)
-                     ("writing" . ?g)))
+                     ("watch" . ?l)
+                     ("writing" . ?W)))
     (org-tags-exclude-from-inheritance '("crypt" "project"))
     (org-todo-keywords '((sequence "TODO(t)"
                                    "STARTED(s)"
@@ -2194,11 +2354,6 @@ Provides snippets for consult.
   (use-package toc-org
     :after org
     :hook (org-mode . toc-org-enable))
-
-  (use-package org-indent
-    :straight nil
-    :after org
-    :delight)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -2248,8 +2403,6 @@ Provides snippets for consult.
     (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp")))
 #+end_src
 
-
-
 * Agenda
 
 #+begin_src emacs-lisp
@@ -2278,6 +2431,7 @@ Provides snippets for consult.
      `(("home" ,(list (all-the-icons-faicon "home" :v-adjust -0.05)) nil nil :ascent center :mask heuristic)
        ("inbox" ,(list (all-the-icons-faicon "inbox" :v-adjust -0.1)) nil nil :ascent center :mask heuristic)
        ("people" ,(list (all-the-icons-material "people" :v-adjust -0.25)) nil nil :ascent center :mask heuristic)
+       ("work" ,(list (all-the-icons-material "work" :v-adjust -0.25)) nil nil :ascent center :mask heuristic)
        ("routine" ,(list (all-the-icons-material "repeat" :v-adjust -0.25)) nil nil :ascent center :mask heuristic)
        ))
     (org-agenda-custom-commands
@@ -2290,11 +2444,11 @@ Provides snippets for consult.
         ((agenda "" ((org-deadline-warning-days 7)))
          (todo "NEXT"
                ((org-agenda-overriding-header "Next Tasks")))))
-       ("h" "Home Tasks" tags-todo "+home")
-       ("w" "Work Tasks" tags-todo "+work")
+       ("h" "Home Tasks" tags-todo "@home")
+       ("w" "Work Tasks" tags-todo "@work")
 
-       ("E" "Easy Tasks" tags-todo "+easy")
-       ("C" "Challenging Tasks" tags-todo "+challenging")
+       ("E" "Easy Tasks" tags-todo "easy")
+       ("C" "Challenging Tasks" tags-todo "challenging")
 
        ("e" tags-todo "+TODO=\"NEXT\"+Effort<15&+Effort>0"
         ((org-agenda-overriding-header "Low Effort Tasks")
@@ -2346,65 +2500,65 @@ Provides snippets for consult.
 ** Capture
 
 #+begin_src emacs-lisp
-  (use-package org-capture
-    :straight nil
-    :preface
-    (defvar my/org-active-task-template
-      (concat "* NEXT %^{Task}\n"
-              ":PROPERTIES:\n"
-              ":Effort: %^{effort|1:00|0:05|0:15|0:30|2:00|4:00}\n"
-              ":CAPTURED: %<%Y-%m-%d %H:%M>\n"
-              ":END:") "Template for basic task.")
-    (defvar my/org-appointment
-      (concat "* TODO %^{Appointment}\n"
-              "SCHEDULED: %t\n") "Template for appointment task.")
-    (defvar my/org-basic-task-template
-      (concat "* TODO %^{Task}\n"
-              ":PROPERTIES:\n"
-              ":Effort: %^{effort|1:00|0:05|0:15|0:30|2:00|4:00}\n"
-              ":CAPTURED: %<%Y-%m-%d %H:%M>\n"
-              ":END:") "Template for basic task.")
-    (defvar my/org-contacts-template
-      (concat "* %(org-contacts-template-name)\n"
-              ":PROPERTIES:\n"
-              ":BIRTHDAY: %^{YYYY-MM-DD}\n"
-              ":END:") "Template for a contact.")
-    :custom
-    (org-capture-templates
-     `(("c" "Contact" entry (file+headline "~/.personal/agenda/contacts.org" "Friends"),
-        my/org-contacts-template :empty-lines 1)
-       ("p" "People" entry (file+headline "~/.personal/agenda/people.org" "Tasks"),
-        my/org-basic-task-template :empty-lines 1)
-       ("a" "Appointment" entry (file+headline "~/.personal/agenda/people.org" "Appointments"),
-        my/org-appointment :empty-lines 1)
-       ("m" "Meeting" entry (file+headline "~/.personal/agenda/people.org" "Meetings")
-        "* Meeting with %? :meeting:\n%U" :clock-in t :clock-resume t :empty-lines 1)
-       ("P" "Phone Call" entry (file+headline "~/.personal/agenda/people.org" "Phone Calls")
-        "* Phone %? :phone:\n%U" :clock-in t :clock-resume t)
+    (use-package org-capture
+      :straight nil
+      :preface
+      (defvar my/org-active-task-template
+        (concat "* NEXT %^{Task}\n"
+                ":PROPERTIES:\n"
+                ":Effort: %^{effort|1:00|0:05|0:15|0:30|2:00|4:00}\n"
+                ":CAPTURED: %<%Y-%m-%d %H:%M>\n"
+                ":END:") "Template for basic task.")
+      (defvar my/org-appointment
+        (concat "* TODO %^{Appointment}\n"
+                "SCHEDULED: %t\n") "Template for appointment task.")
+      (defvar my/org-basic-task-template
+        (concat "* TODO %^{Task}\n"
+                ":PROPERTIES:\n"
+                ":Effort: %^{effort|1:00|0:05|0:15|0:30|2:00|4:00}\n"
+                ":CAPTURED: %<%Y-%m-%d %H:%M>\n"
+                ":END:") "Template for basic task.")
+      (defvar my/org-contacts-template
+        (concat "* %(org-contacts-template-name)\n"
+                ":PROPERTIES:\n"
+                ":BIRTHDAY: %^{YYYY-MM-DD}\n"
+                ":END:") "Template for a contact.")
+      :custom
+      (org-capture-templates
+       `(("c" "Contact" entry (file+headline "~/.personal/agenda/contacts.org" "Inbox"),
+          my/org-contacts-template :empty-lines 1)
+         ("p" "People" entry (file+headline "~/.personal/agenda/people.org" "Tasks"),
+          my/org-basic-task-template :empty-lines 1)
+         ("a" "Appointment" entry (file+headline "~/.personal/agenda/people.org" "Appointments"),
+          my/org-appointment :empty-lines 1)
+         ("m" "Meeting" entry (file+headline "~/.personal/agenda/people.org" "Meetings")
+          "* Meeting with %? :meeting:\n%U" :clock-in t :clock-resume t :empty-lines 1)
+         ("P" "Phone Call" entry (file+headline "~/.personal/agenda/people.org" "Phone Calls")
+          "* Phone %? :phone:\n%U" :clock-in t :clock-resume t)
 
-       ("i" "New Item")
-       ("ib" "Book" checkitem (file+headline "~/.personal/items/books.org" "Books")
-        "- [ ] %^{Title} -- %^{Author} %? :@home:reading:\n%U"
-        :immediate-finish t)
-       ("il" "Learning" checkitem (file+headline "~/.personal/items/learning.org" "Things")
-        "- [ ] %^{Thing} :@home:"
-        :immediate-finish t)
-       ("im" "Movie" checkitem (file+headline "~/.personal/items/movies.org" "Movies")
-        "- [ ] %^{Title}  :@home:watch:\n%U"
-        :immediate-finish t)
-       ("ip" "Purchase" checkitem (file+headline "~/.personal/items/purchases.org" "Purchases")
-        "- [ ] %^{Item}  :@home:purchase:\n%U"
-        :immediate-finish t)
+         ("i" "New Item")
+         ("ib" "Book" checkitem (file+headline "~/.personal/items/books.org" "Books")
+          "- [ ] %^{Title} -- %^{Author}\n  %U"
+          :immediate-finish t)
+         ("il" "Learning" checkitem (file+headline "~/.personal/items/learning.org" "Things")
+          "- [ ] %^{Thing}\n  %U"
+          :immediate-finish t)
+         ("im" "Movie" checkitem (file+headline "~/.personal/items/movies.org" "Movies")
+          "- [ ] %^{Title}\n  %U"
+          :immediate-finish t)
+         ("ip" "Purchase" checkitem (file+headline "~/.personal/items/purchases.org" "Purchases")
+          "- [ ] %^{Item}\n  %U"
+          :immediate-finish t)
 
-       ("t" "New Task")
-       ("ta" "Active" entry (file+headline "~/.personal/agenda/inbox.org" "Active"),
-        my/org-active-task-template
-        :empty-lines 1
-        :immediate-finish t)
-  ("tb" "Backlog" entry (file+headline "~/.personal/agenda/inbox.org" "Backlog"),
-              my/org-basic-task-template
-              :empty-lines 1
-              :immediate-finish t))))
+         ("t" "New Task")
+         ("ta" "Active" entry (file+headline "~/.personal/agenda/inbox.org" "Active"),
+          my/org-active-task-template
+          :empty-lines 1
+          :immediate-finish t)
+    ("tb" "Backlog" entry (file+headline "~/.personal/agenda/inbox.org" "Backlog"),
+                my/org-basic-task-template
+                :empty-lines 1
+                :immediate-finish t))))
 #+end_src
 
 ** Clock
@@ -2478,16 +2632,16 @@ Provides snippets for consult.
 ** Encryption/Decryption
 
 #+begin_src emacs-lisp
-  (use-package org-crypt
-    :straight nil
-    :config
-    (require 'org)
-    (org-crypt-use-before-save-magic)
-    :custom
-    (org-crypt-key "8F4E3CEEA8CAE6040E88CF2784D878C99B99611D"))
+      (use-package org-crypt
+        :straight nil
+        :config
+        (require 'org)
+        (org-crypt-use-before-save-magic)
+        :custom
+        (org-crypt-key "CE498E212FC1FA5348B3FFF27A09A11BEB260B60"))
 
-  (setq epa-file-encrypt-to "karolos.triantafyllou@gmail.com")
-  (setq epa-file-select-keys "auto")
+      (setq epa-file-encrypt-to "karolos.triantafyllou@gmail.com")
+      (setq epa-file-select-keys "auto")
 #+end_src
 
 ** Journal
@@ -2536,6 +2690,7 @@ Provides snippets for consult.
 #+begin_src emacs-lisp
   (use-package mu4e
       :straight nil
+      :load-path "/usr/share/emacs/site-lisp/mu4e"
       :commands mu4e
       :hook (mu4e-compose-mode . turn-off-auto-fill)
       :bind (:map mu4e-headers-mode-map

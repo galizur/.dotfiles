@@ -99,8 +99,8 @@
 ;; Set variable pitch face
 (set-face-attribute 'variable-pitch nil :font "Cantarell" :weight 'regular :height 1.35)
 
-;;  (use-package mixed-pitch
-;;    :hook (text-mode . mixed-pitch-mode))
+(use-package mixed-pitch
+  :hook (text-mode . mixed-pitch-mode))
 
 (use-package ligature
   :straight (ligature :type git :host github :repo
@@ -178,16 +178,18 @@
       (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 
 (use-package vertico
-  :straight (:files (:defaults "extensions/*"))
-  :init (vertico-mode)
-  :custom (vertico-cycle t)
-  :custom-face (vertico-current ((t (:background "#1d1f21")))))
+    :straight (:files (:defaults "extensions/*"))
+    :init (vertico-mode)
+    :bind (:map vertico-map
+                ("C-<backspace>" . vertico-directory-up))
+    :custom (vertico-cycle t)
+    :custom-face (vertico-current ((t (:background "#1d1f21")))))
 
-(use-package vertico-directory
-  :after (vertico)
-  :straight nil
-  :bind (:map vertico-map
-              ("C-<backspace>" . vertico-directory-up)))
+  ;;(use-package vertico-directory
+;;    :after (vertico)
+    ;;:straight nil
+    ;;:bind (:map vertico-map
+                ;;("C-<backspace>" . vertico-directory-up)))
 
 (use-package marginalia
   :after vertico
@@ -269,7 +271,7 @@
   ;; Recommended: Enable Corfu globally.
   ;; This is recommended since dabbrev can be used globally (M-/).
   :init
-  (corfu-global-mode))
+  (global-corfu-mode))
 
 (use-package cape
   ;; Bind dedicated completion commands
@@ -732,33 +734,33 @@
           @media (max-width: 767px) { .markdown-body { padding: 15px; } }
         </style>")))
 
-;; (use-package web-mode
-;;  :delight ""
-;;  :preface
-  ;; (defun enable-minor-mode (my-pair)
-  ;;   "Enable minor mode if filename match the regexp."
-  ;;   (if (buffer-file-name)
-  ;;       (if (string-match (car my-pair) buffer-file-name)
-  ;;           (funcall (cdr my-pair)))))
-  ;; :mode ("\\.\\(html\\|jsx\\|php\\|css\\)\\'" . web-mode)
-  ;; :hook (web-mode . (lambda ()
-  ;;                     (enable-minor-mode
-  ;;                      '("\\.jsx?\\'" . prettier-js-mode))))
-  ;;
-  ;; (defun my/web-mode-hook ()
-  ;;   "Hooks for web-mode."
-  ;;   (setq web-mode-markup-indent-offset 2)
-  ;;   (setq web-mode-attr-indent-offset 2)
-  ;;   (setq web-mode-block-padding 2)
-  ;;   (setq web-mode-css-indent-offset 2)
-  ;;   (setq web-mode-code-indent-offset 2)
-  ;;   (setq web-mode-comment-style 2))
-  ;; :hook (web-mode . my/web-mode-hook)
-  ;; :config
-  ;; (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-  ;; (add-to-list 'auto-mode-alist '("\\.css?\\'" . web-mode))
-  ;; (setq web-mode-enable-current-element-highlight t)
-  ;; )
+;;(use-package web-mode
+;;    :delight ""
+  ;;  :preface
+    ;; (defun enable-minor-mode (my-pair)
+    ;;   "Enable minor mode if filename match the regexp."
+    ;;   (if (buffer-file-name)
+    ;;       (if (string-match (car my-pair) buffer-file-name)
+    ;;           (funcall (cdr my-pair)))))
+    ;; :mode ("\\.\\(html\\|jsx\\|php\\|css\\)\\'" . web-mode)
+    ;; :hook (web-mode . (lambda ()
+    ;;                     (enable-minor-mode
+    ;;                      '("\\.jsx?\\'" . prettier-js-mode))))
+    ;;
+    ;; (defun my/web-mode-hook ()
+    ;;   "Hooks for web-mode."
+    ;;   (setq web-mode-markup-indent-offset 2)
+    ;;   (setq web-mode-attr-indent-offset 2)
+    ;;   (setq web-mode-block-padding 2)
+    ;;   (setq web-mode-css-indent-offset 2)
+    ;;   (setq web-mode-code-indent-offset 2)
+    ;;   (setq web-mode-comment-style 2))
+    ;; :hook (web-mode . my/web-mode-hook)
+    ;; :config
+    ;; (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+    ;; (add-to-list 'auto-mode-alist '("\\.css?\\'" . web-mode))
+    ;; (setq web-mode-enable-current-element-highlight t)
+    ;; )
 
 (use-package python
   :delight "π"
@@ -782,7 +784,7 @@
 
 (use-package lsp-pyright
   :if (executable-find "pyright")
-  ;; To properly load `lsp-pyrigt', the `require' instruction is important.
+  ;; To properly load `lsp-pyright', the `require' instruction is important.
   :hook (python-mode . (lambda ()
                          (require 'lsp-pyright)
                          (lsp-deferred)))
@@ -1038,7 +1040,8 @@
 
 (use-package perspective
   :demand t
-  :config (persp-mode))
+  :custom (persp-mode-prefix-key (kbd "C-c M-p"))
+  :init (persp-mode))
 
 (use-package persp-projectile
   :after (perspective))
@@ -1129,9 +1132,21 @@
   (undo-tree-visualizer-diff t))
 
 (use-package hydra
-  :bind (("C-c f" . hydra-flycheck/body)
+  :bind (("C-c I" . hydra-image/body)
+         ("C-c L" . hydra-ledger/body)
+         ("C-c M" . hydra-merge/body)
+         ("C-c T" . hydra-tool/body)
+         ("C-c b" . hydra-btoggle/body)
+         ("C-c c" . hydra-clock/body)
+         ("C-c f" . hydra-flycheck/body)
+         ("C-c g" . hydra-go-to-file/body)
+         ("C-c m" . hydra-magit/body)
+         ("C-c o" . hydra-org/body)
          ("C-c p" . hydra-projectile/body)
-         ("C-c m" . hydra-magit/body)))
+         ("C-c s" . hydra-spelling/body)
+         ("C-c t" . hydra-tex/body)
+         ("C-c u" . hydra-upload/body)
+         ("C-c w" . hydra-windows/body)))
 
 (use-package major-mode-hydra
   :after hydra
@@ -1176,38 +1191,56 @@
   ("p" org-pomodoro "pomodoro")
   ("r" org-clock-report "report"))))
 
+(pretty-hydra-define hydra-flycheck
+  (:hint nil :color teal :quit-key "q" :title (with-faicon "plane" "Flycheck" 1 -0.05))
+  ("Checker"
+   (("?" flycheck-describe-checker "describe")
+    ("d" flycheck-disable-checker "disable")
+    ("m" flycheck-mode "mode")
+    ("s" flycheck-select-checker "select"))
+   "Errors"
+   (("<" flycheck-previous-error "previous" :color pink)
+    (">" flycheck-next-error "next" :color pink)
+    ("f" flycheck-buffer "check")
+    ("l" flycheck-list-errors "list"))
+   "Other"
+   (("M" flycheck-manual "manual")
+    ("v" flycheck-verify-setup "verify setup"))))
+
 (pretty-hydra-define hydra-go-to-file
 (:hint nil :color teal :quit-key "q" :title (with-octicon "file-symlink-file" "Go To" 1 -0.05))
 ("Agenda"
  (("ac" (find-file "~/.personal/agenda/contacts.org") "contacts")
   ("ah" (find-file "~/.personal/agenda/home.org") "home")
   ("ai" (find-file "~/.personal/agenda/inbox.org") "inbox")
+  ("ag" (find-file "~/.personal/agenda/goals.org") "goals")
   ("ap" (find-file "~/.personal/agenda/people.org") "people")
   ("ar" (find-file "~/.personal/agenda/routine.org") "routine")
+  ("aR" (find-file "~/.personal/agenda/review.org") "review")
+  ("as" (find-file "~/.personal/agenda/someday.org") "someday")
   ("aw" (find-file "~/.personal/agenda/work.org") "work"))
  "Config"
- (("ca" (find-file (format "%s/alacritty/alacritty.yml" xdg-config)) "alacritty")
-  ("cA" (find-file (format "%s/sh/aliases" xdg-config)) "aliases")
-  ("ce" (find-file "~/.emacs.d/config.org") "emacs")
+ (("cA" (find-file (format "%s/sh/aliases" xdg-config)) "aliases")
+  ("ce" (find-file (format "%s/emacs/config.org" xdg-config)) "emacs")
   ("cE" (find-file (format "%s/sh/environ" xdg-config)) "environ")
+  ("cf" (find-file (format "%s/foot/foot.ini" xdg-config)) "foot")
   ("cn" (find-file (format "%s/neofetch/config.conf" xdg-config)) "neofetch")
-  ("cq" (find-file (format "%s/qutebrowser/config.py" xdg-config)) "qutebrowser")
   ("cr" (find-file (format "%s/ranger/rc.conf" xdg-config)) "ranger")
   ("cs" (find-file (format "%s/sway/config" xdg-config)) "sway")
   ("ct" (find-file (format "%s/tmux/tmux.conf" xdg-config)) "tmux")
   ("cw" (find-file (format "%s/waybar/config" xdg-config)) "waybar")
-  ("cW" (find-file (format "%s/wofi/config" xdg-config)) "wofi")
   ("cx" (find-file (format "%s/sh/xdg" xdg-config)) "xdg"))
- "Notes"
- (("na" (find-file (format "~/.personal/notes/affirmations.pdf" xdg-config)) "Affirmations"))
- "Other"
- (("ob" (find-file "~/.personal/other/books.org") "book")
-  ("ol" (find-file "~/.personal/other/long-goals.org") "long-terms goals")
-  ("om" (find-file "~/.personal/other/movies.org"))
-  ("op" (find-file "~/.personal/other/purchases.org") "purchase")
+ "Items"
+  (("ib" (find-file "~/.personal/items/books.org") "book")
+   ("il" (find-file "~/.personal/items/learning.org") "learning")
+   ("im" (find-file "~/.personal/items/movies.org"))
+   ("ip" (find-file "~/.personal/items/purchases.org") "purchase"))
+  "Notes"
+  (("na" (find-file (format "~/.personal/notes/affirmations.pdf" xdg-config)) "Affirmations"))
+  "Other"
+ (("ol" (find-file "~/.personal/other/long-goals.org") "long-terms goals")
   ("os" (find-file "~/.personal/other/short-goals.org") "short-terms goals")
-  ("ou" (find-file "~/.personal/other/usb.org") "usb")
-  ("oL" (find-file "~/.personal/other/learning.org") "learning"))))
+  ("ou" (find-file "~/.personal/other/usb.org") "usb"))))
 
 (pretty-hydra-define hydra-image
 (:hint nil :color pink :quit-key "q" :title (with-faicon "file-image-o" "Images" 1 -0.05))
@@ -1228,49 +1261,33 @@
   ("s" ledger-delete-current-transaction "delete")
   ("r" ledger-report "report"))))
 
-(pretty-hydra-define hydra-flycheck
-                     (:hint nil :color teal :quit-key "q" :title (with-faicon "plane" "Flycheck" 1 -0.05))
-                     ("Checker"
-                      (("?" flycheck-describe-checker "describe")
-                       ("d" flycheck-disable-checker "disable")
-                       ("m" flycheck-mode "mode")
-                       ("s" flycheck-select-checker "select"))
-                      "Errors"
-                      (("<" flycheck-previous-error "previous" :color pink)
-                       (">" flycheck-next-error "next" :color pink)
-                       ("f" flycheck-buffer "check")
-                       ("l" flycheck-list-errors "list"))
-                      "Other"
-                      (("M" flycheck-manual "manual")
-                       ("v" flycheck-verify-setup "verify setup"))))
-
 (pretty-hydra-define hydra-projectile
-                     (:hint nil :color teal :quit-key "q" :title (with-faicon "rocket" "Projectile" 1 -0.05))
-                     ("Buffers"
-                      (("b" projectile-switch-to-buffer "list")
-                       ("k" projectile-kill-buffers "kill all")
-                       ("S" projectile-save-project-buffers "save all"))
-                      "Find"
-                      (("d" projectile-find-dir "directory")
-                       ("D" projectile-dired "root")
-                       ("f" projectile-find-file "file")
-                       ("p" projectile-persp-switch-project "project"))
-                      "Other"
-                      (("i" projectile-invalidate-cache "reset cache"))
-                      "Search"
-                      (("r" projectile-replace "replace")
-                       ("R" projectile-replace-regexp "regex replace")
-                       ("s" consult-ripgrep "search"))))
+  (:hint nil :color teal :quit-key "q" :title (with-faicon "rocket" "Projectile" 1 -0.05))
+  ("Buffers"
+   (("b" projectile-switch-to-buffer "list")
+    ("k" projectile-kill-buffers "kill all")
+    ("S" projectile-save-project-buffers "save all"))
+   "Find"
+   (("d" projectile-find-dir "directory")
+    ("D" projectile-dired "root")
+    ("f" projectile-find-file "file")
+    ("p" projectile-persp-switch-project "project"))
+   "Other"
+   (("i" projectile-invalidate-cache "reset cache"))
+   "Search"
+   (("r" projectile-replace "replace")
+    ("R" projectile-replace-regexp "regex replace")
+    ("s" consult-git-grep "search"))))
 
 (pretty-hydra-define hydra-magit
-                     (:hint nil :color teal :quit-key "q" :title (with-octicon "mark-github" "Magit" 1 -0.05))
-                     ("Action"
-                      (("b" magit-blame "blame")
-                       ("c" magit-clone "clone")
-                       ("i" magit-init "init")
-                       ("l" magit-log-buffer-file "commit log (current file)")
-                       ("L" magit-log-current "commit log (project)")
-                       ("s" magit-status "status"))))
+  (:hint nil :color teal :quit-key "q" :title (with-octicon "mark-github" "Magit" 1 -0.05))
+  ("Action"
+   (("b" magit-blame "blame")
+    ("c" magit-clone "clone")
+    ("i" magit-init "init")
+    ("l" magit-log-buffer-file "commit log (current file)")
+    ("L" magit-log-current "commit log (project)")
+    ("s" magit-status "status"))))
 
 (pretty-hydra-define hydra-merge
 (:hint nil :color pink :quit-key "q" :title (with-octicon "mark-github" "Magit" 1 -0.05))
@@ -1302,7 +1319,7 @@
   ("c" org-capture "capture")
   ("d" org-decrypt-entry "decrypt")
   ("i" org-insert-link-global "insert-link")
-  ("j" my/org-jump "jump-task")
+  ("j" org-capture-goto-last-stored "jump-capture")
   ("k" org-cut-subtree "cut-subtree")
   ("o" org-open-at-point-global "open-link")
   ("r" org-refile "refile")
@@ -1340,20 +1357,89 @@
   ("f" langtool-check "find"))))
 
 (pretty-hydra-define hydra-windows
-(:hint nil :forein-keys warn :quit-key "q" :title (with-faicon "windows" "Windows" 1 -0.05))
-("Window"
- (("b" balance-windows "balance")
-  ("i" enlarge-window "heighten")
-  ("j" shrink-window-horizontally "narrow")
-  ("k" shrink-window "lower")
-  ("u" winner-undo "undo")
-  ("r" winner-redo "redo")
-  ("l" enlarge-window-horizontally "widen")
-  ("s" switch-window-then-swap-buffer "swap" :color teal))
- "Zoom"
- (("-" text-scale-decrease "out")
-  ("+" text-scale-increase "in")
-  ("=" (text-scale-increase 0) "reset"))))
+  (:hint nil :forein-keys warn :quit-key "q" :title (with-faicon "windows" "Windows" 1 -0.05))
+  ("Window"
+   (("b" balance-windows "balance")
+    ("c" centered-window-mode "center")
+    ("i" enlarge-window "heighten")
+    ("j" shrink-window-horizontally "narrow")
+    ("k" shrink-window "lower")
+    ("u" winner-undo "undo")
+    ("r" winner-redo "redo")
+    ("l" enlarge-window-horizontally "widen")
+    ("s" switch-window-then-swap-buffer "swap" :color teal))
+   "Zoom"
+   (("-" text-scale-decrease "out")
+    ("+" text-scale-increase "in")
+    ("=" (text-scale-increase 0) "reset"))))
+
+(pretty-hydra-define hydra-tex
+  (:hint nil :color teal :quit-key "q" :title (with-fileicon "tex" "LaTeX" 1 -0.05))
+  ("Action"
+   (("g" reftex-goto-label "goto")
+    ("r" reftex-query-replace-document "replace")
+    ("s" counsel-rg "search")
+    ("t" reftex-toc "table of content"))))
+
+(pretty-hydra-define hydra-tool
+  (:hint nil :color teal :quit-key "q" :title (with-faicon "briefcase" "Tool" 1 -0.05))
+  ("Network"
+   (("c" ipcalc "subnet calculator")
+    ("i" ipinfo "ip info"))))
+
+(defhydra hydra-typescript (:color blue)
+  "
+  ^
+  ^TypeScript^          ^Do^
+  ^──────────^──────────^──^───────────
+  _q_ quit             _b_ back
+  ^^                   _e_ errors
+  ^^                   _j_ jump
+  ^^                   _r_ references
+  ^^                   _R_ restart
+  ^^                   ^^
+  "
+  ("q" nil)
+  ("b" tide-jump-back)
+  ("e" tide-project-errors)
+  ("j" tide-jump-to-definition)
+  ("r" tide-references)
+  ("R" tide-restart-server))
+
+(pretty-hydra-define hydra-upload
+  (:hint nil :color teal :quit-key "q" :title (with-faicon "cloud-upload" "Upload" 1 -0.05))
+  ("Action"
+   (("b" webpaste-paste-buffer "buffer")
+    ("i" imgbb-upload "image")
+    ("r" webpaste-paste-region "region"))))
+
+(use-package ledger-mode
+  :mode ("\\.\\(dat\\|ledger\\)\\'")
+  :preface
+  (defun my/ledger-save ()
+    "Clean the ledger buffer at each save."
+    (interactive)
+    (ledger-mode-clean-buffer)
+    (save-buffer))
+  :bind (:map ledger-mode-map
+              ("C-x C-s" . my/ledger-save))
+  :hook (ledger-mode . ledger-flymake-enable)
+  :custom
+  (ledger-clear-whole-transactions t)
+  (ledger-reconcile-default-commodity "EUR")
+  (ledger-reports
+   '(("account statement" "%(binary) reg --real [[ledger-mode-flags]] -f %(ledger-file) ^%(account)")
+     ("balance sheet" "%(binary) --real [[ledger-mode-flags]] -f %(ledger-file) bal ^assets ^liabilities ^equity")
+     ("budget" "%(binary) --empty -S -T [[ledger-mode-flags]] -f %(ledger-file) bal ^assets:bank ^assets:receivables ^assets:cash ^assets:budget")
+     ("budget goals" "%(binary) --empty -S -T [[ledger-mode-flags]] -f %(ledger-file) bal ^assets:bank ^assets:receivables ^assets:cash ^assets:'budget goals'")
+     ("budget obligations" "%(binary) --empty -S -T [[ledger-mode-flags]] -f %(ledger-file) bal ^assets:bank ^assets:receivables ^assets:cash ^assets:'budget obligations'")
+     ("budget debts" "%(binary) --empty -S -T [[ledger-mode-flags]] -f %(ledger-file) bal ^assets:bank ^assets:receivables ^assets:cash ^assets:'budget debts'")
+     ("cleared" "%(binary) cleared [[ledger-mode-flags]] -f %(ledger-file)")
+     ("equity" "%(binary) --real [[ledger-mode-flags]] -f %(ledger-file) equity")
+     ("income statement" "%(binary) --invert --real -S -T [[ledger-mode-flags]] -f %(ledger-file) bal ^income ^expenses -p \"this month\""))
+   (ledger-report-use-header-line nil)))
+
+   (use-package flycheck-ledger :after ledger-mode)
 
 (use-package org-contrib)
 
@@ -1387,7 +1473,6 @@
     `(lambda (&rest _rest)
        (funcall ,fnc)))
   :hook ((after-save . my/config-tangle)
-         (org-mode . org-indent-mode)
          (org-mode . visual-line-mode))
   :custom
   (org-archive-location "~/.personal/archives/%s::")
@@ -1405,10 +1490,12 @@
                  org-protocol
                  org-tempo))
   (org-refile-allow-creating-parent-nodes 'confirm)
+  (org-refile-targets '((org-agenda-files :maxlevel . 1)
+                        ("~/.personal/agenda/home.org" :maxlevel . 2)
+                        ("~/.personal/agenda/work.org" :maxlevel . 2)))
   (org-refile-use-cache nil)
   (org-refile-use-outline-path nil)
-  (org-refile-targets '((org-agenda-files . (:maxlevel . 1))))
-  (org-startup-folded nil)
+  (org-startup-indented t)
   (org-startup-with-inline-images t)
   (org-tag-alist '((:startgroup . "Context")
                    ("@errands" . ?e)
@@ -1439,8 +1526,8 @@
                    ("trip" . ?I)
                    ("thinking" . ?i)
                    ("update" . ?u)
-                   ("watch" . ?W)
-                   ("writing" . ?g)))
+                   ("watch" . ?l)
+                   ("writing" . ?W)))
   (org-tags-exclude-from-inheritance '("crypt" "project"))
   (org-todo-keywords '((sequence "TODO(t)"
                                  "STARTED(s)"
@@ -1475,11 +1562,6 @@
 (use-package toc-org
   :after org
   :hook (org-mode . toc-org-enable))
-
-(use-package org-indent
-  :straight nil
-  :after org
-  :delight)
 
 (use-package async
   :after org
@@ -1551,6 +1633,7 @@
    `(("home" ,(list (all-the-icons-faicon "home" :v-adjust -0.05)) nil nil :ascent center :mask heuristic)
      ("inbox" ,(list (all-the-icons-faicon "inbox" :v-adjust -0.1)) nil nil :ascent center :mask heuristic)
      ("people" ,(list (all-the-icons-material "people" :v-adjust -0.25)) nil nil :ascent center :mask heuristic)
+     ("work" ,(list (all-the-icons-material "work" :v-adjust -0.25)) nil nil :ascent center :mask heuristic)
      ("routine" ,(list (all-the-icons-material "repeat" :v-adjust -0.25)) nil nil :ascent center :mask heuristic)
      ))
   (org-agenda-custom-commands
@@ -1563,11 +1646,11 @@
       ((agenda "" ((org-deadline-warning-days 7)))
        (todo "NEXT"
              ((org-agenda-overriding-header "Next Tasks")))))
-     ("h" "Home Tasks" tags-todo "+home")
-     ("w" "Work Tasks" tags-todo "+work")
+     ("h" "Home Tasks" tags-todo "@home")
+     ("w" "Work Tasks" tags-todo "@work")
 
-     ("E" "Easy Tasks" tags-todo "+easy")
-     ("C" "Challenging Tasks" tags-todo "+challenging")
+     ("E" "Easy Tasks" tags-todo "easy")
+     ("C" "Challenging Tasks" tags-todo "challenging")
 
      ("e" tags-todo "+TODO=\"NEXT\"+Effort<15&+Effort>0"
       ((org-agenda-overriding-header "Low Effort Tasks")
@@ -1636,7 +1719,7 @@
             ":END:") "Template for a contact.")
   :custom
   (org-capture-templates
-   `(("c" "Contact" entry (file+headline "~/.personal/agenda/contacts.org" "Friends"),
+   `(("c" "Contact" entry (file+headline "~/.personal/agenda/contacts.org" "Inbox"),
       my/org-contacts-template :empty-lines 1)
      ("p" "People" entry (file+headline "~/.personal/agenda/people.org" "Tasks"),
       my/org-basic-task-template :empty-lines 1)
@@ -1649,16 +1732,16 @@
 
      ("i" "New Item")
      ("ib" "Book" checkitem (file+headline "~/.personal/items/books.org" "Books")
-      "- [ ] %^{Title} -- %^{Author} %? :@home:reading:\n%U"
+      "- [ ] %^{Title} -- %^{Author}\n  %U"
       :immediate-finish t)
      ("il" "Learning" checkitem (file+headline "~/.personal/items/learning.org" "Things")
-      "- [ ] %^{Thing} :@home:"
+      "- [ ] %^{Thing}\n  %U"
       :immediate-finish t)
      ("im" "Movie" checkitem (file+headline "~/.personal/items/movies.org" "Movies")
-      "- [ ] %^{Title}  :@home:watch:\n%U"
+      "- [ ] %^{Title}\n  %U"
       :immediate-finish t)
      ("ip" "Purchase" checkitem (file+headline "~/.personal/items/purchases.org" "Purchases")
-      "- [ ] %^{Item}  :@home:purchase:\n%U"
+      "- [ ] %^{Item}\n  %U"
       :immediate-finish t)
 
      ("t" "New Task")
@@ -1733,7 +1816,7 @@
   (require 'org)
   (org-crypt-use-before-save-magic)
   :custom
-  (org-crypt-key "8F4E3CEEA8CAE6040E88CF2784D878C99B99611D"))
+  (org-crypt-key "CE498E212FC1FA5348B3FFF27A09A11BEB260B60"))
 
 (setq epa-file-encrypt-to "karolos.triantafyllou@gmail.com")
 (setq epa-file-select-keys "auto")
@@ -1777,6 +1860,7 @@
 
 (use-package mu4e
     :straight nil
+    :load-path "/usr/share/emacs/site-lisp/mu4e"
     :commands mu4e
     :hook (mu4e-compose-mode . turn-off-auto-fill)
     :bind (:map mu4e-headers-mode-map
