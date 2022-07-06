@@ -60,8 +60,6 @@
     },
     "pulseaudio": {
         "format": "{volume}% {icon} ",
-        "format-bluetooth": "{volume}% {icon} {format_source}",
-        "format-bluetooth-muted": " {icon} {format_source}",
         "format-muted": "0% {icon} ",
         "format-source": "{volume}% ",
         "format-source-muted": "",
@@ -90,7 +88,7 @@
             "warning": 60,
             "critical": 90
         },
-        "on-click": "alacritty -e htop",
+        "on-click": "foot -e htop",
         "tooltip": false
     },
     "memory": {
@@ -99,7 +97,7 @@
             "warning": 60,
             "critical": 90
         },
-        "format": "{}% ",
+        "format": "{}% ",
         "tooltip": false
     },
     "disk": {
