@@ -1,0 +1,78 @@
+# Start the terminal
+bindsym $mod+Return exec $terminal
+bindsym $mod+Shift+n exec $terminal -e "nnn"
+
+# Start rofi
+bindsym $mod+d exec rofi -show drun -theme launchpad
+bindsym $mod+Shift+f exec ~/.local/bin/rofi-finder
+bindsym $mod+Shift+w exec networkmanager_dmenu
+
+# Kill focused window
+bindsym $mod+Shift+q kill
+# Reload configuration file
+bindsym $mod+Shift+c reload
+
+# Move focus around
+bindsym $mod+$up focus up
+bindsym $mod+$down focus down
+bindsym $mod+$left focus left
+bindsym $mod+$right focus right
+# Alternatively, use $mod+[up|down|left|right]
+bindsym $mod+Up focus up
+bindsym $mod+Down focus down
+bindsym $mod+Left focus left
+bindsym $mod+Right focus right
+
+# Move the focused window with the same combination, adding Shift
+bindsym $mod+Shift+$up move up
+bindsym $mod+Shift+$down move down
+bindsym $mod+Shift+$left move left
+bindsym $mod+Shift+$right move right
+# As before, with arrow keys
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Right move right
+
+bindsym $mod+g focus next
+bindsym $mod+Shift+g focus prev
+
+bindsym $mod+Mod1+h workspace prev_on_output
+bindsym $mod+Mod1+l workspace next_on_output
+bindsym $mod+Mod1+Left workspace prev_on_output
+bindsym $mod+Mod1+Right workspace next_on_output
+
+# Move the currently focused window to the scratchpad
+bindsym $mod+Shift+t move scratchpad
+
+# Show the next scratchpad window or hide the focused scratchpad window.
+# If there are multiple scratchpad windows, this command cycles through them.
+bindsym $mod+t scratchpad show
+
+# Get a password with rofi from pass
+bindsym $mod+p exec ~/.local/bin/rofi-pass
+# Get an emoji from emoji picker
+bindsym $mod+u exec rofi -show emoji -modi emoji
+# Get an OTP with rofi from YubiKey.
+bindsym $mod+y exec ~/.local/bin/rofi-yubi
+
+# Manage the brightness.
+bindsym XF86MonBrightnessDown exec light -U 10
+bindsym XF86MonBrightnessUp exec light -A 10
+
+# Manage the media player.
+bindsym XF86AudioNext exec playerctl next
+bindsym XF86AudioPlay exec playerctl play-pause
+bindsym XF86AudioPrev exec playerctl previous
+
+# Manage the audio volume
+set $WOBSOCK $XDG_RUNTIME_DIR/wob.sock
+exec mkfifo $WOBSOCK && tail -f $WOBSOCK | wob
+
+bindsym XF86AudioRaiseVolume exec pamixer -ui 5 && pamixer --get-volume > $WOBSOCK
+bindsym XF86AudioLowerVolume exec pamixer -ud 5 && pamixer --get-volume > $WOBSOCK
+
+# Manage the microphone
+bindsym XF86AudioMute exec pamixer --toggle-mute && ( pamixer --get-mute && echo 0 > $WOBSOCK ) || pamixer --get-volume > $WOBSOCK
+
+exec rm -f /tmp/wob && mkfifo /tmp/wob && tail -f /tmp/wob | wob

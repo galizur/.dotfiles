@@ -1,0 +1,57 @@
+# Screenshots
+set $mode_screenshot "<span foreground='$nord13'>🖼</span> \
+    <span foreground='$nord4'><b>Clipboard</b></span> <span foreground='$nord13'>(<b>c</b>)</span> \
+    <span foreground='$nord2'>—</span> \
+    <span foreground='$nord4'><b>Full Screen</b></span> <span foreground='$nord13'>(<b>f</b>)</span> \
+    <span foreground='$nord2'>—</span> \
+    <span foreground='$nord4'><b>Region</b></span> <span foreground='$nord13'>(<b>r</b>)</span>"
+
+mode --pango_markup $mode_screenshot {
+     bindsym c exec --no-startup-id grim -g "$(slurp -d)" - | wl-copy -t image/png, mode "default"
+     bindsym f exec --no-startup-id grim -o $(swaymsg -t get_outputs | jq -r '.[] | select(.focused) | .name') ~/Pictures/Screenshots/$(date +'%Y-%m-%d-%H%M%S').png, mode "default"
+     bindsym r exec --no-startup-id grim -g "$(slurp -d)" ~/Pictures/Screenshots/$(date +'%Y-%m-%d-%H%M%S').png, mode "default"
+     # Return to default mode.
+     bindsym Escape mode "default"
+     bindsym Return mode "default"
+}
+bindsym $mod+Print mode $mode_screenshot
+
+# Resizing containers:
+mode "resize" {
+     # left will shrink the containers width
+     # right will grow the containers width
+     # up will shrink the containers height
+     # down will grow the containers height
+     bindsym $left resize shrink width 10px
+     bindsym $down resize grow height 10px
+     bindsym $up resize shrink height 10px
+     bindsym $right resize grow width 10px
+
+     # Same with arrow keys
+     bindsym Left resize shrink width 10px
+     bindsym Down resize grow height 10px
+     bindsym Up resize shrink height 10px
+     bindsym Right resize grow width 10px
+
+     # Return to default mode
+     bindsym Return mode "default"
+     bindsym Escape mode "default"
+}
+bindsym $mod+r mode "resize"
+
+# Setting gaps
+set $mode_gaps "<span foreground='$nord13'></span> \
+    <span><b>Increase</b></span> <span>(<b></b>)</span> \
+    <span><b>Decrease</b></span> <span>(<b></b>)</span>"
+# mode "gaps" {
+mode --pango_markup $mode_gaps {
+     bindsym Right gaps inner current plus 5
+     bindsym Left gaps inner current minus 5
+     bindsym Up gaps outer current plus 5 && gaps inner current plus 5
+     bindsym Down gaps outer current minus 5 && gaps inner current minus 5
+     bindsym Escape mode "default"
+     bindsym Return mode "default"
+}
+bindsym $mod+Shift+o mode $mode_gaps
+
+bindsym $mod+Shift+p exec wlogout -p layer-shell

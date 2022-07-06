@@ -1,0 +1,37 @@
+# Assign applications to their own workspace.
+# To find out class, run `xprop` and click on the window.
+assign [app_id="^foot"]               → $ws1
+assign [app_id="^firefox"]            → $ws2
+assign [class="^Emacs$"]              → $ws3
+assign [class="^Gimp$"]               → $ws6
+assign [class="qemu-system-*"]        → $ws7
+
+for_window [class=.*] focus
+
+# Inhibit idle when a window is in fullscreen.
+for_window [class=.*] inhibit_idle fullscreen
+
+# Inhibit idle when a window title contains a "Meet" window title
+for_window [class="^firefox$" title="Meet - .*-.*-.*"] inhibit_idle visible
+
+# Fix some bug for Spotify.
+for_window [class="Spotify"] move to workspace $ws4
+
+# Windows:
+# Floating windows
+for_window [app_id="iwgtk"] floating enable
+for_window [app_id="blueman-manager"] floating enable
+for_window [app_id="pavucontrol"] floating enable
+for_window [app_id="org.gnome.Nautilus"] floating enable
+for_window [app_id="wdisplays"] floating enable
+for_window [app_id="pavucontrol"] floating enable
+for_window [app_id="imv"] floating enable
+for_window [app_id="pamac-manager"] floating enable
+for_window [instance="origin.exe"] floating enable
+for_window [app_id="gnome-system-monitor"] floating enable
+
+# Window size
+for_window [app_id="blueman-manager"] resize set 1000 600
+for_window [app_id="gnome-system-monitor"] resize shrink down 100px; resize shrink up 100px
+for_window [app_id="wdisplays"] resize set 1000 600
+for_window [app_id="pavucontrol"] resize set 1000 600

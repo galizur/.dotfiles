@@ -1,55 +1,18 @@
-include sub/variables
-include sub/output
-include sub/input
-include sub/bindings
-include sub/idle
+include sub/sets
+include sub/settings
+include sub/outputs
+include sub/inputs
+include sub/mappings
+include sub/workspaces
+include sub/programs
+include sub/layouts
+include sub/modes
+include sub/swaybar
 
-#
-# Status Bar:
-#
-# Read `man 5 sway-bar` for more information about this section.
-bar {
-    swaybar_command waybar
-    workspace_buttons yes
-}
-
-# Set gaps
-gaps inner 6
-gaps outer 6
-smart_gaps on
-
-# Focus window on event activation
-focus_on_window_activation focus
-
-# Hide the cursor after some time of inactivity
-seat seat0 hide_cursor 5000
-
-# Set default window border
-default_floating_border pixel 1
-default_border pixel 0
-
-# Switch back to the previous workspace when repeating a workspace
-workspace_auto_back_and_forth yes
-
-for_window [instance="origin.exe"] floating enable
-
-set $WOBSOCK $XDG_RUNTIME_DIR/wob.sock
-exec mkfifo $WOBSOCK && tail -f $WOBSOCK | wob
-
-bindsym XF86AudioRaiseVolume exec pamixer -ui 5 && pamixer --get-volume > $WOBSOCK
-bindsym XF86AudioLowerVolume exec pamixer -ud 5 && pamixer --get-volume > $WOBSOCK
-bindsym XF86AudioMute exec pamixer --toggle-mute && ( pamixer --get-mute && echo 0 > $WOBSOCK ) || pamixer --get-volume > $WOBSOCK
-
-# exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
-
-set $gnome-schema org.gnome.desktop.interface
-
-exec_always {
-	gsettings set $gnome-schema gtk-theme 'Nordic'
-	gsettings set org.gnome.desktop.wm.preferences theme 'Nordic'
-}
-
+# Startup programs
 exec --no-startup-id [ -f $XDG_BIN_HOME/autostart.sh ] && . "$XDG_BIN_HOME/autostart.sh"
 
-include /etc/sway/config.d/*
-#exec systemctl --user start sway-session.target
+exec dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK
+
+# auto launch applications
+# exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
