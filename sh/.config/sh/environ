@@ -81,7 +81,7 @@ export READER="evince"
 # Increase the history save size.
 export SAVEHIST=10000
 
-# Use alacritty as default terminal.
+# Use foot as default terminal.
 export TERMINAL="foot"
 
 # Add temporary files according to the user.
@@ -95,3 +95,5 @@ export NNN_PLUG='f:finder;o:fzopen;p:mocplay;d:diffs;t:nmount;v:imgview;g:getplu
 
 # AMD stuff
 export AMD_VULKAN_ICD=RADV
+
+export LANG=en_US.UTF-8
