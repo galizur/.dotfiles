@@ -3,6 +3,7 @@
 assign [app_id="^foot"]               → $ws1
 assign [app_id="^firefox"]            → $ws2
 assign [class="^Emacs$"]              → $ws3
+assign [app_id="^Discord$"]           → $ws4
 assign [class="^Gimp$"]               → $ws6
 assign [class="qemu-system-*"]        → $ws7
 
@@ -19,7 +20,6 @@ for_window [class="Spotify"] move to workspace $ws4
 
 # Windows:
 # Floating windows
-for_window [app_id="iwgtk"] floating enable
 for_window [app_id="blueman-manager"] floating enable
 for_window [app_id="pavucontrol"] floating enable
 for_window [app_id="org.gnome.Nautilus"] floating enable

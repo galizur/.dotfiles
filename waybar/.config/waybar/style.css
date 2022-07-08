@@ -67,13 +67,13 @@ window#waybar {
 }
 #custom-power {
     background-color: rgba(180, 142, 173, 0.6);
-    border-radius: 50px;
-    margin: 5px 5px;
+    border-radius: 50%;
+    margin: 6px 5px;
     padding: 1px 3px;
 }
 #custom-menu {
   background-color: rgba(180, 142, 173, 0.6);
-  margin: 5px 5px;
+  margin: 6px 5px;
   padding: 1px 3px;
 }
 /*-----Indicators----*/
