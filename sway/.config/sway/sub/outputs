@@ -3,6 +3,6 @@
 
 # Monitor resolution
 output DP-3 resolution 1920x1080@75Hz
-focus output DP-3
 # Wallpaper
-output * bg '/home/charlie/.local/bin/wallpaper.py' fill
+output * bg `/home/charlie/.local/bin/wallpaper.py` fill
+focus output DP-3

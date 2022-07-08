@@ -99,8 +99,8 @@
 ;; Set variable pitch face
 (set-face-attribute 'variable-pitch nil :font "Cantarell" :weight 'regular :height 1.35)
 
-(use-package mixed-pitch
-  :hook (text-mode . mixed-pitch-mode))
+;;(use-package mixed-pitch
+;;    :hook (text-mode . mixed-pitch-mode))
 
 (use-package ligature
   :straight (ligature :type git :host github :repo
@@ -253,7 +253,7 @@
 (use-package corfu
   ;; Optional customizations
   :custom
-  (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
+  (corfu-cycle t)                ;; Enable cycling for 'corfu-next/previous'
   (corfu-auto t)                 ;; Enable auto completion
   ;; (corfu-separator ?\s)          ;; Orderless field separator
   ;; (corfu-quit-no-match nil)      ;; Never quit, even if there is no match
@@ -291,7 +291,7 @@
          ("C-c c &" . cape-sgml)
          ("C-c c r" . cape-rfc1345))
   :init
-  ;; Add `completion-at-point-functions', used by `completion-at-point'.
+  ;; Add 'completion-at-point-functions', used by 'completion-at-point'.
   (add-to-list 'completion-at-point-functions #'cape-file)
   (add-to-list 'completion-at-point-functions #'cape-tex)
   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
@@ -784,7 +784,7 @@
 
 (use-package lsp-pyright
   :if (executable-find "pyright")
-  ;; To properly load `lsp-pyright', the `require' instruction is important.
+  ;; To properly load 'lsp-pyright', the 'require' instruction is important.
   :hook (python-mode . (lambda ()
                          (require 'lsp-pyright)
                          (lsp-deferred)))
@@ -1470,7 +1470,7 @@
 
   (defmacro ignore-args (fnc)
     "Return function that ignores its arguments and invokes FNC."
-    `(lambda (&rest _rest)
+    '(lambda (&rest _rest)
        (funcall ,fnc)))
   :hook ((after-save . my/config-tangle)
          (org-mode . visual-line-mode))
@@ -1588,11 +1588,11 @@
           (file (buffer-file-name))
           (async-quiet-switch "-q"))
       (async-start
-       `(lambda ()
+       '(lambda ()
           (require 'org)
           (org-babel-tangle-file ,org-file))
        (unless show-async-tangle-results
-         `(lambda (result)
+         '(lambda (result)
             (if result
                 (message "[✓] %s successfully tangled (%.2fs)"
                          ,org-file
@@ -1630,7 +1630,7 @@
     (org-capture 0 "t"))
   :custom
   (org-agenda-category-icon-alist
-   `(("home" ,(list (all-the-icons-faicon "home" :v-adjust -0.05)) nil nil :ascent center :mask heuristic)
+   '(("home" ,(list (all-the-icons-faicon "home" :v-adjust -0.05)) nil nil :ascent center :mask heuristic)
      ("inbox" ,(list (all-the-icons-faicon "inbox" :v-adjust -0.1)) nil nil :ascent center :mask heuristic)
      ("people" ,(list (all-the-icons-material "people" :v-adjust -0.25)) nil nil :ascent center :mask heuristic)
      ("work" ,(list (all-the-icons-material "work" :v-adjust -0.25)) nil nil :ascent center :mask heuristic)
@@ -1719,7 +1719,7 @@
             ":END:") "Template for a contact.")
   :custom
   (org-capture-templates
-   `(("c" "Contact" entry (file+headline "~/.personal/agenda/contacts.org" "Inbox"),
+   '(("c" "Contact" entry (file+headline "~/.personal/agenda/contacts.org" "Inbox"),
       my/org-contacts-template :empty-lines 1)
      ("p" "People" entry (file+headline "~/.personal/agenda/people.org" "Tasks"),
       my/org-basic-task-template :empty-lines 1)
@@ -1836,7 +1836,7 @@
   (org-roam-completion-everywhere t)
   (org-roam-dailies-directory "journal/")
   (org-roam-dailies-capture-templates
-   `(("d" "default" plain
+   '(("d" "default" plain
       "* %?"
       :if-new (file+head ,my/daily-note-filename
                          ,my/daily-note-header)
@@ -1931,17 +1931,17 @@
                             (smtpmail-stream-type . ssl)
                             (user-mail-address . "karolos.triantafyllou@gmail.com")
                             (user-full-name . "Karolos Triantafyllou")))
-    ;; (setq mu4e-headers-attach-mark    `("a" . ,(with-faicon "paperclip" "" 0.75 -0.05 "all-the-icons-lyellow"))
-    ;;       mu4e-headers-draft-mark     `("D" . ,(with-octicon "pencil" "" 0.75 -0.05 "all-the-icons-lsilver"))
-    ;;       mu4e-headers-encrypted-mark `("x" . ,(with-faicon "lock" "" 0.75 -0.05 "all-the-icons-lred"))
-    ;;       mu4e-headers-flagged-mark   `("F" . ,(with-faicon "flag" "" 0.75 -0.05 "all-the-icons-maroon"))
-    ;;       mu4e-headers-new-mark       `("N" . ,(with-faicon "check-circle" "" 0.75 -0.05 "all-the-icons-silver"))
-    ;;       mu4e-headers-passed-mark    `("P" . ,(with-faicon "share" "" 0.75 -0.05 "all-the-icons-purple "))
-    ;;       mu4e-headers-replied-mark   `("R" . ,(with-faicon "reply" "" 0.75 -0.05 "all-the-icons-lgreen"))
-    ;;       mu4e-headers-seen-mark      `("S" . ,(with-octicon "check" "" 1 -0.05 "all-the-icons-lgreen"))
-    ;;       mu4e-headers-signed-mark    `("s" . ,(with-faicon "key" "" 0.75 -0.05 "all-the-icons-cyan"))
-    ;;       mu4e-headers-trashed-mark   `("T" . ,(with-faicon "trash" "" 0.75 -0.05 "all-the-icons-lred"))
-    ;;       mu4e-headers-unread-mark    `("u" . ,(with-faicon "envelope" "" 0.75 -0.05 "all-the-icons-silver")))
+    ;; (setq mu4e-headers-attach-mark    '("a" . ,(with-faicon "paperclip" "" 0.75 -0.05 "all-the-icons-lyellow"))
+    ;;       mu4e-headers-draft-mark     '("D" . ,(with-octicon "pencil" "" 0.75 -0.05 "all-the-icons-lsilver"))
+    ;;       mu4e-headers-encrypted-mark '("x" . ,(with-faicon "lock" "" 0.75 -0.05 "all-the-icons-lred"))
+    ;;       mu4e-headers-flagged-mark   '("F" . ,(with-faicon "flag" "" 0.75 -0.05 "all-the-icons-maroon"))
+    ;;       mu4e-headers-new-mark       '("N" . ,(with-faicon "check-circle" "" 0.75 -0.05 "all-the-icons-silver"))
+    ;;       mu4e-headers-passed-mark    '("P" . ,(with-faicon "share" "" 0.75 -0.05 "all-the-icons-purple "))
+    ;;       mu4e-headers-replied-mark   '("R" . ,(with-faicon "reply" "" 0.75 -0.05 "all-the-icons-lgreen"))
+    ;;       mu4e-headers-seen-mark      '("S" . ,(with-octicon "check" "" 1 -0.05 "all-the-icons-lgreen"))
+    ;;       mu4e-headers-signed-mark    '("s" . ,(with-faicon "key" "" 0.75 -0.05 "all-the-icons-cyan"))
+    ;;       mu4e-headers-trashed-mark   '("T" . ,(with-faicon "trash" "" 0.75 -0.05 "all-the-icons-lred"))
+    ;;       mu4e-headers-unread-mark    '("u" . ,(with-faicon "envelope" "" 0.75 -0.05 "all-the-icons-silver")))
     (add-to-list 'mu4e-header-info-custom
                  '(:account
                    :name "Account"

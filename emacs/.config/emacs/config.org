@@ -277,6 +277,7 @@ Set our favorite fonts! We just must make sure the font is installed on the syst
   (set-face-attribute 'default nil :font "Iosevka" :height 110)
   ;; Set fixed pitch face
   (set-face-attribute 'fixed-pitch nil :font "Iosevka")
+  (set-fontset-font t 'latin "Cantarell")
   ;; Set emoji font
   (set-fontset-font t 'symbol (font-spec :family "Noto Color Emoji") nil 'prepend)
   ;; Set variable pitch face
@@ -288,8 +289,8 @@ Set our favorite fonts! We just must make sure the font is installed on the syst
 In order to used multiple fonts, we use the the package [[https://gitlab.com/jabranham/mixed-pitch][mixed-pitch]].
 
 #+begin_src emacs-lisp
-  (use-package mixed-pitch
-    :hook (text-mode . mixed-pitch-mode))
+  ;;(use-package mixed-pitch
+;;    :hook (text-mode . mixed-pitch-mode))
 #+end_src
 
 *** Ligatures
@@ -538,7 +539,7 @@ We used [[https://github.com/company-mode/company-mode][company-mode]] as our co
   (use-package corfu
     ;; Optional customizations
     :custom
-    (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
+    (corfu-cycle t)                ;; Enable cycling for 'corfu-next/previous'
     (corfu-auto t)                 ;; Enable auto completion
     ;; (corfu-separator ?\s)          ;; Orderless field separator
     ;; (corfu-quit-no-match nil)      ;; Never quit, even if there is no match
@@ -580,7 +581,7 @@ We used [[https://github.com/company-mode/company-mode][company-mode]] as our co
            ("C-c c &" . cape-sgml)
            ("C-c c r" . cape-rfc1345))
     :init
-    ;; Add `completion-at-point-functions', used by `completion-at-point'.
+    ;; Add 'completion-at-point-functions', used by 'completion-at-point'.
     (add-to-list 'completion-at-point-functions #'cape-file)
     (add-to-list 'completion-at-point-functions #'cape-tex)
     (add-to-list 'completion-at-point-functions #'cape-dabbrev)
@@ -1256,7 +1257,7 @@ If we ever wanted to change =Meson=, we could use [[https://github.com/atilaneve
 
   (use-package lsp-latex
   :if (executable-find "texlab")
-  ;; To properly load `lsp-latex', the `require' instruction is important.
+  ;; To properly load 'lsp-latex', the 'require' instruction is important.
   :hook (LaTeX-mode . (lambda ()
                         (require 'lsp-latex)
                         (lsp-deferred)))
@@ -1381,7 +1382,7 @@ If we ever wanted to change =Meson=, we could use [[https://github.com/atilaneve
 
   (use-package lsp-pyright
     :if (executable-find "pyright")
-    ;; To properly load `lsp-pyright', the `require' instruction is important.
+    ;; To properly load 'lsp-pyright', the 'require' instruction is important.
     :hook (python-mode . (lambda ()
                            (require 'lsp-pyright)
                            (lsp-deferred)))
@@ -2761,17 +2762,17 @@ Provides snippets for consult.
                               (smtpmail-stream-type . ssl)
                               (user-mail-address . "karolos.triantafyllou@gmail.com")
                               (user-full-name . "Karolos Triantafyllou")))
-      ;; (setq mu4e-headers-attach-mark    `("a" . ,(with-faicon "paperclip" "" 0.75 -0.05 "all-the-icons-lyellow"))
-      ;;       mu4e-headers-draft-mark     `("D" . ,(with-octicon "pencil" "" 0.75 -0.05 "all-the-icons-lsilver"))
-      ;;       mu4e-headers-encrypted-mark `("x" . ,(with-faicon "lock" "" 0.75 -0.05 "all-the-icons-lred"))
-      ;;       mu4e-headers-flagged-mark   `("F" . ,(with-faicon "flag" "" 0.75 -0.05 "all-the-icons-maroon"))
-      ;;       mu4e-headers-new-mark       `("N" . ,(with-faicon "check-circle" "" 0.75 -0.05 "all-the-icons-silver"))
-      ;;       mu4e-headers-passed-mark    `("P" . ,(with-faicon "share" "" 0.75 -0.05 "all-the-icons-purple "))
-      ;;       mu4e-headers-replied-mark   `("R" . ,(with-faicon "reply" "" 0.75 -0.05 "all-the-icons-lgreen"))
-      ;;       mu4e-headers-seen-mark      `("S" . ,(with-octicon "check" "" 1 -0.05 "all-the-icons-lgreen"))
-      ;;       mu4e-headers-signed-mark    `("s" . ,(with-faicon "key" "" 0.75 -0.05 "all-the-icons-cyan"))
-      ;;       mu4e-headers-trashed-mark   `("T" . ,(with-faicon "trash" "" 0.75 -0.05 "all-the-icons-lred"))
-      ;;       mu4e-headers-unread-mark    `("u" . ,(with-faicon "envelope" "" 0.75 -0.05 "all-the-icons-silver")))
+       (setq mu4e-headers-attach-mark    `("a" . ,(with-faicon "paperclip" "" 0.75 -0.05 "all-the-icons-lyellow"))
+             mu4e-headers-draft-mark     `("D" . ,(with-octicon "pencil" "" 0.75 -0.05 "all-the-icons-lsilver"))
+             mu4e-headers-encrypted-mark `("x" . ,(with-faicon "lock" "" 0.75 -0.05 "all-the-icons-lred"))
+             mu4e-headers-flagged-mark   `("F" . ,(with-faicon "flag" "" 0.75 -0.05 "all-the-icons-maroon"))
+             mu4e-headers-new-mark       `("N" . ,(with-faicon "check-circle" "" 0.75 -0.05 "all-the-icons-silver"))
+             mu4e-headers-passed-mark    `("P" . ,(with-faicon "share" "" 0.75 -0.05 "all-the-icons-purple "))
+             mu4e-headers-replied-mark   `("R" . ,(with-faicon "reply" "" 0.75 -0.05 "all-the-icons-lgreen"))
+             mu4e-headers-seen-mark      `("S" . ,(with-octicon "check" "" 1 -0.05 "all-the-icons-lgreen"))
+             mu4e-headers-signed-mark    `("s" . ,(with-faicon "key" "" 0.75 -0.05 "all-the-icons-cyan"))
+             mu4e-headers-trashed-mark   `("T" . ,(with-faicon "trash" "" 0.75 -0.05 "all-the-icons-lred"))
+             mu4e-headers-unread-mark    `("u" . ,(with-faicon "envelope" "" 0.75 -0.05 "all-the-icons-silver")))
       (add-to-list 'mu4e-header-info-custom
                    '(:account
                      :name "Account"
