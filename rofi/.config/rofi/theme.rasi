@@ -2,13 +2,14 @@
 
 window {
 	border-color:					@ac;
-	border:							0px;
+	border:							3px;
     background-color:               @bg;
     border-radius:                  12px;
     location:                       center;
     text-color:                     @fg;
     transparency:                   "real";
-	width:							30%;
+	width:							35%;
+    height:                         40%;
     x-offset:                       0;
     y-offset:                       0;
 }
@@ -90,8 +91,8 @@ element-text {
 }
 
 element selected {
-    background-color:               @ac;
-	border:							0% 0% 0% 0%;
-    border-color:                  	@bg;
-    text-color:                     @bg;
+    background-color:               @es;
+	border:							3px;
+    border-color:                  	@bc;
+    text-color:                     @fg;
 }
