@@ -3,7 +3,7 @@ anchor center
 
 # margin, distance from edges if anchor is set
 margin 0
-       
+
 # show timeout in millisecs
 timeout 200
 
@@ -17,7 +17,7 @@ columns 5
 ratio 8
 
 # font face, use any string that is output by fc-list
-font_face Terminus (TTF):style=Bold
+font_face Source Code Pro 11 (TTF):style=Bold
 
 # margin size around text
 text_margin_size 7
