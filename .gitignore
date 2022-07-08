@@ -29,3 +29,6 @@
 /emacs/.config/emacs/var/
 *.log
 /emacs/.config/emacs/.cache/
+/npm/.config/npm/_cacache/
+/npm/.config/npm/_update-notifier-last-checked
+/sway/.config/sway/info.txt
