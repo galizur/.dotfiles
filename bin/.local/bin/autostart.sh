@@ -10,8 +10,8 @@ if have mpd; then
     [ ! -s ~/.config/mpd/pid ] && mpd &
 fi
 
-if have razercfg; then
-    razercfg -r 4 &
+if have polychromatic-tray-applet; then
+    polychromatic-tray-applet &
 fi
 
 if have gammastep; then
