@@ -9,8 +9,7 @@ set $right l
 
 # Global variables
 set $browser firefox
-set $locker swaylock --ignore-empty-password --show-failed-attempt --indicator-caps-lock --scalling fill \
-    -i '~/Pictures/Wallpapers/1920x1080/sunset.jpg'
+set $locker swaylock --ignore-empty-password --show-failed-attempt --indicator-caps-lock --scalling fill -i ~/Pictures/Wallpapers/1920x1080/sunset.jpg
 set $font pango:Source Code Pro Medium 9
 set $terminal foot
 
