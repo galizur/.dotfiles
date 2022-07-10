@@ -95,5 +95,6 @@ export NNN_PLUG='f:finder;o:fzopen;p:mocplay;d:diffs;t:nmount;v:imgview;g:getplu
 
 # AMD stuff
 export AMD_VULKAN_ICD=RADV
+export DISABLE_LAYER_AMD_SWITCHABLE_GRAPHICS_1=1
 
 export LANG=en_US.UTF-8
