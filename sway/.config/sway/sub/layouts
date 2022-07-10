@@ -1,23 +1,23 @@
-# Split windows
-bindsym $mod+b splith
-bindsym $mod+v splitv
+bindsym --to-code {
+        # Split windows
+        $mod+b splith
+        $mod+v splitv
+        # Switch to different layout style
+        $mod+s layout stacking
+        $mod+w layout tabbed
+        $mod+e layout toggle split
+        # Make the current focus fullscreen
+        $mod+f fullscreen
 
-# Switch to different layout style
-bindsym $mod+s layout stacking
-bindsym $mod+w layout tabbed
-bindsym $mod+e layout toggle split
+        # Toggle the current focus between tiling and floating mode
+        $mod+Shift+space floating toggle
 
-# Make the current focus fullscreen
-bindsym $mod+f fullscreen
+        # Swap focus between the tiling area and the floating area
+        $mod+m focus mode_toggle
 
-# Toggle the current focus between tiling and floating mode
-bindsym $mod+Shift+space floating toggle
+        # Move focus to parent container
+        $mod+a focus parent
 
-# Swap focus between the tiling area and the floating area
-bindsym $mod+m focus mode_toggle
-
-# Move focus to parent container
-bindsym $mod+a focus parent
-
-# Dismiss all notifications
-bindsym Control+Shift+Space exec makoctl dismiss -a
+        # Dismiss all notifications
+        Control+Shift+Space exec makoctl dismiss -a
+}
