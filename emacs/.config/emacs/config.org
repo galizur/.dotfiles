@@ -173,16 +173,16 @@ Last thing we do, is suppress some warnings of =native-compilation=, since it's 
 We enable these when we need to debug our startup
 
 #+begin_src emacs-lisp
-  ;; (defun my/display-startup-time ()
-  ;;   (message "⏱ Emacs loaded in %s with %d garbage collections."
-  ;; 	   (format "%.2f seconds"
-  ;; 		   (float-time
-  ;; 		    (time-subtract after-init-time before-init-time)))
-  ;; 	   gcs-done))
+  (defun my/display-startup-time ()
+    (message "⏱ Emacs loaded in %s with %d garbage collections."
+             (format "%.2f seconds"
+                     (float-time
+            (time-subtract after-init-time before-init-time)))
+             gcs-done))
 
-  ;; (add-hook 'emacs-startup-hook #'my/display-startup-time)
+  (add-hook 'emacs-startup-hook #'my/display-startup-time)
 
-  ;; (setq use-package-verbose t)
+  (setq use-package-verbose t)
 #+end_src
 
 ** Keeping The Folder Clean
@@ -203,7 +203,7 @@ We use the package [[https://github.com/emacscollective/no-littering][no-litteri
     :straight nil
     :demand t
     :custom
-    (auth-sources '("~/.gnupg/shared/authinfo.gpg"
+    (auth-sources '("~/.config/gnupg/shared/.authinfo.gpg"
                     "~/.authinfo.gpg"
                     "~/.authinfo"
                     "~/.netrc")))
@@ -619,7 +619,8 @@ We use [[https://emacs-lsp.github.io/lsp-mode/][LSP]] as a language server, beca
            (lsp-completion-mode . my/lsp-mode-setup-completion))
     :custom
     (lsp-server-install-dir (expand-file-name (format "%s/etc/lsp" user-emacs-directory)))
-    (lsp-keymap-prefix "C-c ;"))
+    (lsp-keymap-prefix "C-c ;")
+    (lsp-warn-no-matched-clients 'nil))
 #+end_src
 
 *** LSP-ui
@@ -2234,127 +2235,128 @@ Provides snippets for consult.
 * Org Mode Configuration
 
 #+begin_src emacs-lisp
-  (use-package org-contrib)
+    (use-package org-contrib
+      :demand t)
 
-  (use-package org
-    :delight "θ"
-    :hook (org-mode . turn-off-auto-fill)
-    :bind ("C-c i" . org-insert-structure-template)
-    :preface
-    (defun my/org-archive-done-tasks ()
-      "Archive finished or cancelled tasks."
-      (interactive)
-      (org-map-entries
-       (lambda ()
-         (org-archive-subtree)
-         (setq org-map-continue-from (outline-previous-heading)))
-       "TODO=\"DONE\"|TODO=\"CANCELLED\"" (if (org-before-first-heading-p) 'file 'tree)))
+    (use-package org
+      :delight "θ"
+      :hook (org-mode . turn-off-auto-fill)
+      :bind ("C-c i" . org-insert-structure-template)
+      :preface
+      (defun my/org-archive-done-tasks ()
+        "Archive finished or cancelled tasks."
+        (interactive)
+        (org-map-entries
+         (lambda ()
+           (org-archive-subtree)
+           (setq org-map-continue-from (outline-previous-heading)))
+         "TODO=\"DONE\"|TODO=\"CANCELLED\"" (if (org-before-first-heading-p) 'file 'tree)))
 
-    (defun my/org-jump ()
-      "Jump to a specific task."
-      (interactive)
-      (let ((current-prefix-arg '(4)))
-        (call-interactively 'org-refile)))
+      (defun my/org-jump ()
+        "Jump to a specific task."
+        (interactive)
+        (let ((current-prefix-arg '(4)))
+          (call-interactively 'org-refile)))
 
-    (defun my/org-use-speed-commands-for-headings-and-lists ()
-      "Activate speed commands on list items too."
-      (or (and (looking-at org-outline-regexp) (looking-back "^\**"))
-          (save-excursion (and (looking-at (org-item-re)) (looking-back "^[ \t]*")))))
+      (defun my/org-use-speed-commands-for-headings-and-lists ()
+        "Activate speed commands on list items too."
+        (or (and (looking-at org-outline-regexp) (looking-back "^\**"))
+            (save-excursion (and (looking-at (org-item-re)) (looking-back "^[ \t]*")))))
 
-    (defmacro ignore-args (fnc)
-      "Return function that ignores its arguments and invokes FNC."
-      `(lambda (&rest _rest)
-         (funcall ,fnc)))
-    :hook ((after-save . my/config-tangle)
-           (org-mode . visual-line-mode))
-    :custom
-    (org-archive-location "~/.personal/archives/%s::")
-    (org-blank-before-new-entry '((heading . t) (plain-list-item . t)))
-    (org-confirm-babel-evaluate nil)
-    (org-cycle-include-plain-lists 'integrate)
-    (org-ellipsis " ▾")
-    (org-export-backends '(ascii beamer html icalendar latex man md org texinfo))
-    (org-hide-emphasis-markers t)
-    (org-lod-done 'time)
-    (org-log-into-drrawer t)
-    (org-modules '(org-crypt
-                   org-habit
-                   org-mouse
-                   org-protocol
-                   org-tempo))
-    (org-refile-allow-creating-parent-nodes 'confirm)
-    (org-refile-targets '((org-agenda-files :maxlevel . 1)
-                          ("~/.personal/agenda/home.org" :maxlevel . 2)
-                          ("~/.personal/agenda/work.org" :maxlevel . 2)))
-    (org-refile-use-cache nil)
-    (org-refile-use-outline-path nil)
-    (org-startup-indented t)
-    (org-startup-with-inline-images t)
-    (org-tag-alist '((:startgroup . "Context")
-                     ("@errands" . ?e)
-                     ("@home" . ?h)
-                     ("@work" . ?w)
-                     (:endgroup)
-                     (:startgroup . "Difficulty")
-                     ("easy" . ?E)
-                     ("medium" . ?M)
-                     ("challenging" . ?C)
-                     (:endgroup)
-                     ("bug" . ?b)
-                     ("car" . ?v)
-                     ("future" . ?F)
-                     ("goal" . ?g)
-                     ("health" . ?H)
-                     ("house" . ?O)
-                     ("meeting" . ?m)
-                     ("planning" . ?p)
-                     ("phone" . ?0)
-                     ("purchase" . ?P)
-                     ("reading" . ?r)
-                     ("review" . ?R)
-                     ("study" . ?s)
-                     ("sport" . ?S)
-                     ("talk" . ?T)
-                     ("tech" . ?t)
-                     ("trip" . ?I)
-                     ("thinking" . ?i)
-                     ("update" . ?u)
-                     ("watch" . ?l)
-                     ("writing" . ?W)))
-    (org-tags-exclude-from-inheritance '("crypt" "project"))
-    (org-todo-keywords '((sequence "TODO(t)"
-                                   "STARTED(s)"
-                                   "NEXT(n)"
-                                   "SOMEDAY(.)"
-                                   "WAITING(w)""|" "DONE(x!)" "CANCELLED(c@)")))
-    (org-use-effective-time t)
-    (org-use-speed-commands 'my/org-use-speed-commands-for-headings-and-lists)
-    (org-yank-adjusted-subtrees t)
-    :config
-    (add-to-list 'org-global-properties '("Effort_ALL" . "0:05 0:15 0:30 1:00 2:00 3:00 4:00"))
-    (add-to-list 'org-speed-commands '("$" call-interactively 'org-archive-subtree))
-    (add-to-list 'org-speed-commands '("i" call-interactively 'org-clock-in))
-    (add-to-list 'org-speed-commands '("o" call-interactively 'org-clock-out))
-    (add-to-list 'org-speed-commands '("s" call-interactively 'org-schedule))
-    (add-to-list 'org-speed-commands '("x" org-todo "DONE"))
-    (add-to-list 'org-speed-commands '("y" org-todo-yesterday "DONE"))
-    (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
-    (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
-    (add-to-list 'org-structure-template-alist '("py" . "src python"))
-    (advice-add 'org-deadline :after (ignore-args #'org-save-all-org-buffers))
-    (advice-add 'org-schedule :after (ignore-args #'org-save-all-org-buffers))
-    (advice-add 'org-store-log-note :after (ignore-args #'org-save-all-org-buffers))
-    (advice-add 'org-refile :after 'org-save-all-org-buffers)
-    (advice-add 'org-todo :after (ignore-args #'org-save-all-org-buffers))
-    (font-lock-add-keywords 'org-mode
-                            '(("^ *\\([-]\\) "
-                               (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
-    (org-clock-persistence-insinuate)
-    (org-load-modules-maybe t))
+      (defmacro ignore-args (fnc)
+        "Return function that ignores its arguments and invokes FNC."
+        `(lambda (&rest _rest)
+           (funcall ,fnc)))
+      :hook ((after-save . my/config-tangle)
+             (org-mode . visual-line-mode))
+      :custom
+      (org-archive-location "~/.personal/archives/%s::")
+      (org-blank-before-new-entry '((heading . t) (plain-list-item . t)))
+      (org-confirm-babel-evaluate nil)
+      (org-cycle-include-plain-lists 'integrate)
+      (org-ellipsis " ▾")
+      (org-export-backends '(ascii beamer html icalendar latex man md org texinfo))
+      (org-hide-emphasis-markers t)
+      (org-lod-done 'time)
+      (org-log-into-drrawer t)
+      (org-modules '(org-crypt
+                     org-habit
+                     org-mouse
+                     org-protocol
+                     org-tempo))
+      (org-refile-allow-creating-parent-nodes 'confirm)
+      (org-refile-targets '((org-agenda-files :maxlevel . 1)
+                            ("~/.personal/agenda/home.org" :maxlevel . 2)
+                            ("~/.personal/agenda/work.org" :maxlevel . 2)))
+      (org-refile-use-cache nil)
+      (org-refile-use-outline-path nil)
+      (org-startup-indented t)
+      (org-startup-with-inline-images t)
+      (org-tag-alist '((:startgroup . "Context")
+                       ("@errands" . ?e)
+                       ("@home" . ?h)
+                       ("@work" . ?w)
+                       (:endgroup)
+                       (:startgroup . "Difficulty")
+                       ("easy" . ?E)
+                       ("medium" . ?M)
+                       ("challenging" . ?C)
+                       (:endgroup)
+                       ("bug" . ?b)
+                       ("car" . ?v)
+                       ("future" . ?F)
+                       ("goal" . ?g)
+                       ("health" . ?H)
+                       ("house" . ?O)
+                       ("meeting" . ?m)
+                       ("planning" . ?p)
+                       ("phone" . ?0)
+                       ("purchase" . ?P)
+                       ("reading" . ?r)
+                       ("review" . ?R)
+                       ("study" . ?s)
+                       ("sport" . ?S)
+                       ("talk" . ?T)
+                       ("tech" . ?t)
+                       ("trip" . ?I)
+                       ("thinking" . ?i)
+                       ("update" . ?u)
+                       ("watch" . ?l)
+                       ("writing" . ?W)))
+      (org-tags-exclude-from-inheritance '("crypt" "project"))
+      (org-todo-keywords '((sequence "TODO(t)"
+                                     "STARTED(s)"
+                                     "NEXT(n)"
+                                     "SOMEDAY(.)"
+                                     "WAITING(w)""|" "DONE(x!)" "CANCELLED(c@)")))
+      (org-use-effective-time t)
+      (org-use-speed-commands 'my/org-use-speed-commands-for-headings-and-lists)
+      (org-yank-adjusted-subtrees t)
+      :config
+      (add-to-list 'org-global-properties '("Effort_ALL" . "0:05 0:15 0:30 1:00 2:00 3:00 4:00"))
+      (add-to-list 'org-speed-commands '("$" call-interactively 'org-archive-subtree))
+      (add-to-list 'org-speed-commands '("i" call-interactively 'org-clock-in))
+      (add-to-list 'org-speed-commands '("o" call-interactively 'org-clock-out))
+      (add-to-list 'org-speed-commands '("s" call-interactively 'org-schedule))
+      (add-to-list 'org-speed-commands '("x" org-todo "DONE"))
+      (add-to-list 'org-speed-commands '("y" org-todo-yesterday "DONE"))
+      (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
+      (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
+      (add-to-list 'org-structure-template-alist '("py" . "src python"))
+      (advice-add 'org-deadline :after (ignore-args #'org-save-all-org-buffers))
+      (advice-add 'org-schedule :after (ignore-args #'org-save-all-org-buffers))
+      (advice-add 'org-store-log-note :after (ignore-args #'org-save-all-org-buffers))
+      (advice-add 'org-refile :after 'org-save-all-org-buffers)
+      (advice-add 'org-todo :after (ignore-args #'org-save-all-org-buffers))
+      (font-lock-add-keywords 'org-mode
+                              '(("^ *\\([-]\\) "
+                                 (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+      (org-clock-persistence-insinuate)
+      (org-load-modules-maybe t))
 
-  (use-package toc-org
-    :after org
-    :hook (org-mode . toc-org-enable))
+    (use-package toc-org
+      :after org
+      :hook (org-mode . toc-org-enable))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -2501,65 +2503,66 @@ Provides snippets for consult.
 ** Capture
 
 #+begin_src emacs-lisp
-    (use-package org-capture
-      :straight nil
-      :preface
-      (defvar my/org-active-task-template
-        (concat "* NEXT %^{Task}\n"
-                ":PROPERTIES:\n"
-                ":Effort: %^{effort|1:00|0:05|0:15|0:30|2:00|4:00}\n"
-                ":CAPTURED: %<%Y-%m-%d %H:%M>\n"
-                ":END:") "Template for basic task.")
-      (defvar my/org-appointment
-        (concat "* TODO %^{Appointment}\n"
-                "SCHEDULED: %t\n") "Template for appointment task.")
-      (defvar my/org-basic-task-template
-        (concat "* TODO %^{Task}\n"
-                ":PROPERTIES:\n"
-                ":Effort: %^{effort|1:00|0:05|0:15|0:30|2:00|4:00}\n"
-                ":CAPTURED: %<%Y-%m-%d %H:%M>\n"
-                ":END:") "Template for basic task.")
-      (defvar my/org-contacts-template
-        (concat "* %(org-contacts-template-name)\n"
-                ":PROPERTIES:\n"
-                ":BIRTHDAY: %^{YYYY-MM-DD}\n"
-                ":END:") "Template for a contact.")
-      :custom
-      (org-capture-templates
-       `(("c" "Contact" entry (file+headline "~/.personal/agenda/contacts.org" "Inbox"),
-          my/org-contacts-template :empty-lines 1)
-         ("p" "People" entry (file+headline "~/.personal/agenda/people.org" "Tasks"),
-          my/org-basic-task-template :empty-lines 1)
-         ("a" "Appointment" entry (file+headline "~/.personal/agenda/people.org" "Appointments"),
-          my/org-appointment :empty-lines 1)
-         ("m" "Meeting" entry (file+headline "~/.personal/agenda/people.org" "Meetings")
-          "* Meeting with %? :meeting:\n%U" :clock-in t :clock-resume t :empty-lines 1)
-         ("P" "Phone Call" entry (file+headline "~/.personal/agenda/people.org" "Phone Calls")
-          "* Phone %? :phone:\n%U" :clock-in t :clock-resume t)
+  (use-package org-capture
+    :straight nil
+    :demand t
+    :preface
+    (defvar my/org-active-task-template
+      (concat "* NEXT %^{Task}\n"
+              ":PROPERTIES:\n"
+              ":Effort: %^{effort|1:00|0:05|0:15|0:30|2:00|4:00}\n"
+              ":CAPTURED: %<%Y-%m-%d %H:%M>\n"
+              ":END:") "Template for basic task.")
+    (defvar my/org-appointment
+      (concat "* TODO %^{Appointment}\n"
+              "SCHEDULED: %t\n") "Template for appointment task.")
+    (defvar my/org-basic-task-template
+      (concat "* TODO %^{Task}\n"
+              ":PROPERTIES:\n"
+              ":Effort: %^{effort|1:00|0:05|0:15|0:30|2:00|4:00}\n"
+              ":CAPTURED: %<%Y-%m-%d %H:%M>\n"
+              ":END:") "Template for basic task.")
+    (defvar my/org-contacts-template
+      (concat "* %(org-contacts-template-name)\n"
+              ":PROPERTIES:\n"
+              ":BIRTHDAY: %^{YYYY-MM-DD}\n"
+              ":END:") "Template for a contact.")
+    :custom
+    (org-capture-templates
+     `(("c" "Contact" entry (file+headline "~/.personal/agenda/contacts.org" "Inbox"),
+        my/org-contacts-template :empty-lines 1)
+       ("p" "People" entry (file+headline "~/.personal/agenda/people.org" "Tasks"),
+        my/org-basic-task-template :empty-lines 1)
+       ("a" "Appointment" entry (file+headline "~/.personal/agenda/people.org" "Appointments"),
+        my/org-appointment :empty-lines 1)
+       ("m" "Meeting" entry (file+headline "~/.personal/agenda/people.org" "Meetings")
+        "* Meeting with %? :meeting:\n%U" :clock-in t :clock-resume t :empty-lines 1)
+       ("P" "Phone Call" entry (file+headline "~/.personal/agenda/people.org" "Phone Calls")
+        "* Phone %? :phone:\n%U" :clock-in t :clock-resume t)
 
-         ("i" "New Item")
-         ("ib" "Book" checkitem (file+headline "~/.personal/items/books.org" "Books")
-          "- [ ] %^{Title} -- %^{Author}\n  %U"
-          :immediate-finish t)
-         ("il" "Learning" checkitem (file+headline "~/.personal/items/learning.org" "Things")
-          "- [ ] %^{Thing}\n  %U"
-          :immediate-finish t)
-         ("im" "Movie" checkitem (file+headline "~/.personal/items/movies.org" "Movies")
-          "- [ ] %^{Title}\n  %U"
-          :immediate-finish t)
-         ("ip" "Purchase" checkitem (file+headline "~/.personal/items/purchases.org" "Purchases")
-          "- [ ] %^{Item}\n  %U"
-          :immediate-finish t)
+       ("i" "New Item")
+       ("ib" "Book" checkitem (file+headline "~/.personal/items/books.org" "Books")
+        "- [ ] %^{Title} -- %^{Author}\n  %U"
+        :immediate-finish t)
+       ("il" "Learning" checkitem (file+headline "~/.personal/items/learning.org" "Things")
+        "- [ ] %^{Thing}\n  %U"
+        :immediate-finish t)
+       ("im" "Movie" checkitem (file+headline "~/.personal/items/movies.org" "Movies")
+        "- [ ] %^{Title}\n  %U"
+        :immediate-finish t)
+       ("ip" "Purchase" checkitem (file+headline "~/.personal/items/purchases.org" "Purchases")
+        "- [ ] %^{Item}\n  %U"
+        :immediate-finish t)
 
-         ("t" "New Task")
-         ("ta" "Active" entry (file+headline "~/.personal/agenda/inbox.org" "Active"),
-          my/org-active-task-template
-          :empty-lines 1
-          :immediate-finish t)
-    ("tb" "Backlog" entry (file+headline "~/.personal/agenda/inbox.org" "Backlog"),
-                my/org-basic-task-template
-                :empty-lines 1
-                :immediate-finish t))))
+       ("t" "New Task")
+       ("ta" "Active" entry (file+headline "~/.personal/agenda/inbox.org" "Active"),
+        my/org-active-task-template
+        :empty-lines 1
+        :immediate-finish t)
+  ("tb" "Backlog" entry (file+headline "~/.personal/agenda/inbox.org" "Backlog"),
+              my/org-basic-task-template
+              :empty-lines 1
+              :immediate-finish t))))
 #+end_src
 
 ** Clock
@@ -2611,7 +2614,7 @@ Provides snippets for consult.
 
 #+begin_src emacs-lisp
   (use-package org-contacts
-    :straight nil
+    ;;:straight nil
     :after org
     :custom (org-contacts-files '("~/.personal/agenda/contacts.org")))
 #+end_src
@@ -2692,6 +2695,7 @@ Provides snippets for consult.
   (use-package mu4e
       :straight nil
       :load-path "/usr/share/emacs/site-lisp/mu4e"
+      :demand t
       :commands mu4e
       :hook (mu4e-compose-mode . turn-off-auto-fill)
       :bind (:map mu4e-headers-mode-map
@@ -2746,6 +2750,22 @@ Provides snippets for consult.
       (mu4e-view-show-addresses t)
       (mu4e-view-show-images t)
       :config
+      (my/set-email-account "charlie-roseman"
+                            '((mu4e-drafts-folder . "/personal/charlie-roseman/drafts")
+                              (mu4e-refile-folder . "/personal/charlie-roseman/all")
+                              (mu4e-sent-folder   . "/personal/charlie-roseman/sent")
+                              (mu4e-trash-folder  . "/personal/charlie-roseman/trash")
+                              (mu4e-maildir-shortcuts . ((:maildir "/personal/charlie-roseman/all"    :key ?a)
+                                                         (:maildir "/personal/charlie-roseman/inbox"  :key ?i)
+                                                         (:maildir "/personal/charlie-roseman/drafts" :key ?d)
+                                                         (:maildir "/personal/charlie-roseman/sent"   :key ?s)
+                                                         (:maildir "/personal/charlie-roseman/trash"  :key ?t)))
+                              (smtpmail-smtp-user . "charlie.roseman@yahoo.com")
+                              (smtpmail-smtp-server . "smtp.mail.yahoo.com")
+                              (smtpmail-smtp-service . 465)
+                              (smtpmail-stream-type . ssl)
+                              (user-mail-address . "charlie.roseman@yahoo.com")
+                              (user-full-name . "Karolos Triantafyllou")))
       (my/set-email-account "karolos-triantafyllou"
                             '((mu4e-drafts-folder . "/personal/karolos-triantafyllou/drafts")
                               (mu4e-refile-folder . "/personal/karolos-triantafyllou/all")
@@ -2794,7 +2814,8 @@ Provides snippets for consult.
     (add-hook 'org-mime-html-hook (lambda ()
                                     (goto-char (point-max))
                                     (insert "--<br>
-                   <strong>Karolos Triantafyllou</strong><br>")))
+                   <strong>Karolos Triantafyllou</strong><br>
+                    Programmer")))
     (add-hook 'org-mime-html-hook (lambda ()
                                     (org-mime-change-element-style "p" (format "color: %s" "#1a1a1a"))))
 
@@ -2830,7 +2851,7 @@ Provides snippets for consult.
     (message-citation-line-function 'message-insert-formatted-citation-line)
     (message-kill-buffer-on-exit t)
     (message-send-mail-function 'smtpmail-send-it)
-    (mml-secure-openpgp-signers '("84D878C99B99611D")))
+    (mml-secure-openpgp-signers '("7A09A11BEB260B60")))
 #+end_src
 
 * Ebooks

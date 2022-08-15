@@ -20,16 +20,16 @@
 
 (setq comp-async-report-warnings-errors nil)
 
-;; (defun my/display-startup-time ()
-;;   (message "⏱ Emacs loaded in %s with %d garbage collections."
-;; 	   (format "%.2f seconds"
-;; 		   (float-time
-;; 		    (time-subtract after-init-time before-init-time)))
-;; 	   gcs-done))
+(defun my/display-startup-time ()
+  (message "⏱ Emacs loaded in %s with %d garbage collections."
+           (format "%.2f seconds"
+                   (float-time
+          (time-subtract after-init-time before-init-time)))
+           gcs-done))
 
-;; (add-hook 'emacs-startup-hook #'my/display-startup-time)
+(add-hook 'emacs-startup-hook #'my/display-startup-time)
 
-;; (setq use-package-verbose t)
+(setq use-package-verbose t)
 
 (use-package no-littering
   :demand t
@@ -40,7 +40,7 @@
   :straight nil
   :demand t
   :custom
-  (auth-sources '("~/.gnupg/shared/authinfo.gpg"
+  (auth-sources '("~/.config/gnupg/shared/.authinfo.gpg"
                   "~/.authinfo.gpg"
                   "~/.authinfo"
                   "~/.netrc")))
@@ -94,6 +94,7 @@
 (set-face-attribute 'default nil :font "Iosevka" :height 110)
 ;; Set fixed pitch face
 (set-face-attribute 'fixed-pitch nil :font "Iosevka")
+(set-fontset-font t 'latin "Cantarell")
 ;; Set emoji font
 (set-fontset-font t 'symbol (font-spec :family "Noto Color Emoji") nil 'prepend)
 ;; Set variable pitch face
@@ -321,7 +322,8 @@
          (lsp-completion-mode . my/lsp-mode-setup-completion))
   :custom
   (lsp-server-install-dir (expand-file-name (format "%s/etc/lsp" user-emacs-directory)))
-  (lsp-keymap-prefix "C-c ;"))
+  (lsp-keymap-prefix "C-c ;")
+  (lsp-warn-no-matched-clients 'nil))
 
 (use-package lsp-ui
   :hook (lsp-mode . lsp-ui-mode))
@@ -1441,7 +1443,8 @@
 
    (use-package flycheck-ledger :after ledger-mode)
 
-(use-package org-contrib)
+(use-package org-contrib
+  :demand t)
 
 (use-package org
   :delight "θ"
@@ -1470,7 +1473,7 @@
 
   (defmacro ignore-args (fnc)
     "Return function that ignores its arguments and invokes FNC."
-    '(lambda (&rest _rest)
+    `(lambda (&rest _rest)
        (funcall ,fnc)))
   :hook ((after-save . my/config-tangle)
          (org-mode . visual-line-mode))
@@ -1588,11 +1591,11 @@
           (file (buffer-file-name))
           (async-quiet-switch "-q"))
       (async-start
-       '(lambda ()
+       `(lambda ()
           (require 'org)
           (org-babel-tangle-file ,org-file))
        (unless show-async-tangle-results
-         '(lambda (result)
+         `(lambda (result)
             (if result
                 (message "[✓] %s successfully tangled (%.2fs)"
                          ,org-file
@@ -1630,7 +1633,7 @@
     (org-capture 0 "t"))
   :custom
   (org-agenda-category-icon-alist
-   '(("home" ,(list (all-the-icons-faicon "home" :v-adjust -0.05)) nil nil :ascent center :mask heuristic)
+   `(("home" ,(list (all-the-icons-faicon "home" :v-adjust -0.05)) nil nil :ascent center :mask heuristic)
      ("inbox" ,(list (all-the-icons-faicon "inbox" :v-adjust -0.1)) nil nil :ascent center :mask heuristic)
      ("people" ,(list (all-the-icons-material "people" :v-adjust -0.25)) nil nil :ascent center :mask heuristic)
      ("work" ,(list (all-the-icons-material "work" :v-adjust -0.25)) nil nil :ascent center :mask heuristic)
@@ -1696,6 +1699,7 @@
 
 (use-package org-capture
   :straight nil
+  :demand t
   :preface
   (defvar my/org-active-task-template
     (concat "* NEXT %^{Task}\n"
@@ -1719,7 +1723,7 @@
             ":END:") "Template for a contact.")
   :custom
   (org-capture-templates
-   '(("c" "Contact" entry (file+headline "~/.personal/agenda/contacts.org" "Inbox"),
+   `(("c" "Contact" entry (file+headline "~/.personal/agenda/contacts.org" "Inbox"),
       my/org-contacts-template :empty-lines 1)
      ("p" "People" entry (file+headline "~/.personal/agenda/people.org" "Tasks"),
       my/org-basic-task-template :empty-lines 1)
@@ -1796,7 +1800,7 @@
   (org-pomodoro-start-sound-p t))
 
 (use-package org-contacts
-  :straight nil
+  ;;:straight nil
   :after org
   :custom (org-contacts-files '("~/.personal/agenda/contacts.org")))
 
@@ -1836,7 +1840,7 @@
   (org-roam-completion-everywhere t)
   (org-roam-dailies-directory "journal/")
   (org-roam-dailies-capture-templates
-   '(("d" "default" plain
+   `(("d" "default" plain
       "* %?"
       :if-new (file+head ,my/daily-note-filename
                          ,my/daily-note-header)
@@ -1861,6 +1865,7 @@
 (use-package mu4e
     :straight nil
     :load-path "/usr/share/emacs/site-lisp/mu4e"
+    :demand t
     :commands mu4e
     :hook (mu4e-compose-mode . turn-off-auto-fill)
     :bind (:map mu4e-headers-mode-map
@@ -1915,6 +1920,22 @@
     (mu4e-view-show-addresses t)
     (mu4e-view-show-images t)
     :config
+    (my/set-email-account "charlie-roseman"
+                          '((mu4e-drafts-folder . "/personal/charlie-roseman/drafts")
+                            (mu4e-refile-folder . "/personal/charlie-roseman/all")
+                            (mu4e-sent-folder   . "/personal/charlie-roseman/sent")
+                            (mu4e-trash-folder  . "/personal/charlie-roseman/trash")
+                            (mu4e-maildir-shortcuts . ((:maildir "/personal/charlie-roseman/all"    :key ?a)
+                                                       (:maildir "/personal/charlie-roseman/inbox"  :key ?i)
+                                                       (:maildir "/personal/charlie-roseman/drafts" :key ?d)
+                                                       (:maildir "/personal/charlie-roseman/sent"   :key ?s)
+                                                       (:maildir "/personal/charlie-roseman/trash"  :key ?t)))
+                            (smtpmail-smtp-user . "charlie.roseman@yahoo.com")
+                            (smtpmail-smtp-server . "smtp.mail.yahoo.com")
+                            (smtpmail-smtp-service . 465)
+                            (smtpmail-stream-type . ssl)
+                            (user-mail-address . "charlie.roseman@yahoo.com")
+                            (user-full-name . "Karolos Triantafyllou")))
     (my/set-email-account "karolos-triantafyllou"
                           '((mu4e-drafts-folder . "/personal/karolos-triantafyllou/drafts")
                             (mu4e-refile-folder . "/personal/karolos-triantafyllou/all")
@@ -1931,17 +1952,17 @@
                             (smtpmail-stream-type . ssl)
                             (user-mail-address . "karolos.triantafyllou@gmail.com")
                             (user-full-name . "Karolos Triantafyllou")))
-    ;; (setq mu4e-headers-attach-mark    '("a" . ,(with-faicon "paperclip" "" 0.75 -0.05 "all-the-icons-lyellow"))
-    ;;       mu4e-headers-draft-mark     '("D" . ,(with-octicon "pencil" "" 0.75 -0.05 "all-the-icons-lsilver"))
-    ;;       mu4e-headers-encrypted-mark '("x" . ,(with-faicon "lock" "" 0.75 -0.05 "all-the-icons-lred"))
-    ;;       mu4e-headers-flagged-mark   '("F" . ,(with-faicon "flag" "" 0.75 -0.05 "all-the-icons-maroon"))
-    ;;       mu4e-headers-new-mark       '("N" . ,(with-faicon "check-circle" "" 0.75 -0.05 "all-the-icons-silver"))
-    ;;       mu4e-headers-passed-mark    '("P" . ,(with-faicon "share" "" 0.75 -0.05 "all-the-icons-purple "))
-    ;;       mu4e-headers-replied-mark   '("R" . ,(with-faicon "reply" "" 0.75 -0.05 "all-the-icons-lgreen"))
-    ;;       mu4e-headers-seen-mark      '("S" . ,(with-octicon "check" "" 1 -0.05 "all-the-icons-lgreen"))
-    ;;       mu4e-headers-signed-mark    '("s" . ,(with-faicon "key" "" 0.75 -0.05 "all-the-icons-cyan"))
-    ;;       mu4e-headers-trashed-mark   '("T" . ,(with-faicon "trash" "" 0.75 -0.05 "all-the-icons-lred"))
-    ;;       mu4e-headers-unread-mark    '("u" . ,(with-faicon "envelope" "" 0.75 -0.05 "all-the-icons-silver")))
+     (setq mu4e-headers-attach-mark    `("a" . ,(with-faicon "paperclip" "" 0.75 -0.05 "all-the-icons-lyellow"))
+           mu4e-headers-draft-mark     `("D" . ,(with-octicon "pencil" "" 0.75 -0.05 "all-the-icons-lsilver"))
+           mu4e-headers-encrypted-mark `("x" . ,(with-faicon "lock" "" 0.75 -0.05 "all-the-icons-lred"))
+           mu4e-headers-flagged-mark   `("F" . ,(with-faicon "flag" "" 0.75 -0.05 "all-the-icons-maroon"))
+           mu4e-headers-new-mark       `("N" . ,(with-faicon "check-circle" "" 0.75 -0.05 "all-the-icons-silver"))
+           mu4e-headers-passed-mark    `("P" . ,(with-faicon "share" "" 0.75 -0.05 "all-the-icons-purple "))
+           mu4e-headers-replied-mark   `("R" . ,(with-faicon "reply" "" 0.75 -0.05 "all-the-icons-lgreen"))
+           mu4e-headers-seen-mark      `("S" . ,(with-octicon "check" "" 1 -0.05 "all-the-icons-lgreen"))
+           mu4e-headers-signed-mark    `("s" . ,(with-faicon "key" "" 0.75 -0.05 "all-the-icons-cyan"))
+           mu4e-headers-trashed-mark   `("T" . ,(with-faicon "trash" "" 0.75 -0.05 "all-the-icons-lred"))
+           mu4e-headers-unread-mark    `("u" . ,(with-faicon "envelope" "" 0.75 -0.05 "all-the-icons-silver")))
     (add-to-list 'mu4e-header-info-custom
                  '(:account
                    :name "Account"
@@ -1963,7 +1984,8 @@
   (add-hook 'org-mime-html-hook (lambda ()
                                   (goto-char (point-max))
                                   (insert "--<br>
-                 <strong>Karolos Triantafyllou</strong><br>")))
+                 <strong>Karolos Triantafyllou</strong><br>
+                  Programmer")))
   (add-hook 'org-mime-html-hook (lambda ()
                                   (org-mime-change-element-style "p" (format "color: %s" "#1a1a1a"))))
 
@@ -1999,7 +2021,7 @@
   (message-citation-line-function 'message-insert-formatted-citation-line)
   (message-kill-buffer-on-exit t)
   (message-send-mail-function 'smtpmail-send-it)
-  (mml-secure-openpgp-signers '("84D878C99B99611D")))
+  (mml-secure-openpgp-signers '("7A09A11BEB260B60")))
 
 (use-package nov
   :mode ("\\.epub\\'" . nov-mode)
