@@ -1,6 +1,6 @@
 {
   "label": "lock",
-  "action": "swaylock -f -i '~/Pictures/Wallpapers/1920x1080/arch-splash.png'",
+  "action": "swaylock -f -i ~/Pictures/Wallpapers/1920x1080/sunset.jpg",
   "text": "Lock",
   "keybind": "l"
 }

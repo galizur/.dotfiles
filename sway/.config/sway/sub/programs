@@ -29,6 +29,8 @@ for_window [app_id="imv"] floating enable
 for_window [app_id="pamac-manager"] floating enable
 for_window [instance="origin.exe"] floating enable
 for_window [app_id="gnome-system-monitor"] floating enable
+for_window [instance="Battle.net Launcher.exe"] floating enable
+for_window [instance="Battle.net.exe"] floating enable
 
 # Window size
 for_window [app_id="blueman-manager"] resize set 1000 600

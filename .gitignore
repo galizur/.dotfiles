@@ -32,3 +32,6 @@
 /npm/.config/npm/_cacache/
 /npm/.config/npm/_update-notifier-last-checked
 /sway/.config/sway/info.txt
+/bin/.local/bin/cmake-language-server
+/bin/.local/bin/wheel
+/gnupg/.config/gnupg/*.charliehost.*

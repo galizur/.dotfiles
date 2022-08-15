@@ -1,22 +1,100 @@
-IMAPAccount gmail
+Create Both
+Expunge Both
+SyncState *
+
+# karolos.triantafyllou@gmail.com
+
+IMAPAccount karolos-triantafyllou
 Host imap.gmail.com
-User karolos.triantafyllou@gmail.com
+User karolos.triantafyllou
+PassCmd "pass email/gmail/karolos-triantafyllou"
 SSLType IMAPS
-Pass pybmwwzcizrrhfcv
 CertificateFile /etc/ssl/certs/ca-certificates.crt
 
-IMAPStore gmail-remote
-Account gmail
+IMAPStore personal-karolos-remote
+Account karolos-triantafyllou
 
-MaildirStore gmail-local
-Path ~/.mail/gmail
-Inbox ~/.mail/gmail/Inbox
+MaildirStore personal-karolos-local
 Subfolders Verbatim
+Path ~/Mail/personal/karolos-triantafyllou/
+Inbox ~/Mail/personal/karolos-triantafyllou/inbox
 
-Channel gmail
-Far: :gmail-remote:
-Near :gmail-local:
-Patterns * ![Gmail]* "[Gmail]/Sent Mail" "[Gmail]/Bin"
+Channel personal-karolos-all
+Far :personal-karolos-remote:"[Gmail]/All Mail"
+Near :personal-karolos-local:"all"
 
-Create Both
-SyncState *
+Channel personal-karolos-draft
+Far :personal-karolos-remote:"[Gmail]/Drafts"
+Near :personal-karolos-local:"drafts"
+
+Channel personal-karolos-inbox
+Far :personal-karolos-remote:
+Near :personal-karolos-local:
+Patterns "INBOX"
+
+Channel personal-karolos-sent
+Far :personal-karolos-remote:"[Gmail]/Sent Mail"
+Near :personal-karolos-local:"sent"
+
+Channel personal-karolos-starred
+Far :personal-karolos-remote:"[Gmail]/Starred"
+Near :personal-karolos-local:"starred"
+
+Channel personal-karolos-trash
+Far :personal-karolos-remote:"[Gmail]/Trash"
+Near :personal-karolos-local:"trash"
+
+Group karolos-triantafyllou
+Channel personal-karolos-all
+Channel personal-karolos-draft
+Channel personal-karolos-sent
+Channel personal-karolos-starred
+Channel personal-karolos-trash
+
+# charlie.roseman@yahoo.com
+
+IMAPAccount charlie-roseman
+Host imap.mail.yahoo.com
+User charlie.roseman
+PassCmd "pass email/yahoo/charlie-roseman"
+SSLType IMAPS
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+IMAPStore personal-charlie-remote
+Account charlie-roseman
+
+MaildirStore personal-charlie-local
+Subfolders Verbatim
+Path ~/Mail/personal/charlie-roseman/
+Inbox ~/Mail/personal/charlie-roseman/inbox
+
+Channel personal-charlie-all
+Far :personal-charlie-remote:"[Yahoo]/All Mail"
+Near :personal-charlie-local:"all"
+
+Channel personal-charlie-draft
+Far :personal-charlie-remote:"[Yahoo]/Drafts"
+Near :personal-charlie-local:"drafts"
+
+Channel personal-charlie-inbox
+Far :personal-charlie-remote:
+Near :personal-charlie-local:
+Patterns "INBOX"
+
+Channel personal-charlie-sent
+Far :personal-charlie-remote:"[Yahoo]/Sent Mail"
+Near :personal-charlie-local:"sent"
+
+Channel personal-charlie-starred
+Far :personal-charlie-remote:"[Yahoo]/Starred"
+Near :personal-charlie-local:"starred"
+
+Channel personal-charlie-trash
+Far :personal-charlie-remote:"[Yahoo]/Trash"
+Near :personal-charlie-local:"trash"
+
+Group charlie-roseman
+Channel personal-charlie-all
+Channel personal-charlie-draft
+Channel personal-charlie-sent
+Channel personal-charlie-starred
