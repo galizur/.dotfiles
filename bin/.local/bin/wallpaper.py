@@ -6,7 +6,7 @@ import random
 import time
 
 # DEFAULT FOLDER
-FOLDER_WALL = "/home/charlie/Pictures/Wallpapers/1920x1080/"
+FOLDER_WALL = "/home/charlie/Pictures/Wallpapers/"
 
 
 def interval_wall(wallpapers, seconds):
