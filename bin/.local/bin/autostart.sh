@@ -41,3 +41,7 @@ fi
 if have emacs; then
     emacs --daemon &
 fi
+
+if have corectrl; then
+    corectrl &
+fi
