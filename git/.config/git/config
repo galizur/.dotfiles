@@ -72,3 +72,5 @@
     email = karolos.triantafyllou@gmail.com
     name = Karolos Triantafyllou
     signingKey = 7A09A11BEB260B60
+[init]
+	defaultBranch = main
