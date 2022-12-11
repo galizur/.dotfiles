@@ -1,12 +1,12 @@
 * {
     border: none;
-    font-family: Font Awesome, Roboto, Arial, sans-serif;
-    font-size: 14px;
+    font-family: Font Awesome, Iosevka Aile, Arial, sans-serif;
+    font-size: 13px;
     color: #eceff4;
 }
 
-window {
-	/*font-weight: bold;*/
+tooltip {
+    border: 2px solid #5e81ac;
 }
 window#waybar {
     /* background: rgba(46, 52, 64, 0.5);*/
@@ -14,12 +14,12 @@ window#waybar {
 }
 /*-----module groups----*/
 .modules-right {
-	background-color: rgba(46, 52, 64, 1);
+	  background-color: rgba(46, 52, 64, 1);
     margin: 0 0 0 0;
     border-radius: 0 0 0 15px;
 }
 .modules-center {
-	background-color: rgba(46, 52, 64, 1);
+	  background-color: rgba(46, 52, 64, 1);
     margin: 0 0 0 0;
     border-radius: 0 0 15px 15px;
 }
@@ -35,11 +35,12 @@ window#waybar {
 }
 #workspaces button:hover {
     box-shadow: inherit;
-	background-color: rgba(143, 188, 187, 1);
+	  background-color: rgba(143, 188, 187, 1);
+    box-shadow: inset 0 -3px #bf616a;
 }
 
 #workspaces button.focused {
-	background-color: rgba(94, 129, 172, 1);
+	  background-color: rgba(94, 129, 172, 1);
 }
 
 #clock,
@@ -68,12 +69,12 @@ window#waybar {
 #custom-power {
     background-color: rgba(180, 142, 173, 0.6);
     border-radius: 50%;
-    margin: 6px 5px;
-    padding: 1px 3px;
+    margin: 5px;
+    padding: 3px;
 }
 #custom-menu {
   background-color: rgba(180, 142, 173, 0.6);
-  margin: 6px 5px;
+  margin: 5px 5px;
   padding: 1px 3px;
 }
 /*-----Indicators----*/
@@ -95,10 +96,3 @@ window#waybar {
 #temperature.critical {
     color: #bf616a;
 }
-/*-----Colors----*/
-/*
- *rgba(0,85,102,1),#005566 --> Indigo(dye)
- *rgba(0,43,51,1),#002B33 --> Dark Green
- *rgba(0,153,153,1),#009999 --> Persian Green
- *
- */

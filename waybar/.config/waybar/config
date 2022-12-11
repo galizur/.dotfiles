@@ -2,8 +2,8 @@
     "layer": "top",
     "height": 32,
     "modules-left": ["sway/workspaces", "sway/mode"],
-    "modules-center": ["clock", "idle_inhibitor", "mpd"],
-    "modules-right": ["tray", "custom/scratchpad-indicator", "pulseaudio", "temperature", "cpu", "memory", "disk", "custom/menu", "custom/power"],
+    "modules-center": ["clock", "idle_inhibitor", "gamemode", "mpd"],
+    "modules-right": ["tray", "custom/update-notifier", "custom/scratchpad-indicator", "pulseaudio",  "temperature", "cpu", "memory", "disk", "custom/menu", "custom/power"],
 
     "sway/mode": {
         "format": "<span style=\"italic\">{}</span>",
@@ -15,8 +15,17 @@
         "format": "{:%H:%M:%S}",
         "format-alt": "{:%A, %d %B %Y}",
         "interval": 1,
-		"on-click-right": "wl-copy $(date '+%Y-%m-%d %T')",
-        "tooltip": false
+		    "on-click-right": "wl-copy $(date '+%Y-%m-%d %T')",
+        "tooltip": true,
+        "today-format": "<span color='#b48ead99'><b><u>{}</u></b></span>",
+        "calendar-weeks-pos": "right",
+        "format-calendar": "<span color='#eceff4'><b>{}</b></span>",
+        "format-calendar-weeks": "W{:%V}",
+        "format-calendar-weekdays": "<span color='#8fbcbb'><b>{}</b></span>",
+        "tooltip-format": "<span font='Iosevka 13'><big><b>{:  %B %Y}</b></big>\n{calendar}</span>",
+        "on-scroll": {
+                     "calendar": 1
+                     }
     },
     "idle_inhibitor": {
         "format": "{icon}",
@@ -25,6 +34,18 @@
             "deactivated": ""
         },
         "tooltip": false
+    },
+    "gamemode": {
+        "format": "{glyph}",
+    "format-alt": "{glyph} {count}",
+    "glyph": "",
+    "hide-not-running": true,
+    "use-icon": true,
+    "icon-name": "input-gaming-symbolic",
+    "icon-spacing": 4,
+    "icon-size": 15,
+    "tooltip": true,
+    "tooltip-format": "Games running: {count}"
     },
     "mpd": {
         "format": "{stateIcon} {consumeIcon}{randomIcon}{repeatIcon}{singleIcon}{artist} - {album} - {title} ",
@@ -118,7 +139,7 @@
     },
     "custom/menu": {
         "format": "",
-        "on-click": "rofi -show drun -theme launchpad",
+        "on-click": "wofi -m -S drun --allow-images -p 'Application Manager'",
         "tooltip": false
     },
 	"custom/power": {
@@ -126,4 +147,13 @@
 		"on-click": "wlogout",
         "tooltip": false
 	},
+  "custom/update-notifier": {
+    "format": "{} ",
+    "interval": 3600,
+    "exec": "paru -Qu | wc -l",
+    "exec-if": "exit 0",
+    "on-click": "foot -e paru -Syu; pkill -SIGRTMIN+8 waybar",
+    "signal": 8,
+    "tooltip": false
+  }
 }
