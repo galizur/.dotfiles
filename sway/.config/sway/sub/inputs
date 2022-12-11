@@ -6,7 +6,7 @@ input "type:keyboard" {
       xkb_layout us,gr
       repeat_delay 330
       repeat_rate 25
-      xkb_options grp:win_space_toggle,eurosign:e
+      xkb_options grp:eurosign:e
       xkb_numlock enabled
 }
 
