@@ -20,7 +20,7 @@ is_started() { pgrep -x "$1" > /dev/null 2>&1; }
 
 get_emojis
 
-emoji=$(cat "$FILE" | wofi -L 15 -m -S dmenu -p "Emoji Manager:")
+emoji=$(cat "$FILE" | wofi -c ~/.config/wofi/config -L 15 -w 1 -W 600 -m -S dmenu -p "Emoji Manager:")
 emoji_icon=$(echo $emoji | cut -d ' ' -f1)
 $(echo -n "$emoji_icon" | wl-copy)
 
