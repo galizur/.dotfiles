@@ -6,9 +6,9 @@ if pgrep sway && have mako; then
 	mako --background-color "#2e3440" --border-color "#5e81ac" --font "Source Code Pro Medium 10" --padding 10 --default-timeout 10000 &
 fi
 
-if have mpd; then
-    [ ! -s ~/.config/mpd/pid ] && mpd &
-fi
+#if have mpd; then
+    #[ ! -s ~/.config/mpd/pid ] && mpd &
+#fi
 
 if have polychromatic-tray-applet; then
     polychromatic-tray-applet &
