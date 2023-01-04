@@ -16,8 +16,8 @@ Account karolos-triantafyllou
 
 MaildirStore personal-karolos-local
 Subfolders Verbatim
-Path ~/Mail/personal/karolos-triantafyllou/
-Inbox ~/Mail/personal/karolos-triantafyllou/inbox
+Path ~/Mails/personal/karolos-triantafyllou/
+Inbox ~/Mails/personal/karolos-triantafyllou/inbox
 
 Channel personal-karolos-all
 Far :personal-karolos-remote:"[Gmail]/All Mail"
@@ -65,8 +65,8 @@ Account charlie-roseman
 
 MaildirStore personal-charlie-local
 Subfolders Verbatim
-Path ~/Mail/personal/charlie-roseman/
-Inbox ~/Mail/personal/charlie-roseman/inbox
+Path ~/Mails/personal/charlie-roseman/
+Inbox ~/Mails/personal/charlie-roseman/inbox
 
 Channel personal-charlie-all
 Far :personal-charlie-remote:"[Yahoo]/All Mail"
