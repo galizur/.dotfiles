@@ -1,224 +1,223 @@
-#+author: Karolos Triantafyllou
-#+title: Personal GNU Emacs Configuration
-#+property: header-args:emacs-lisp :tangle ./init.el :mkdirp yes
+#+AUTHOR: Karolos Triantafyllou
+#+TITLE: GNU Emacs Configuration
+#+PROPERTY: header-args:emacs-lisp :tangle ./config.el :mkdirp yes
 
-* Table Of Contents                                                     :TOC:
-- [[#emacs-initialization][Emacs Initialization]]
-  - [[#startup-performance][Startup Performance]]
-  - [[#package-manager][Package Manager]]
-  - [[#settings][Settings]]
-  - [[#emacs-startup-debugging][Emacs Startup Debugging]]
-  - [[#keeping-the-folder-clean][Keeping The Folder Clean]]
-  - [[#authentication][Authentication]]
-  - [[#better-defaults][Better Defaults]]
-- [[#ui-configuration][UI Configuration]]
-  - [[#mouse-interface][Mouse Interface]]
-  - [[#fonts][Fonts]]
-  - [[#theme][Theme]]
-  - [[#modeline][Modeline]]
-  - [[#icons][Icons]]
-- [[#minibuffer-completion][Minibuffer Completion]]
-  - [[#vertico][Vertico]]
-  - [[#marginalia][Marginalia]]
-  - [[#orderless][Orderless]]
-  - [[#consult][Consult]]
-  - [[#embark][Embark]]
-- [[#auto-completion][Auto-Completion]]
-  - [[#corfu][Corfu]]
-- [[#language-servers][Language Servers]]
-  - [[#lsp][LSP]]
-  - [[#dap][DAP]]
-  - [[#consult-lsp][Consult LSP]]
-- [[#built-in-packages][Built-in Packages]]
-  - [[#emacs][Emacs]]
-- [[#meson][Meson]]
-- [[#file-management][File Management]]
-  - [[#dired][Dired]]
-- [[#buffer-management][Buffer management]]
-  - [[#ibuffer][IBuffer]]
-  - [[#imenu][IMenu]]
-  - [[#move-text][Move Text]]
-  - [[#auto-revert][Auto-revert]]
+* Table of Contents :TOC:
+- [[#startup][Startup]]
+- [[#defaults][Defaults]]
+- [[#xdg-base-directories][XDG Base Directories]]
+- [[#customizations][Customizations]]
+- [[#fonts][Fonts]]
+- [[#theme][Theme]]
+- [[#saving-configuration][Saving Configuration]]
+- [[#backups][Backups]]
+- [[#management][Management]]
+  - [[#buffers][Buffers]]
+- [[#files][Files]]
 - [[#windows][Windows]]
-  - [[#window][Window]]
-  - [[#centered-window][Centered window]]
-  - [[#switch-window][Switch Window]]
-  - [[#winner][Winner]]
-- [[#terminals][Terminals]]
-  - [[#term][Term]]
-  - [[#e-term][E-Term]]
-  - [[#vterm][VTerm]]
-  - [[#eshell][EShell]]
+- [[#minibuffer-completion][Minibuffer Completion]]
+- [[#autocompletion][Autocompletion]]
 - [[#spelling][Spelling]]
-  - [[#abbreviations][Abbreviations]]
-  - [[#flyspell][Flyspell]]
-  - [[#spell-checker][Spell Checker]]
-  - [[#grammar-checker][Grammar Checker]]
-- [[#programming-languages-and-tools][Programming Languages and Tools]]
-  - [[#bash][Bash]]
-  - [[#c][C++]]
-  - [[#cmake][CMake]]
-  - [[#csv][CSV]]
-  - [[#dart-and-flutter][Dart and Flutter]]
-  - [[#dockerfile][Dockerfile]]
-  - [[#gnuplot][GNUplot]]
-  - [[#ini][INI]]
-  - [[#java][Java]]
-  - [[#javascript][Javascript]]
-  - [[#json][JSON]]
-  - [[#lua][Lua]]
-  - [[#markdown][Markdown]]
-  - [[#php-and-html][PHP and HTML]]
-  - [[#python][Python]]
-  - [[#stylesheet][Stylesheet]]
-  - [[#typescript][Typescript]]
-  - [[#xml][XML]]
-  - [[#yaml][YAML]]
-- [[#advanced-configuration][Advanced Configuration]]
-  - [[#browser][Browser]]
-  - [[#calculator][Calculator]]
-  - [[#calendar][Calendar]]
-  - [[#color-display-in-text][Color Display in Text]]
-  - [[#dashboard][Dashboard]]
-  - [[#which-key][Which Key]]
-  - [[#helpful][Helpful]]
-  - [[#indentations][Indentations]]
-  - [[#linters][Linters]]
-  - [[#parentheses][Parentheses]]
-  - [[#pdf][PDF]]
-  - [[#projectile][Projectile]]
-  - [[#perspective][Perspective]]
-  - [[#yasnippet][Yasnippet]]
-  - [[#version-control][Version Control]]
-  - [[#whitespace-and-kill][Whitespace and Kill]]
-  - [[#undo-tree][Undo-tree]]
-  - [[#hydra][Hydra]]
-- [[#ledger][Ledger]]
-- [[#org-mode-configuration][Org Mode Configuration]]
+- [[#cape][Cape]]
+- [[#term][Term]]
+- [[#perspective][Perspective]]
+- [[#bash][Bash]]
+- [[#c][C++]]
+- [[#cmake][CMake]]
+- [[#csv][CSV]]
+- [[#dart--flutter][Dart & Flutter]]
+- [[#epub][EPub]]
+- [[#gnuplot][GnuPlot]]
+- [[#ini][INI]]
+- [[#java][Java]]
+- [[#javascript][Javascript]]
+- [[#json][JSON]]
+- [[#meson][Meson]]
+- [[#yaml][YAML]]
+- [[#xml][XML]]
+- [[#browser][Browser]]
+- [[#calculator][Calculator]]
+- [[#calendar][Calendar]]
+- [[#color-display][Color display]]
+- [[#dashboard][Dashboard]]
+- [[#display-keybindings][Display keybindings]]
+- [[#documentation][Documentation]]
+- [[#history][History]]
+- [[#hydra][Hydra]]
+- [[#icons][Icons]]
+- [[#indentations][Indentations]]
+- [[#linters][Linters]]
+- [[#mails][Mails]]
+- [[#money][Money]]
+- [[#parentheses][Parentheses]]
+- [[#paste][Paste]]
+- [[#pdf][PDF]]
+- [[#project][Project]]
+- [[#snippets][Snippets]]
+- [[#spaces-around-operators][Spaces around Operators]]
+- [[#recent-files][Recent Files]]
+- [[#term-definitions][Term definitions]]
+- [[#try-packages][Try packages]]
+- [[#vcs][VCS]]
+- [[#whitespace-and-kill][Whitespace and kill]]
+- [[#org][Org]]
 - [[#agenda][Agenda]]
-  - [[#bullets][Bullets]]
-  - [[#capture][Capture]]
-  - [[#clock][Clock]]
-  - [[#contacts][Contacts]]
-  - [[#faces][Faces]]
-  - [[#encryptiondecryption][Encryption/Decryption]]
-  - [[#journal][Journal]]
-- [[#email][Email]]
-- [[#ebooks][Ebooks]]
-- [[#runtime-performance][Runtime Performance]]
+- [[#bullets][Bullets]]
+- [[#capture][Capture]]
+- [[#clock][Clock]]
+- [[#contacts][Contacts]]
+- [[#faces][Faces]]
+- [[#encryptiondecryption][Encryption/Decryption]]
+- [[#languages][Languages]]
+- [[#notes-and-journal][Notes and Journal]]
+- [[#lsp][LSP]]
+- [[#tempel][Tempel]]
 
-* Emacs Initialization
-
-Here we store our settings for correctly initializing GNU Emacs and it's subsystems.
-
-** Startup Performance
-
-The first thing we have to do is set the garbage collector to a higher memory value, in order for GNU Emacs to start faster.
+* Startup
 
 #+begin_src emacs-lisp
-  (setq gc-cons-threshold (* 100 1024 1024))
-#+end_src
+  (use-package org
+    ;;:ensure org-contrib
+    :delight "Θ"
+    :hook (org-mode . turn-off-auto-fill)
+    :bind ("C-c i" . org-insert-structure-template)
+    :preface
+    (defun my/org-archive-done-tasks ()
+      "Archive finished or cancelled tasks."
+      (interactive)
+      (org-map-entries
+       (lambda ()
+         (org-archive-subtree)
+         (setq org-map-continue-from (outline-previous-heading)))
+       "TODO=\"DONE\"|TODO=\"CANCELLED\"" (if (org-before-first-heading-p) 'file 'tree)))
 
-After GNU Emacs has started, we lower the value again. TODO: Add link to end.
+    (defun my/org-jump ()
+      "Jump to a specific task."
+      (interactive)
+      (let ((current-prefix-arg '(4)))
+        (call-interactively 'org-refile)))
 
-** Package Manager
+    (defun my/org-use-speed-commands-for-headings-and-lists ()
+      "Activate speed commands on list items too."
+      (or (and (looking-at org-outline-regexp) (looking-back "^\**"))
+          (save-excursion (and (looking-at (org-item-re)) (looking-back "^[ \t]*")))))
 
-We aim to override the built-in =package.el= package manager and replace it with a much more powerful and modern alternative.
-[[https://github.com/raxod502/straight.el][straight]] is our choice.
-
-Firstly, we must configure the built-in package to not be enabled. We do that in the [[file:early-init.el::setq package-enable-at-startup nil][early-init.el]] file.
-We use ~(setq package-enable-at-startup nil)~ to achieve that. (Only for Emacs >= 27)
-
-After that step, we must install and bootstrap our new package manager.
-
-#+begin_src emacs-lisp
-  (defvar bootstrap-version)
-  (let ((bootstrap-file
-	 (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-	(bootstrap-version 5))
-    (unless (file-exists-p bootstrap-file)
-      (with-current-buffer
-	  (url-retrieve-synchronously
-	   "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-	   'silent 'inhibit-cookies)
-	(goto-char (point-max))
-	(eval-print-last-sexp)))
-    (load bootstrap-file nil 'nomessage))
-#+end_src
-
-** Settings
-
-=straight= provides integration with [[https://github.com/jwiegley/use-package][use-package]]. We first install is using ~(straight-use-package 'use-package)~ and
-then set some defaults.
-=straight-use-package-by-default= makes =use-package= install packages throught =straight= and also allows us to skip
-the otherwise necessary ~:straight t~ command.
-By default, we set all packages to not load until needed with ~use-package-always-defer t~. When we need for any
-reason to override it, we can use ~:demand t~.
-
-#+begin_src emacs-lisp
-  (straight-use-package 'use-package)
-
-  (setq straight-use-package-by-default t)
-  (setq use-package-always-defer t)
-#+end_src
-
-Last thing we do, is suppress some warnings of =native-compilation=, since it's still new and a bit experimental.
-
-#+begin_src emacs-lisp
-  (setq comp-async-report-warnings-errors nil)
-#+end_src
-
-** Emacs Startup Debugging
-
-We enable these when we need to debug our startup
-
-#+begin_src emacs-lisp
-  (defun my/display-startup-time ()
-    (message "⏱ Emacs loaded in %s with %d garbage collections."
-             (format "%.2f seconds"
-                     (float-time
-            (time-subtract after-init-time before-init-time)))
-             gcs-done))
-
-  (add-hook 'emacs-startup-hook #'my/display-startup-time)
-
-  (setq use-package-verbose t)
-#+end_src
-
-** Keeping The Folder Clean
-
-We use the package [[https://github.com/emacscollective/no-littering][no-littering]] to help us keep our main folder clean.
-
-#+begin_src emacs-lisp
-  (use-package no-littering
-    :demand t
-    :custom (auto-save-file-name-transforms
-             `((".*" ,(no-littering-expand-var-file-name "auto-save/") t))))
-#+end_src
-
-** Authentication
-
-#+begin_src emacs-lisp
-  (use-package auth-source
-    :straight nil
-    :demand t
+    (defmacro ignore-args (fnc)
+      "Returns function that ignores its arguments and invokes FNC."
+      `(lambda (&rest _rest)
+         (funcall ,fnc)))
+    :hook ((after-save . my/config-tangle)
+           (auto-save . org-save-all-org-buffers)
+           (org-mode . visual-line-mode))
     :custom
-    (auth-sources '("~/.config/gnupg/shared/.authinfo.gpg"
-                    "~/.authinfo.gpg"
-                    "~/.authinfo"
-                    "~/.netrc")))
+    (org-archive-location "~/.personal/archives/%s::")
+    (org-blank-before-new-entry '((heading . t)
+                                  (plain-list-item . t)))
+    (org-confirm-babel-evaluate nil)
+    (org-cycle-include-plain-lists 'integrate)
+    (org-ellipsis " ▾")
+    (org-export-backends '(ascii beamer html icalendar latex man md org texinfo))
+    (org-hide-emphasis-markers t)
+    (org-log-done 'time)
+    (org-log-into-drawer t)
+    (org-modules '(org-crypt
+                   org-habit
+                   org-mouse
+                   org-protocol
+                   org-tempo))
+    (org-refile-allow-creating-parent-nodes 'confirm)
+    (org-refile-targets '((org-agenda-files :maxlevel . 1)
+                          ("~/.personal/agenda/home.org" :maxlevel . 2)
+                          ("~/.personal/agenda/work.org" :maxlevel . 2)))
+    (org-refile-use-cache nil)
+    (org-refile-use-outline-path nil)
+    (org-startup-indented t)
+    (org-startup-with-inline-images t)
+    (org-tag-alist
+     '((:startgroup . "Context")
+       ("@errands" . ?e)
+       ("@home" . ?h)
+       ("@work" . ?w)
+       (:endgroup)
+       (:startgroup . "Difficulty")
+       ("easy" . ?E)
+       ("medium" . ?M)
+       ("challenging" . ?C)
+       (:endgroup)
+       ("bug" . ?b)
+       ("car" . ?v)
+       ("future" . ?F)
+       ("goal" . ?g)
+       ("health" . ?H)
+       ("house" . ?O)
+       ("meeting" . ?m)
+       ("planning" . ?p)
+       ("phone" . ?0)
+       ("purchase" . ?P)
+       ("reading" . ?r)
+       ("review" . ?R)
+       ("study" . ?s)
+       ("sport" . ?S)
+       ("talk" . ?T)
+       ("tech" . ?t)
+       ("trip" . ?I)
+       ("thinking" . ?i)
+       ("update" . ?u)
+       ("watch" . ?l)
+       ("writing" . ?W)))
+    (org-tags-exclude-from-inheritance '("crypt" "project"))
+    (org-todo-keywords '((sequence "TODO(t)"
+                                   "STARTED(s)"
+                                   "NEXT(n)"
+                                   "SOMEDAY(.)"
+                                   "WAITING(w)""|" "DONE(x!)" "CANCELLED(c@)")))
+    (org-use-effective-time t)
+    (org-use-speed-commands 'my/org-use-speed-commands-for-headings-and-lists)
+    (org-yank-adjusted-subtrees t)
+    :config
+    (add-to-list 'org-global-properties '("Effort_ALL". "0:05 0:15 0:30 1:00 2:00 3:00 4:00"))
+    (add-to-list 'org-speed-commands '("$" call-interactively 'org-archive-subtree))
+    (add-to-list 'org-speed-commands '("i" call-interactively 'org-clock-in))
+    (add-to-list 'org-speed-commands '("o" call-interactively 'org-clock-out))
+    (add-to-list 'org-speed-commands '("s" call-interactively 'org-schedule))
+    (add-to-list 'org-speed-commands '("x" org-todo "DONE"))
+    (add-to-list 'org-speed-commands '("y" org-todo-yesterday "DONE"))
+    (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
+    (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
+    (add-to-list 'org-structure-template-alist '("py" . "src python"))
+    (advice-add 'org-deadline :after (ignore-args #'org-save-all-org-buffers))
+    (advice-add 'org-schedule :after (ignore-args #'org-save-all-org-buffers))
+    (advice-add 'org-store-log-note :after (ignore-args #'org-save-all-org-buffers))
+    (advice-add 'org-refile :after 'org-save-all-org-buffers)
+    (advice-add 'org-todo :after (ignore-args #'org-save-all-org-buffers))
+    ;; Replace list hyphen with dot
+    (font-lock-add-keywords 'org-mode
+                            '(("^ *\\([-]\\) "
+                               (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+    (org-clock-persistence-insinuate)
+    (org-load-modules-maybe t))
+
+
 #+end_src
 
-** Better Defaults
+#+begin_src emacs-lisp
+    (defun my/display-startup-time ()
+      (message "Emacs loaded in %s with %d garbage collections."
+               (format "%.2f seconds"
+                       (float-time
+                        (time-subtract after-init-time before-init-time)))
+               gcs-done))
+    (add-hook 'emacs-startup-hook #'my/display-startup-time)
+#+end_src
 
-We set some changed default values, for a better GNU Emacs experience.
+* Defaults
 
 #+begin_src emacs-lisp
   (setq-default
    ad-redefinition-action 'accept                      ; Silence warnings for redefinition.
    cursor-in-non-selected-windows t                    ;Hide the cursor in inactive windows.
    display-time-default-load-average nil               ; Don't display the load average.
-   fill-column 120                                     ; Set width for automatic line break/wrap.
+   fill-column 80                                      ; Set width for automatic line break/wrap.
    help-window-select t                                ; Focus on new help windows when opened.
    indent-tabs-mode nil                                ; Use spaces over tabs.
    inhibit-startup-screen t                            ; Disable start-up screen.
@@ -229,13 +228,13 @@ We set some changed default values, for a better GNU Emacs experience.
    read-process-output-max (* 1024 1024)               ; Increase the amount of data reads from the process.
    scroll-conservatively most-positive-fixnum          ; Always scroll by one line.
    select-enable-clipboard t                           ; Merge system's and Emacs' clipboards.
-   tab-width 4                                         ; Set the width for tabs.
+   tab-width 2                                         ; Set the width for tabs.
    user-full-name "Karolos Triantafyllou"              ; Set the full name of the current user.
    user-mail-address "karolos.triantafyllou@gmail.com" ; Set the email address of the current user.
    vc-follow-symlinks t                                ; Always follow the symlinks
    view-read-only t                                    ; Always open read-only buffers in view-mode.
-   c-basic-offset 4                                    ; Set the base offset for C/C++.
-   c-default-style "stroustrup")                       ; Set the default style of C/C++.
+   c-default-style "stroustrup"                        ; Set the default style of C/C++.
+   c-basic-offset 2)                                    ; Default indent width
   (global-display-line-numbers-mode t)                 ; Show line numbers.
   (column-number-mode)                                 ; Show columns numbers in the modeline.
   (fset 'yes-or-no-p 'y-or-n-p)                        ; Replace yes/no prompts with y/n.
@@ -243,87 +242,100 @@ We set some changed default values, for a better GNU Emacs experience.
   (set-default-coding-systems 'utf-8)                  ; Set default encoding to UTF-8.
   (show-paren-mode 1)                                  ; Show matching parentheses.
   (set-fringe-mode 10)                                 ; Set the left and right width in pixels
-  ;; Disable line numbers for some modes
-  (dolist (mode
-           '(org-mode-hook
-             term-mode-hook
-             treemacs-mode-hook
-             eshell-mode-hook
-             vterm-mode-hook
-             shell-mode-hook))
-    (add-hook mode (lambda () (display-line-numbers-mode 0))))
 #+end_src
 
-* UI Configuration
+* XDG Base Directories
 
-** Mouse Interface
-
-With GNU Emacs, we focus on using only the keyboard. Every other element is disabled.
+#+begin_src shell
+  mkdir ~/.cache/emacs ~/.local/share/emacs/
+#+end_src
 
 #+begin_src emacs-lisp
-  (when window-system
-    (scroll-bar-mode -1)   ; Disable visible scrollbar
-    (tool-bar-mode -1)     ; Disable the toolbar
-    (tooltip-mode -1)      ; Disable tooltips
-    (menu-bar-mode -1))     ; Disable menu bar
+  (defvar xdg-bin (getenv "XDG_BIN_HOME")
+    "The XDG bin base directory.")
+  (defvar xdg-cache (getenv "XDG_CACHE_HOME")
+    "The XDG cache base directory.")
+  (defvar xdg-config (getenv "XDG_CONFIG_HOME")
+    "The XDG config base directory.")
+  (defvar xdg-data (getenv "XDG_DATA_HOME")
+    "The XDG data base directory.")
+  (defvar xdg-lib (getenv "XDG_LIB_HOME")
+    "The XDG lib base directory.")
 #+end_src
-
-** Fonts
-
-Set our favorite fonts! We just must make sure the font is installed on the system
 
 #+begin_src emacs-lisp
-  ;; Set default font
-  (set-face-attribute 'default nil :font "Iosevka" :height 110)
-  ;; Set fixed pitch face
-  (set-face-attribute 'fixed-pitch nil :font "Iosevka")
-  (set-fontset-font t 'latin "Cantarell")
-  ;; Set emoji font
-  (set-fontset-font t 'symbol (font-spec :family "Noto Color Emoji") nil 'prepend)
-  ;; Set variable pitch face
-  (set-face-attribute 'variable-pitch nil :font "Cantarell" :weight 'regular :height 1.35)
+  (use-package request
+    :demand t
+    :custom
+    (request-storage-directory (expand-file-name (format "%s/emacs/request/" xdg-data))))
 #+end_src
-
-*** Mixed Pitch Fonts
-
-In order to used multiple fonts, we use the the package [[https://gitlab.com/jabranham/mixed-pitch][mixed-pitch]].
 
 #+begin_src emacs-lisp
-  ;;(use-package mixed-pitch
-;;    :hook (text-mode . mixed-pitch-mode))
+  (use-package url-cookie
+    :straight nil
+    :demand t
+    :custom
+    (url-cookie-file (expand-file-name (format "%s/emacs/url/cookies/" xdg-data))))
 #+end_src
 
-*** Ligatures
+* Customizations
 
-Since GNU Emacs doesn't automatically enable ligatures, we enable them ourselves. We will use =straight= to clone the [[https://github.com/mickeynp/ligature.el][repo]] directly.
+#+begin_src emacs-lisp
+  (use-package cus-edit
+    :straight nil
+    :demand t
+    :custom (custom-file (expand-file-name (format "%s/emacs/custom.el" xdg-data)))
+    :config
+    (when (file-exists-p custom-file)
+      (load custom-file t)))
+
+  (use-package emacs
+  :init
+  (defun crm-indicator (args)
+    (cons (format "[CRM%s] %s"
+		  (replace-regexp-in-string
+		   "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
+		   crm-separator)
+		  (car args))
+	  (cdr args)))
+  (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
+
+  (setq minibuffer-prompt-properties
+	'(read-only t cursor-intangible t face minibuffer-prompt))
+  (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
+  (setq read-extended-command-predicate
+	#'command-completion-default-include-p)
+  (setq enable-recursive-minibuffers t)
+  (setq completion-style-threshold 3)
+  (setq completion-prefix-min-length 1)
+  (setq tab-always-indent 'complete))
+#+end_src
+
+* Fonts
+
+#+begin_src emacs-lisp
+  (set-face-attribute 'default nil :font "Iosevka" :height 105)
+  (set-face-attribute 'fixed-pitch nil :font "Iosevka" :height 105)
+  (set-face-attribute 'variable-pitch nil :font "Iosevka Aile" :height 105 :weight
+                      'regular)
+#+end_src
 
 #+begin_src emacs-lisp
   (use-package ligature
-    :straight (ligature :type git :host github :repo
-                        "mickeynp/ligature.el" :branch "master")
-    :demand t
+    ;; :load-path "path-to-ligature-repo"
     :config
-    (ligature-set-ligatures 't '("www"))
-    (ligature-set-ligatures 'eww-mode '("ff" "fi" "ffi"))
-    (ligature-set-ligatures 'prog-mode '("|||>" "<|||" "<==>" "<!--" "####" "~~>" "***" "||=" "||>"
-                                         ":::" "::=" "=:=" "===" "==>" "=!=" "=>>" "=<<" "=/=" "!=="
-                                         "!!." ">=>" ">>=" ">>>" ">>-" ">->" "->>" "-->" "---" "-<<"
-                                         "<~~" "<~>" "<*>" "<||" "<|>" "<$>" "<==" "<=>" "<=<" "<->"
-                                         "<--" "<-<" "<<=" "<<-" "<<<" "<+>" "</>" "###" "#_(" "..<"
-                                         "..." "+++" "/==" "///" "_|_" "www" "&&" "^=" "~~" "~@" "~="
-                                         "~>" "~-" "**" "*>" "*/" "||" "|}" "|]" "|=" "|>" "|-" "{|"
-                                         "[|" "]#" "::" ":=" ":>" ":<" "$>" "==" "=>" "!=" "!!" ">:"
-                                         ">=" ">>" ">-" "-~" "-|" "->" "--" "-<" "<~" "<*" "<|" "<:"
-                                         "<$" "<=" "<>" "<-" "<<" "<+" "</" "#{" "#[" "#:" "#=" "#!"
-                                         "##" "#(" "#?" "#_" "%%" ".=" ".-" ".." ".?" "+>" "++" "?:"
-                                         "?=" "?." "??" ";;" "/*" "/=" "/>" "//" "__" "~~" "(*" "*)"
-                                         "\\\\" "://"))
+    ;; Enable all Iosevka ligatures in programming modes
+    (ligature-set-ligatures 'prog-mode '("<---" "<--"  "<<-" "<-" "->" "-->" "--->" "<->" "<-->" "<--->" "<---->" "<!--"
+                                         "<==" "<===" "<=" "=>" "=>>" "==>" "===>" ">=" "<=>" "<==>" "<===>" "<====>" "<!---"
+                                         "<~~" "<~" "~>" "~~>" "::" ":::" "==" "!=" "===" "!=="
+                                         ":=" ":-" ":+" "<*" "<*>" "*>" "<|" "<|>" "|>" "+:" "-:" "=:" "<******>" "++" "+++"))
+    ;; Enables ligature checks globally in all buffers. You can also do it
+    ;; per mode with `ligature-mode'.
     (global-ligature-mode t))
 #+end_src
 
-** Theme
 
-A nice theme is always pleasant to the eyes. Personally, I prefer a bit muted colors, so the [[www.nordtheme.com][nord theme]] is a perfect fit.
+* Theme
 
 #+begin_src emacs-lisp
   (use-package doom-themes
@@ -334,57 +346,210 @@ A nice theme is always pleasant to the eyes. Personally, I prefer a bit muted co
     (setq doom-themes-treemacs-theme "doom-colors")
     (doom-themes-treemacs-config)
     (doom-themes-org-config))
-#+end_src
 
-Solaire-mode can help us differentiate between our actual buffers, from ones that are informative or pop-ups, by giving the latter a darker color.
-
-#+begin_src emacs-lisp
-  (use-package solaire-mode
-    :demand t
-    :custom (solaire-mode-remap-fringe t)
-    :config (solaire-global-mode))
-#+end_src
-
-** Modeline
-
-GNU Emacs' default modeline is a bit bland, so we spice it up with =doom-modeline=.
-
-#+begin_src emacs-lisp
   (use-package doom-modeline
-    :demand t
-    :init (doom-modeline-mode)
+    :init (doom-modeline-mode 1)
     :custom
     (doom-modeline-icon (display-graphic-p))
     (doom-modeline-mu4e t)
     (mu4e-alert-enable-mode-line-display))
 #+end_src
 
-** Icons
-
-Some icons will always make things prettier
-
-*** All The Icons
-
-[[https://github.com/domtronn/all-the-icons.el][all-the-icons]] is the defacto standard for inserting icons in almost everywhere. If the config does not work, we must install the icons with ~all-the-icons-install-fonts~
-
-#+begin_src  emacs-lisp
-  (use-package all-the-icons
-    :if (display-graphic-p)
-    :commands all-the-icons-install-fonts
-    :config (unless (find-font (font-spec :name "all-the-icons"))
-              (all-the-icons-install-fonts t))
-    ;; Use 'prepend for the NS and Mac ports or Emacs will crash.
-    (set-fontset-font t 'unicode (font-spec :family "all-the-icons") nil 'append)
-    (set-fontset-font t 'unicode (font-spec :family "file-icons") nil 'append)
-    (set-fontset-font t 'unicode (font-spec :family "Material Icons") nil 'append)
-    (set-fontset-font t 'unicode (font-spec :family "github-octicons") nil 'append)
-    (set-fontset-font t 'unicode (font-spec :family "FontAwesome") nil 'append)
-    (set-fontset-font t 'unicode (font-spec :family "Weather Icons") nil 'append))
+#+begin_src emacs-lisp
+  (use-package solaire-mode
+  :init (solaire-global-mode +1)
+  :custom (solaire-mode-remap-fringe t))
 #+end_src
 
-*** All The Icons Dired
+#+begin_src emacs-lisp
+  (when window-system
+    (scroll-bar-mode -1)   ; Disable visible scrollbar
+    (tool-bar-mode -1)     ; Disable the toolbar
+    (tooltip-mode -1)      ; Disable tooltips
+    (menu-bar-mode -1))    ; Disable menu bar
+#+end_src
 
-We also give the same icons to =dired=.
+* Saving Configuration
+
+#+begin_src emacs-lisp
+  (use-package async
+    :after org
+    :preface
+    (defvar config-file (expand-file-name "config.org" user-emacs-directory)
+      "The configuration file.")
+
+    (defvar config-last-change (nth 5 (file-attributes config-file))
+      "The last modification time of the configuration file.")
+
+    (defvar show-async-tangle-results nil
+      "Keep *emacs* async buffers around for later inspection.")
+
+    (defun my/config-tangle ()
+      "Tangle the org file asynchronously."
+      (when (my/config-updated)
+        (setq config-last-change
+              (nth 5 (file-attributes config-file)))
+        (my/async-babel-tangle config-file)))
+
+    (defun my/config-updated ()
+      "Check if the configuration file has been updated since the last time."
+      (time-less-p config-last-change
+                   (nth 5 (file-attributes config-file))))
+
+    (defun my/async-babel-tangle (org-file)
+      "Tangle the org file asynchronously."
+      (let ((init-tangle-start-time (current-time))
+            (file (buffer-file-name))
+            (async-quiet-switch "-q"))
+        (async-start
+         `(lambda ()
+            (require 'org)
+
+            (org-babel-tangle-file ,org-file))
+         (unless show-async-tangle-results
+           `(lambda (result)
+              (if result
+                  (message "[✓] %s successfully tangled (%.2fs)"
+                           ,org-file
+                           (float-time (time-subtract (current-time)
+                                                      ',init-tangle-start-time)))
+                (message "[✗] %s as tangle failed." ,org-file))))))))
+#+end_src
+
+* Backups
+
+#+begin_src emacs-lisp
+  (use-package files
+    :straight nil
+    :preface
+    (defvar afilename-cmd
+      `((,(format "%s/X11/Xresources" xdg-config) . ,(format "xrdb -merge %s/X11/Xresources" xdg-config))
+        (,(format "%s/xbindkeysrc" (getenv "HOME")) . "xbindkeys -p"))
+      "File association list with their respective command.")
+
+    (defun my/cmd-after-saved-file ()
+      "Execute a command after saved a specific file."
+      (let* ((match (assoc (buffer-file-name) afilename-cmd)))
+        (when match
+          (shell-command (cdr match)))))
+    :hook (after-save . my/cmd-after-saved-file)
+    :init
+    ;; Create the "~/.cache/emacs/auto-save" folder if it does not exist.
+    (let ((auto-save-folder (expand-file-name
+                             (file-name-as-directory
+                              (expand-file-name (format "%s/emacs/auto-save/" xdg-cache))))))
+      (unless (file-exists-p (locate-user-emacs-file auto-save-folder))
+        (make-directory (locate-user-emacs-file auto-save-folder))))
+    :custom
+    (auto-save-file-name-transforms
+     `((".*" ,(expand-file-name (format "%s/emacs/auto-save/" xdg-cache) t))))
+    (backup-directory-alist
+     `(("." . ,(expand-file-name (format "%s/emacs/backups/" xdg-data)))))
+    (delete-old-versions t)
+    (vc-make-backup-files t)
+    (version-control t))
+#+end_src
+
+* Management
+
+** Buffers
+
+#+begin_src emacs-lisp
+  (use-package ibuffer
+    :demand t
+    :preface
+    (defvar protected-buffers '("*scratch*" "*Messages*")
+      "Buffers that cannot be killed.")
+    (defun my/protected-buffers ()
+      "Protects some buffers from being killed."
+      (dolist (buffer protected-buffers)
+        (with-current-buffer buffer
+          (emacs-lock-mode 'kill)))))
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package imenu
+    :straight nil
+    :preface
+    (defun my/smarter-move-beginning-of-line (arg)
+      "Move point back to indentation of beginning of line.
+
+   Move point to the first non-whitespace character on this line.
+   If point is already there, move to the beginning of the line.
+   Effectively toggle between the first non-whitespace character and
+   the beginning of the line.
+
+   If ARG is not nil or 1, move forward ARG - 1 lines first. If
+   point reaches the beginning or end of the buffer, stop there."
+      (interactive "^p")
+      (setq arg (or arg 1))
+
+      ;; Move lines first
+      (when (/= arg 1)
+        (let ((line-move-visual nil))
+          (forward-line (1- arg))))
+
+      (let ((orig-point (point)))
+        (back-to-indentation)
+        (when (= orig-point (point))
+          (move-beginning-of-line 1))))
+    :bind (("C-a" . my/smarter-move-beginning-of-line)
+           ("C-r" . imenu)))
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package move-text
+    :bind (("M-p" . move-text-up)
+           ("M-n" . move-text-down))
+    :config (move-text-default-bindings))
+#+end_src
+
+* Files
+
+#+begin_src emacs-lisp
+  (use-package autorevert
+    :straight nil
+    :demand t
+    :delight auto-revert-mode
+    :bind ("C-x R" . revert-buffer)
+    :custom (auto-revert-verbose nil)
+    :config (global-auto-revert-mode))
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package dired
+    :straight nil
+    :commands (dired dired-jump)
+    :bind (:map dired-mode-map
+                ("h" . dired-up-directory)
+                ("j" . dired-next-line)
+                ("k" . dired-previous-line)
+                ("l" . dired-single-buffer))
+    :delight "Dired"
+    :custom
+    (dired-auto-revert-buffer t)
+    (dired-dwim-target t)
+    (dired-hide-details-hide-symlink-targets nil)
+    (dired-listing-switches "-alh --group-directories-first")
+    (dired-ls-F-marks-symlinks nil)
+    (dired-recursive-copies 'always))
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package dired-single
+    :init
+    :after dired
+    :bind (:map dired-mode-map
+                ([remap dired-find-file] . dired-single-buffer)
+                ([remap dired-up-directory] . dired-single-up-directory)
+                ("M-DEL" . dired-prev-subdir)))
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package dired-open
+    :after (dired dired-jump)
+    :custom (dired-open-extensions '(("mp4" . "mpv"))))
+#+end_src
 
 #+begin_src emacs-lisp
   (use-package all-the-icons-dired
@@ -392,37 +557,79 @@ We also give the same icons to =dired=.
     :hook (dired-mode . all-the-icons-dired-mode))
 #+end_src
 
-*** All The Icons Completion
-
-[[https://github.com/iyefrat/all-the-icons-completion][all-the-icons-completion]] adds icons to =marginalia= / =vertico=.
-
 #+begin_src emacs-lisp
-    (use-package all-the-icons-completion
-      :after (all-the-icons marginalia)
-      :hook (marginalia-mode . all-the-icons-completion-marginalia-setup)
-      :init
-      (all-the-icons-completion-mode 1))
+  (use-package dired-hide-dotfiles
+    :hook (dired-mode . dired-hide-dotfiles-mode)
+    :bind (:map dired-mode-map
+                ("H" . dired-hide-dotfiles-mode)))
 #+end_src
 
-*** Kind Icon
-
-[[https://github.com/jdtsmith][kind-icon]] is used to give =corfu= icons.
+#+begin_src emacs-lisp
+  (use-package dired-subtree
+    :init
+    :after dired
+    :bind (:map dired-mode-map
+                ("<tab>" . dired-subtree-toggle)))
+#+end_src
 
 #+begin_src emacs-lisp
-(use-package kind-icon
-      :demand t
-      :after corfu
-      :custom
-      (kind-icon-default-face 'corfu-default) ; to compute blended backgrounds correctly
-      :config
-      (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
+  (use-package dired-narrow
+    ;;  :straight nil
+    :init
+    :bind (("C-c C-n" . dired-narrow)
+           ("C-c C-f" . dired-narrow-fuzzy)))
+#+end_src
+
+* Windows
+
+#+begin_src emacs-lisp
+  (use-package window
+    :straight nil
+    :demand t
+    :bind (("C-x 3" . hsplit-last-buffer)
+           ("C-x 2" . vsplit-last-buffer)
+           ;; Don't ask before killing a buffer.
+           ([remap kill-buffer] . kill-this-buffer))
+    :preface
+    (defun hsplit-last-buffer ()
+      "Gives the focus to the last created horizontal window."
+      (interactive)
+      (split-window-horizontally)
+      (other-window 1))
+    (defun vsplit-last-buffer ()
+      "Gives the focus to the last created vertical window."
+      (interactive)
+      (split-window-vertically)
+      (other-window 1)))
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package centered-window
+    :demand t
+    :custom
+    (cwm-centered-window-width 140)
+    (cwm-frame-internal-border 0)
+    (cwm-incremental-padding t)
+    (cwm-incremental-padding-% 2)
+    (cwm-left-fringe-ratio 0)
+    (cwm-use-vertical-padding t)
+    :config (centered-window-mode t))
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package switch-window
+    :bind (("C-x o" . switch-window)
+           ("C-x w" . switch-window-then-swap-buffer)))
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package winner
+    :straight nil
+    :demand t
+    :config (winner-mode))
 #+end_src
 
 * Minibuffer Completion
-
-** Vertico
-
-We use =vertico=, because it is quite minimal and unobtrusive.
 
 #+begin_src emacs-lisp
   (use-package vertico
@@ -432,44 +639,35 @@ We use =vertico=, because it is quite minimal and unobtrusive.
                 ("C-<backspace>" . vertico-directory-up))
     :custom (vertico-cycle t)
     :custom-face (vertico-current ((t (:background "#1d1f21")))))
-
-  ;;(use-package vertico-directory
-;;    :after (vertico)
-    ;;:straight nil
-    ;;:bind (:map vertico-map
-                ;;("C-<backspace>" . vertico-directory-up)))
 #+end_src
 
-** Marginalia
-
-To enable richer annotations with =vertico= (e.g. summary documentation of the functions variables, as well as size and last consultation of the files), we use [[https://github.com/minad/marginalia/][marginalia]].
-
- #+begin_src emacs-lisp
-   (use-package marginalia
-     :after vertico
-     :init (marginalia-mode)
-     :bind (:map minibuffer-local-map
-                 ("M-A" . marginalia-cycle))
-     :custom
-     (marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil)))
+#+begin_src emacs-lisp
+  (use-package marginalia
+    :after vertico
+    :init (marginalia-mode)
+    :bind (:map minibuffer-local-map
+                ("M-A" . marginalia-cycle))
+    :custom
+    (marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil)))
 #+end_src
 
-** Orderless
-
-By default, =vertico= sorts the candidates according to their history position, then length and finally alphabetically. To improve searching across completion, we use [[https://github.com/oantolin/orderless][orderless]].
+#+begin_src emacs-lisp
+  (use-package all-the-icons-completion
+    :after (marginalia)
+    :hook (marginalia-mode . all-the-icons-completion-marginalia-setup)
+    :init
+    (all-the-icons-completion-mode 1))
+#+end_src
 
 #+begin_src emacs-lisp
   (use-package orderless
     :after (vertico marginalia)
+    :init
     :custom
+    (completion-styles '(orderless basic))
     (completion-category-defaults nil)
-    (completion-category-overrides '((file (styles . (partial-completion)))))
-    (completion-styles '(orderless)))
+    (completion-category-overrides '((file (styles . (partial-completion))))))
 #+end_src
-
-** Consult
-
-To further enrich our minibuffer with commands, [[https://github.com/minad/consult][consult]] is the package of choice.
 
 #+begin_src emacs-lisp
   (use-package consult
@@ -508,18 +706,22 @@ To further enrich our minibuffer with commands, [[https://github.com/minad/consu
     (register-preview-function #'consult-register-preview))
 #+end_src
 
-** Embark
-
-Finally, we can use [[https://github.com/oantolin/embark/][embark]] to interact directly on the files through the completion system.
-
 #+begin_src emacs-lisp
   (use-package embark
-    :bind ("C-." . embark-act))
-  #+end_src
+    :init
+    (setq prefix-help-command #'embark-prefix-help-command)
+    :bind
+    (("C-." . embark-act)
+     ("M-." . embark-dwim)
+     ("C-h B" . embark-bindings))
+    :config
+    (add-to-list 'display-buffer-alist
+                 '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+                   nil
+                   (window-parameters (mode-line-format . none)))))
+#+end_src
 
-We also add =embark= capabilities to =consult=.
-
-  #+begin_src emacs-lisp
+#+begin_src emacs-lisp
   (use-package embark-consult
     :after (embark consult)
     :demand t
@@ -527,436 +729,41 @@ We also add =embark= capabilities to =consult=.
     (embark-collect-mode . consult-preview-at-point-mode))
 #+end_src
 
-* Auto-Completion
-
-Auto-completion in GNU Emacs is mainly combined with LSP mode.
-
-** Corfu
-
-We used [[https://github.com/company-mode/company-mode][company-mode]] as our completion front-end, but [[www.github.com/minad/corfu][corfu]] is a modern replacement that respects GNU Emacs' way of handling things.
+* Autocompletion
 
 #+begin_src emacs-lisp
   (use-package corfu
-    ;; Optional customizations
-    :custom
-    (corfu-cycle t)                ;; Enable cycling for 'corfu-next/previous'
-    (corfu-auto t)                 ;; Enable auto completion
-    ;; (corfu-separator ?\s)          ;; Orderless field separator
-    ;; (corfu-quit-no-match nil)      ;; Never quit, even if there is no match
-    ;; (corfu-preview-current nil)    ;; Disable current candidate preview
-    ;; (corfu-preselect-first nil)    ;; Disable candidate preselection
-    ;; (corfu-on-exact-match nil)     ;; Configure handling of exact matches
-    ;; (corfu-echo-documentation nil) ;; Disable documentation in the echo area
-    ;; (corfu-scroll-margin 5)        ;; Use scroll margin
-
-    ;; You may want to enable Corfu only for certain modes.
-    ;; :hook ((prog-mode . corfu-mode)
-    ;;        (shell-mode . corfu-mode)
-    ;;        (eshell-mode . corfu-mode))
-
-    ;; Recommended: Enable Corfu globally.
-    ;; This is recommended since dabbrev can be used globally (M-/).
+    :straight (:files (:defaults "extensions/*"))
     :init
-    (global-corfu-mode))
-#+end_src
-
-[[https://github.com/minad/cape][cape]] provides more completion-at-point extensions that can be used with =corfu=.
-
-#+begin_src emacs-lisp
-  (use-package cape
-    ;; Bind dedicated completion commands
-    :bind (("C-c c p" . completion-at-point) ;; capf
-           ("C-c c t" . complete-tag)        ;; etags
-           ("C-c c d" . cape-dabbrev)        ;; or dabbrev-completion
-           ("C-c c f" . cape-file)
-           ("C-c c k" . cape-keyword)
-           ("C-c c s" . cape-symbol)
-           ("C-c c a" . cape-abbrev)
-           ("C-c c i" . cape-ispell)
-           ("C-c c l" . cape-line)
-           ("C-c c w" . cape-dict)
-           ("C-c c \\" . cape-tex)
-           ("C-c c _" . cape-tex)
-           ("C-c c ^" . cape-tex)
-           ("C-c c &" . cape-sgml)
-           ("C-c c r" . cape-rfc1345))
-    :init
-    ;; Add 'completion-at-point-functions', used by 'completion-at-point'.
-    (add-to-list 'completion-at-point-functions #'cape-file)
-    (add-to-list 'completion-at-point-functions #'cape-tex)
-    (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-    (add-to-list 'completion-at-point-functions #'cape-keyword)
-    ;;(add-to-list 'completion-at-point-functions #'cape-sgml)
-    ;;(add-to-list 'completion-at-point-functions #'cape-rfc1345)
-    ;;(add-to-list 'completion-at-point-functions #'cape-abbrev)
-    ;;(add-to-list 'completion-at-point-functions #'cape-ispell)
-    ;;(add-to-list 'completion-at-point-functions #'cape-dict)
-    ;;(add-to-list 'completion-at-point-functions #'cape-symbol)
-    ;;(add-to-list 'completion-at-point-functions #'cape-line)
-    )
-#+end_src
-
-* Language Servers
-
-** LSP
-
-We use [[https://emacs-lsp.github.io/lsp-mode/][LSP]] as a language server, because it supports many languages, and usually just works out of the box. The only drawback is that it doesn't support GNU Emacs' capf, so we have to use a workaround to get =corfu= to work.
-
-#+begin_src emacs-lisp
-  (use-package lsp-mode
-    :custom (lsp-completion-provider :none) ;; We use corfu
-    :init
-    (defun my/orderless-dispatch-flex-first (_pattern index _total)
-      (and (eq index 0) 'orderless-flex))
-    (defun my/lsp-mode-setup-completion ()
-      (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
-            '(orderless)))
-    (add-hook 'orderless-style-dispatchers #'my/orderless-dispatch-flex-first nil 'local)
-    (setq-local completion-at-point-functions (list (cape-capf-buster #'lsp-completion-at-point)))
-    :commands (lsp lsp-deferred)
-    :hook ((prog-mode . lsp-deferred)
-           (lsp-mode . lsp-enable-which-key-integration)
-           (lsp-completion-mode . my/lsp-mode-setup-completion))
+    (global-corfu-mode)
     :custom
-    (lsp-server-install-dir (expand-file-name (format "%s/etc/lsp" user-emacs-directory)))
-    (lsp-keymap-prefix "C-c ;")
-    (lsp-warn-no-matched-clients 'nil))
+    (curfu-cycle t)
+    (corfu-auto t)
+    (corfu-quit-no-match 'seperator))
 #+end_src
 
-*** LSP-ui
-
-=LSP-ui= gives us a nice graphical environment for LSP.
-
 #+begin_src emacs-lisp
-  (use-package lsp-ui
-    :hook (lsp-mode . lsp-ui-mode))
-#+end_src
-
-*** LSP-Treemacs
-
-=LSP-Treemacs= gives us a tight integration between Treemacs and LSP.
-
-#+begin_src emacs-lisp
-  (use-package lsp-treemacs
-    :after lsp)
-#+end_src
-
-** DAP
-
-=DAP= gives us a way to use a unified debugger.
-
-#+begin_src emacs-lisp
-  (use-package dap-mode
-    :after lsp-mode
-    :config (dap-mode t)
-    (dap-ui-mode t))
-  #+end_src
-
-We have to require some language-specific servers sometimes.
-I am still not sure which is best for C++, so for now, I keep both.
-
-  #+begin_src emacs-lisp
-  (require 'dap-cpptools)
-  (require 'dap-lldb)
-#+end_src
-
-** Consult LSP
-
-=consult-lsp= allows LSP and consult to work together.
-
-#+begin_src emacs-lisp
-  (use-package consult-lsp
-    :after (consult lsp)
-    :commands (consult-lsp-diagnostics consult-lsp-symbols))
-#+end_src
-
-* Built-in Packages
-
-** Emacs
-
-#+begin_src emacs-lisp
-  (use-package emacs
-    :straight nil
+  (use-package kind-icon
     :demand t
-    :init
-    (setq completion-cycle-threshold 3)
-    (setq completion-prefix-min-length 1)
-    (setq read-extended-command-predicate
-          #'command-completion-default-include-p)
-    (setq tab-always-indent 'complete))
-#+end_src
-
-* Meson
-
-Meson is a build system for C/C++ and some other languages.
-
-#+begin_src emacs-lisp
-    (use-package meson-mode)
-#+end_src
-
-* File Management
-
-** Dired
-
-#+begin_src emacs-lisp
-  (use-package dired
-    :straight nil
-    :commands (dired dired-jump)
-    :bind (:map dired-mode-map
-		("h" . dired-up-directory)
-		("j" . dired-next-line)
-		("k" . dired-previous-line)
-		("l" . dired-single-buffer))
-    :delight "Dired"
+    :after corfu
     :custom
-    (dired-auto-revert-buffer t)
-    (dired-dwim-target t)
-    (dired-hide-details-hide-symlink-targets nil)
-    (dired-listing-switches "-alh --group-directories-first")
-    (dired-ls-F-marks-symlinks nil)
-    (dired-recursive-copies 'always))
-#+end_src
-
-We can peek inside a folder with =<TAB>= using [[https://github.com/Fuco1/dired-hacks/blob/master/dired-subtree.el][dired-subtree]].
-
-#+begin_src emacs-lisp
-  (use-package dired-subtree
-    :after dired
-    :bind (:map dired-mode-map
-		("<tab>" . dired-subtree-toggle)))
-#+end_src
-
-To avoid having =dired= keep buffers, we use [[https://github.com/crocket/dired-single][dired-single]].
-
-#+begin_src emacs-lisp
-  (use-package dired-single
-    :after dired
-    :bind (:map dired-mode-map
-		([remap dired-find-file] . dired-single-buffer)
-		([remap dired-up-directory] . dired-single-up-directory)
-		("M-DEL" . dired-prev-subdir)))
-#+end_src
-
-Sometimes we might want to hide dotfiles. With [[https://github.com/mattiasb/dired-hide-dotfiles][dired-hide-dotfiles]], this becomes trivial.
-
-#+begin_src emacs-lisp
-  (use-package dired-hide-dotfiles
-    :hook (dired-mode . dired-hide-dotfiles-mode)
-    :bind (:map dired-mode-map
-		("H" . dired-hide-dotfiles-mode)))
-#+end_src
-
-By default, =dired= opens files in plain text. This behavior is sometimes undesirable. Thankfully, [[https://github.com/Fuco1/dired-hacks/blob/master/dired-open.el][dired-open]] can be used to inform =dired= of certain file extensions that must be opened with external packages/applications.
-
-#+begin_src emacs-lisp
-  (use-package dired-open
-    :after (dired dired-jump)
-    :custom (dired-open-extensions '(("mp4" . "mpv"))))
-#+end_src
-
-Finally, in order to manage folders with large amounts of files, we can filter it with [[https://github.com/Fuco1/dired-hacks/blob/master/dired-narrow.el][dired-narrow]].
-
-#+begin_src emacs-lisp
-  (use-package dired-narrow
-    :straight nil
-    :bind (("C-c C-n" . dired-narrow)
-           ("C-c C-f" . dired-narrow-fuzzy)))
-#+end_src
-
-* Buffer management
-
-** IBuffer
-
-#+begin_src emacs-lisp
-  (use-package ibuffer
-    :demand t
-    :preface
-    (defvar protected-buffers '("*scratch*" "*Messages*")
-      "Buffers that cannot be killed.")
-    (defun my/protected-buffers ()
-      "Protects some buffers from being killed."
-      (dolist (buffer protected-buffers)
-    (with-current-buffer buffer
-      (emacs-lock-mode 'kill)))))
-#+end_src
-
-** IMenu
-
-#+begin_src emacs-lisp
-  (use-package imenu
-    :straight nil
-    :preface
-    (defun my/smarter-move-beginning-of-line (arg)
-      "Move point back to indentation of beginning of line.
-
-   Move point to the first non-whitespace character on this line.
-   If point is already there, move to the beginning of the line.
-   Effectively toggle between the first non-whitespace character and
-   the beginning of the line.
-
-   If ARG is not nil or 1, move forward ARG - 1 lines first. If
-   point reaches the beginning or end of the buffer, stop there."
-      (interactive "^p")
-      (setq arg (or arg 1))
-
-      ;; Move lines first
-      (when (/= arg 1)
-        (let ((line-move-visual nil))
-          (forward-line (1- arg))))
-
-      (let ((orig-point (point)))
-        (back-to-indentation)
-        (when (= orig-point (point))
-          (move-beginning-of-line 1))))
-    :bind (("C-a" . my/smarter-move-beginning-of-line)
-           ("C-r" . imenu)))
-#+end_src
-
-** Move Text
-
-#+begin_src emacs-lisp
-  (use-package move-text
-    :bind (("M-p" . move-text-up)
-           ("M-n" . move-text-down))
-    :config (move-text-default-bindings))
-#+end_src
-
-** Auto-revert
-
-#+begin_src emacs-lisp
-  (use-package autorevert
-    :straight nil
-    :demand t
-    :delight auto-revert-mode
-    :bind ("C-x R" . revert-buffer)
-    :custom (auto-revert-verbose nil)
-    :config (global-auto-revert-mode))
-#+end_src
-
-* Windows
-
-** Window
-
-Most of the times, when we split a window, we want to focus it and perform some action. Unfortunately, GNU Emacs does not default to this behavior.
-
-#+begin_src emacs-lisp
-  (use-package window
-    :straight nil
-    :demand t
-    :bind (("C-x 3" . hsplit-last-buffer)
-           ("C-x 2" . vsplit-last-buffer)
-           ;; Don't ask before killing a buffer.
-           ([remap kill-buffer] . kill-this-buffer))
-    :preface
-    (defun hsplit-last-buffer ()
-      "Gives the focus to the last created horizontal window."
-      (interactive)
-      (split-window-horizontally)
-      (other-window 1))
-    (defun vsplit-last-buffer ()
-      "Gives the focus to the last created vertical window."
-      (interactive)
-      (split-window-vertically)
-      (other-window 1)))
-#+end_src
-
-** Centered window
-
-Sole windows are centered within GNU Emacs with the help of [[https://github.com/anler/centered-window-mode][centered-window]].
-
-#+begin_src emacs-lisp
-  (use-package centered-window
-    :demand t
-    :custom
-    (cwm-centered-window-width 140)
-    (cwm-frame-internal-border 0)
-    (cwm-incremental-padding t)
-    (cwm-incremental-padding-% 2)
-    (cwm-left-fringe-ratio 0)
-    (cwm-use-vertical-padding t)
-    :config (centered-window-mode t))
-#+end_src
-
-** Switch Window
-
-When we have multiple windows open in GNU Emacs, we can move around them by indicating a unique number and typing that. [[https://github.com/dimitri/switch-window][switch-window]] gives us the tools to do so, while also hiding the contents of each window.
-
-#+begin_src emacs-lisp
-(use-package switch-window
-    :bind (("C-x o" . switch-window)
-           ("C-x w" . switch-window-then-swap-buffer)))
-#+end_src
-
-** Winner
-
-Sometimes, we would like to bring back a window layout with their content. We can use the built-in package =winner= and specifically =winner-undo= and =winner-redo= commands.
-
-#+begin_src emacs-lisp
-  (use-package winner
-    :straight nil
-    :demand t
-    :config (winner-mode))
-#+end_src
-
-* Terminals
-
-** Term
-
-#+begin_src emacs-lisp
-  (use-package term
-    :commands term
+    (kind-icon-default-face 'corfu-default)
     :config
-    (setq explicit-shell-file-name "zsh")
-    (setq term-prompt-regexp "^[^#$%>\n]*[#$%>] *"))
-#+end_src
-
-** E-Term
-
-#+begin_src emacs-lisp
-  (use-package eterm-256color
-    :hook (term-mode . eterm-256color-mode))
-#+end_src
-
-** VTerm
-
-#+begin_src emacs-lisp
-  (use-package vterm
-    :commands vterm
-    :config
-    (setq term-prompt-regexp "^[^#$%>\n]*[#$%>] *")
-    (setq vterm-shell "zsh")
-    (setq vterm-max-scrollback 10000))
-#+end_src
-
-** EShell
-
-#+begin_src emacs-lisp
-  (use-package eshell)
+    (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 #+end_src
 
 * Spelling
-
-In order to check our spelling and grammar, we will use =abbrev=, =flyspell=, =ispell= and =LanguageTool=.
-
-** Abbreviations
-
-We can correct commonly misspelled words with the built-in =abbrev= package. Of course, we have to provide the list in a file.
 
 #+begin_src emacs-lisp
   (use-package abbrev
     :straight nil
     :delight
     :hook (text-mode . abbrev-mode)
+    :custom (abbrev-file-name (expand-file-name (format "%s/emacs/abbrev_defs" xdg-data)))
     :config
     (if (file-exists-p abbrev-file-name)
         (quietly-read-abbrev-file)))
 #+end_src
-
-** Flyspell
-
-For more general spelling mistakes, we use the built-in =flyspell= package, to enable on-the-fly spell checking. A common command is =flyspelll-auto-correct-word= (=M-<TAB>=) which automatically corrects a word according to the best suggestion.
-
-*NOTE:* a call to ~flyspell-buffer~ could be extremely slow.
 
 #+begin_src emacs-lisp
   (use-package flyspell
@@ -972,92 +779,135 @@ For more general spelling mistakes, we use the built-in =flyspell= package, to e
     (flyspell-issue-welcome-flag nil))
 #+end_src
 
-** Spell Checker
-
-To correct spelling mistakes, the =ispell= package needs to use a spell checker package, like [[https://github.com/hunspell/hunspell][hunspell]] or [[https://github.com/GNUAspell/aspell][aspell]].
-
-To use =hunspell=, we need to install it with our system's package manager, together with any desired language dictionaries (e.g. =hunspell-en_US= and =hunspell-el=).
-
-Then we can check that the dictionaries have installed (and where) using the ~hunspell -D~ command.
-
 #+begin_src emacs-lisp
   (use-package ispell
     :preface
     (defun my/switch-language ()
-      "Switches between the English and Greek language for ispell, flyspell and LanguageTool."
+      "Switch between the English and French for ispell, flyspell, and LanguageTool."
       (interactive)
       (let* ((current-dictionary ispell-current-dictionary)
-             (new-dictionary (if (string= current-dictionary "en_US") "el_GR" "en_US")))
+             (new-dictionary (if (string= current-dictionary "en_US") "fr_BE" "en_US")))
         (ispell-change-dictionary new-dictionary)
-        (if (string= new-dictionary "el_GR")
+        (if (string= new-dictionary "fr_BE")
             (progn
-              (setq lsp-ltex-language "el"))
+              (setq lsp-ltex-language "fr"))
           (progn
             (setq lsp-ltex-language "en-US")))
         (flyspell-buffer)
         (message "[✓] Dictionary switched to %s" new-dictionary)))
     :custom
     (ispell-hunspell-dict-paths-alist
-   '(("en_US" "/usr/share/hunspell/en_US.aff")
-     ("el_GR" "/usr/share/hunspell/el_GR.aff")))
-  ;; Save words in personal dictionary without asking
-  (ispell-silently-savep t)
-  :config
-  (setenv "LANG" "en_US")
-  (cond ((executable-find "hunspell")
-         (setq ispell-program-name "hunspell")
-         (setq ispell-local-dictionary-alist '(("en_US"
-                                                "[[:alpha:]]"
-                                                "[^[:alpha:]]"
-                                                "['’-]"
-                                                t
-                                                ("-d" "en_US")
-                                                nil
-                                                utf-8)
-                                               ("el_GR" "[[:alpha:]ΒΓΔΖΘΛΞΠΣΦΨΩαάβγδεέζηήθιίϊκλμνξοόπρσςτυύϋφχψωώ]" "[^[:alpha:]ΒΓΔΖΘΛΞΠΣΦΨΩαάβγδεέζηήθιίϊκλμνξοόπρσςτυύϋφχψωώ]"
-                                                "['’-]"
-                                                t
-                                                ("-d" "el_GR")
-                                                nil
-                                                utf-8))))
-        ((executable-find "aspell")
-         (setq ispell-program-name "aspell")
-         (setq ispell-extra-args '("--sug-mode=ultra"))))
-  ;; Ignore file sections for spell checking.
-  (add-to-list 'ispell-skip-region-alist '("#\\+begin_align" . "#\\+end_align"))
-  (add-to-list 'ispell-skip-region-alist '("#\\+begin_align*" . "#\\+end_align*"))
-  (add-to-list 'ispell-skip-region-alist '("#\\+begin_equation" . "#\\+end_equation"))
-  (add-to-list 'ispell-skip-region-alist '("#\\+begin_equation*" . "#\\+end_equation*"))
-  (add-to-list 'ispell-skip-region-alist '("#\\+begin_example" . "#\\+end_example"))
-  (add-to-list 'ispell-skip-region-alist '("#\\+begin_labeling" . "#\\+end_labeling"))
-  (add-to-list 'ispell-skip-region-alist '("#\\+begin_src" . "#\\+end_src"))
-  (add-to-list 'ispell-skip-region-alist '("\\$" . "\\$"))
-  (add-to-list 'ispell-skip-region-alist '(org-property-drawer-re))
-  (add-to-list 'ispell-skip-region-alist '(":\\(PROPERTIES\\|LOGBOOK\\):" . ":END:")))
+     '(("en_US" "/usr/share/hunspell/en_US.aff")
+       ("fr_BE" "/usr/share/hunspell/fr_BE.aff")))
+    ;; Save words in the personal dictionary without asking.
+    (ispell-silently-savep t)
+    :config
+    (setenv "LANG" "en_US")
+    (cond ((executable-find "hunspell")
+           (setq ispell-program-name "hunspell")
+           (setq ispell-local-dictionary-alist '(("en_US"
+                                                  "[[:alpha:]]"
+                                                  "[^[:alpha:]]"
+                                                  "['’-]"
+                                                  t
+                                                  ("-d" "en_US" )
+                                                  nil
+                                                  utf-8)
+                                                 ("fr_BE"
+                                                  "[[:alpha:]ÀÂÇÈÉÊËÎÏÔÙÛÜàâçèéêëîïôùûü]"
+                                                  "[^[:alpha:]ÀÂÇÈÉÊËÎÏÔÙÛÜàâçèéêëîïôùûü]"
+                                                  "['’-]"
+                                                  t
+                                                  ("-d" "fr_BE")
+                                                  nil
+                                                  utf-8))))
+          ((executable-find "aspell")
+           (setq ispell-program-name "aspell")
+           (setq ispell-extra-args '("--sug-mode=ultra"))))
+    ;; Ignore file sections for spell checking.
+    (add-to-list 'ispell-skip-region-alist '("#\\+begin_align" . "#\\+end_align"))
+    (add-to-list 'ispell-skip-region-alist '("#\\+begin_align*" . "#\\+end_align*"))
+    (add-to-list 'ispell-skip-region-alist '("#\\+begin_equation" . "#\\+end_equation"))
+    (add-to-list 'ispell-skip-region-alist '("#\\+begin_equation*" . "#\\+end_equation*"))
+    (add-to-list 'ispell-skip-region-alist '("#\\+begin_example" . "#\\+end_example"))
+    (add-to-list 'ispell-skip-region-alist '("#\\+begin_labeling" . "#\\+end_labeling"))
+    (add-to-list 'ispell-skip-region-alist '("#\\+begin_src" . "#\\+end_src"))
+    (add-to-list 'ispell-skip-region-alist '("\\$" . "\\$"))
+    (add-to-list 'ispell-skip-region-alist '(org-property-drawer-re))
+    (add-to-list 'ispell-skip-region-alist '(":\\(PROPERTIES\\|LOGBOOK\\):" . ":END:")))
 #+end_src
-
-** Grammar Checker
-
-[[https://languagetool.org/][LanguageTool]] is great for correcting our grammar while we are writing or saving a buffer. Combined with =abbrev-mode= and =flyspell=, we can have better quality documents. To integrate =LanguageTool= with LSP, we will need [[https://github.com/emacs-languagetool/lsp-ltex][lsp-ltex]]. The first time we use it, it will download the [[https://github.com/valentjn/ltex-ls][LTEX Language Server]] LSP server for us.
-
-*NOTE:* We won't hook =lsp-ltex= to =text-mode= to avoid it processing our =config.org= file, since it's so big and might have too many errors to properly process.
 
 #+begin_src emacs-lisp
   (use-package lsp-ltex
-    :init
-    (setq lsp-ltex-version "15.2.0")
+    :disabled
     :custom
-    ;;(lsp-ltex-enabled nil)
-    (lsp-ltex-mother-tongue "en-US"))
+    (lsp-ltex-enabled nil)
+    (lsp-ltex-mother-tongue "fr"))
 #+end_src
 
-* Programming Languages and Tools
+* Cape
 
-** Bash
+#+begin_src emacs-lisp
+  (use-package cape
+    ;; Bind dedicated completion commands
+    ;; Alternative prefix keys: C-c p, M-p, M-+, ...
+    :bind (("C-c l p" . completion-at-point) ;; capf
+           ("C-c l t" . complete-tag)        ;; etags
+           ("C-c l d" . cape-dabbrev)        ;; or dabbrev-completion
+           ("C-c l h" . cape-history)
+           ("C-c l f" . cape-file)
+           ("C-c l k" . cape-keyword)
+           ("C-c l s" . cape-symbol)
+           ("C-c l a" . cape-abbrev)
+           ("C-c l i" . cape-ispell)
+           ("C-c l l" . cape-line)
+           ("C-c l w" . cape-dict)
+           ("C-c l \\" . cape-tex)
+           ("C-c l _" . cape-tex)
+           ("C-c l ^" . cape-tex)
+           ("C-c l &" . cape-sgml)
+           ("C-c l r" . cape-rfc1345))
+    :init
+    ;; Add `completion-at-point-functions', used by `completion-at-point'.
+    ;;(add-to-list 'completion-at-point-functions #'cape-dabbrev)
+    ;;(add-to-list 'completion-at-point-functions #'cape-file)
+    ;;(add-to-list 'completion-at-point-functions #'cape-history)
+    ;;(add-to-list 'completion-at-point-functions #'cape-keyword)
+    ;;(add-to-list 'completion-at-point-functions #'cape-tex)
+    ;;(add-to-list 'completion-at-point-functions #'cape-sgml)
+    ;;(add-to-list 'completion-at-point-functions #'cape-rfc1345)
+    ;;(add-to-list 'completion-at-point-functions #'cape-abbrev)
+    ;;(add-to-list 'completion-at-point-functions #'cape-ispell)
+    ;;(add-to-list 'completion-at-point-functions #'cape-dict)
+    ;;(add-to-list 'completion-at-point-functions #'cape-symbol)
+    ;;(add-to-list 'completion-at-point-functions #'cape-line)
+    )
+#+end_src
 
-Using UNIX, bash is an easy way to script, and it's natively supported by GNU Emacs. For some extra help, we use [[https://emacs-lsp.github.io/lsp-mode/page/lsp-bash/][bash-language-server]] (=bash-ls=) as an LSP server.
+* Term
 
-This snippet ensures that shell script files that begin with a ~#!~ shebang will be automatically granted execution rights (~chmod +x~).
+#+begin_src emacs-lisp
+(use-package vterm
+  :commands vterm
+  :config
+  (setq term-prompt-regexp "^[^#$%>\n]*[#$%>] *")
+  (setq vterm-shell "zsh")
+  (setq vterm-max-scrollback 10000))
+#+end_src
+
+* Perspective
+
+#+begin_src emacs-lisp
+(use-package perspective
+  :demand t
+  :custom (persp-mode-prefix-key (kbd "C-c M-p"))
+  :init (persp-mode))
+
+(use-package persp-projectile
+  :after (perspective))
+#+end_src
+
+* Bash
 
 #+begin_src emacs-lisp
   (use-package sh-script
@@ -1065,61 +915,34 @@ This snippet ensures that shell script files that begin with a ~#!~ shebang will
     :hook (after-save . executable-make-buffer-file-executable-if-script-p))
 #+end_src
 
-** C++
+* C++
 
-For C++, we use [[https://clangd.llvm.org/][clangd]] which integrates natively with LSP. We can either let LSP download the server, or use our system's package manager to download LLVM (clang, clangd, etc.).
+#+begin_src emacs-lisp
+  (use-package c++-mode
+    :straight nil
+    :mode "\\.cppm\\'")
 
-Configuration is stored (at least for now) in a separate file at =%XDG_CONFIG_HOME/clangd/config.yaml=.
-Individual projects can use their own =.clangd= file for extra options or overrides.
+  ;(add-to-list 'auto-mode-alist '("\\.cppm\\'" . c++-mode))
+#+end_src
 
-=clangd= needs a =compile_commands.json= file in order to know the dependencies of our =.cpp= with our =.h/.hpp= files. For that, [[Meson][Meson]] creates one itself in the build directory, or we can use [[https://github.com/rizsotto/Bear][Build EAR]] for simpler projects.
-
-** CMake
-
-Although CMake will never be directly used, it is sometimes handy to get all expected features, as well as syntax highlighting to ease the eyes. We will additionally need the =cmake-language-server=.
+* CMake
 
 #+begin_src emacs-lisp
   (use-package cmake-mode
     :hook (cmake-mode . lsp-deferred)
     :mode ("CMakeLists\\.txt\\'" "\\.cmake\\'"))
-#+end_src
 
-#+begin_src emacs-lisp
   (use-package cmake-font-lock
     :hook (cmake-mode . cmake-font-lock-activate))
-
-  (use-package cmake-ide
-  :after projectile
-  :init (cmake-ide-setup)
-  ;; :hook (c++-mode . my/cmake-ide-find-project)
-  :preface
-  (defun my/cmake-ide-find-project ()
-    "Find the directory of the project for cmake-ide."
-    (with-eval-after-load 'projectile
-      (setq cmake-ide-project-dir (projectile-project-root))
-      (setq cmake-ide-build-dir (concat cmake-ide-project-dir "build")))
-    (setq cmake-ide-compile-command
-          (concat "cd " cmake-ide-build-dir " && cmake .. && make"))
-    (cmake-ide-load-db))
-
-  (defun my/switch-to-compilation-window ()
-    "Switch to the *compilation* buffer after compilation."
-    (other-window 1))
-  :bind ([remap comment-region] . cmake-ide-compile)
-  :config (advice-add 'cmake-ide-compile :after #'my/switch-to-compilation-window))
 #+end_src
 
-If we ever wanted to change =Meson=, we could use [[https://github.com/atilaneves/cmake-ide/blob/master/cmake-ide.el][cmake-ide]].
-
-** CSV
-
-=csv-mode= provides a nice syntax highlight of CSV files.
+* CSV
 
 #+begin_src emacs-lisp
   (use-package csv-mode :mode ("\\.\\(csv\\|tsv\\)\\'"))
 #+end_src
 
-** Dart and Flutter
+* Dart & Flutter
 
 #+begin_src emacs-lisp
   (use-package dart-mode
@@ -1136,32 +959,36 @@ If we ever wanted to change =Meson=, we could use [[https://github.com/atilaneve
     (lsp-dart-sdk-dir "/opt/flutter/bin/cache/dart-sdk/"))
 #+end_src
 
-** Dockerfile
+* EPub
 
 #+begin_src emacs-lisp
-  (use-package dockerfile-mode :delight "δ" :mode "Dockerfile\\'")
+  (use-package nov
+    :mode ("\\.epub\\'" . nov-mode)
+    :custom (nov-text-width 75))
 #+end_src
 
-** GNUplot
+* GnuPlot
 
 #+begin_src emacs-lisp
   (use-package gnuplot
     :mode "\\.\\(gp\\|gpi\\|plt\\)'"
     :bind (:map gnuplot-mode-map
-                ("C-c C-c" . gnuplot-send-buffer-to-gnuplot)))
+                ("C-c C-c".  gnuplot-send-buffer-to-gnuplot)))
 #+end_src
 
-** INI
+* INI
 
 #+begin_src emacs-lisp
   (use-package ini-mode :mode "\\.ini\\'")
 #+end_src
 
-** Java
+* Java
 
 #+begin_src emacs-lisp
   (use-package lsp-java
-    :hook (java-mode . lsp-deferred))
+    :hook (java-mode . lsp-deferred)
+    :custom (lsp-java-server-install-dir
+             (expand-file-name (format "%s/eclipse.jdt.ls/" xdg-lib))))
 
   (use-package gradle-mode
     :hook (java-mode . gradle-mode)
@@ -1177,10 +1004,11 @@ If we ever wanted to change =Meson=, we could use [[https://github.com/atilaneve
     (advice-add 'gradle-test :after #'my/switch-to-compilation-window))
 #+end_src
 
-** Javascript
+* Javascript
 
 #+begin_src emacs-lisp
   (use-package js2-mode
+    :ensure flycheck
     :mode "\\.js\\'"
     :hook ((js2-mode . js2-imenu-extras-mode)
            (js2-mode . prettier-js-mode))
@@ -1202,274 +1030,54 @@ If we ever wanted to change =Meson=, we could use [[https://github.com/atilaneve
   (use-package yarn-mode :mode "yarn\\.lock\\'")
 #+end_src
 
-** JSON
+* JSON
 
 #+begin_src emacs-lisp
-(use-package json-mode
-  :delight "J "
-  :mode "\\.json\\'"
-  :hook (before-save . my/json-mode-before-save-hook)
-  :preface
-  (defun my/json-mode-before-save-hook ()
-    (when (eq major-mode 'json-mode)
-      (json-pretty-print-buffer)))
-
-  (defun my/json-array-of-numbers-on-one-line (encode array)
-    "Prints the arrays of numbers in one line."
-    (let* ((json-encoding-pretty-print
-            (and json-encoding-pretty-print
-                 (not (loop for x across array always (numberp x)))))
-           (json-encoding-seperator (if json-encoding-pretty-print "," ", ")))
-      (funcall encode array)))
-  :config (advice-add 'json-encode-array :around #'my/json-array-of-numbers-on-one-line))
-#+end_src
-
-** COMMENT LaTeX
-
-#+begin_src emacs-lisp
-  (use-package tex
-    :straight nil
+  (use-package json-mode
+    :delight "J"
+    :mode "\\.json\\'"
+    :hook (before-save . my/json-mode-before-save-hook)
     :preface
-    (defun my/switch-to-help-window (&optional ARG REPARSE)
-      "Switches to the *TeX Help* buffer after compilation."
-      (other-window 1))
-    :hook (LaTeX-mode . reftex-mode)
-    :bind (:map TeX-mode-map
-                ("C-c C-o" . TeX-recenter-output-buffer)
-                ("C-c C-l" . TeX-next-error)
-                ("M-[" . outline-previous-heading)
-                ("M-]" . outline-next-heading))
-    :custom
-    (TeX-auto-save t)
-    (TeX-byte-compile t)
-    (TeX-clean-confirm nil)
-    (TeX-master 'dwim)
-    (TeX-parse-self t)
-    (TeX-PDF-mode t)
-    (TeX-source-correlate-mode t)
-    (TeX-view-program-selection '((output-pdf "PDF Tools")))
-    :config
-    (advice-add 'TeX-next-error :after #'my/switch-to-help-window)
-    (advice-add 'TeX-recenter-output-buffer :after #'my/switch-to-help-window)
-    ;; the ":hook" doesn't work for this one... don't ask me why.
-    (add-hook 'TeX-after-compilation-finished-functions 'TeX-revert-document-buffer))
+    (defun my/json-mode-before-save-hook ()
+      (when (eq major-mode 'json-mode)
+        (json-pretty-print-buffer)))
 
-  (setq-default TeX-engine 'xetex)
-
-  (use-package lsp-latex
-  :if (executable-find "texlab")
-  ;; To properly load 'lsp-latex', the 'require' instruction is important.
-  :hook (LaTeX-mode . (lambda ()
-                        (require 'lsp-latex)
-                        (lsp-deferred)))
-  :custom (lsp-latex-build-on-save t))
-
-  (use-package reftex
-  :straight nil
-  :custom
-  (reftex-save-parse-info t)
-  (reftex-use-multiple-selection-buffers t))
-
-  (use-package bibtex
-  :straight nil
-  :preface
-  (defun my/bibtex-fill-column ()
-    "Ensure that each entry does not exceed 120 characters."
-    (setq fill-column 120))
-  :hook ((bibtex-mode . lsp-deferred)
-         (bibtex-mode . my/bibtex-fill-column)))
+    (defun my/json-array-of-numbers-on-one-line (encode array)
+      "Print the arrays of numbers in one line."
+      (let* ((json-encoding-pretty-print
+              (and json-encoding-pretty-print
+                   (not (loop for x across array always (numberp x)))))
+             (json-encoding-separator (if json-encoding-pretty-print "," ", ")))
+        (funcall encode array)))
+    :config (advice-add 'json-encode-array :around #'my/json-array-of-numbers-on-one-line))
 #+end_src
 
-** Lua
+* Meson
 
 #+begin_src emacs-lisp
-  (use-package lua-mode :delight "Λ" :mode "\\.lua\\'")
+  (use-package meson-mode)
 #+end_src
 
-** Markdown
-
-#+begin_src emacs-lisp
-  (use-package markdown-mode
-  :delight "μ"
-  :mode ("\\.\\(md\\|markdown\\)\\'")
-  :custom (markdown-command "/usr/bin/pandoc"))
-
-  (use-package markdown-preview-mode
-  :commands markdown-preview-mode
-  :custom
-  (markdown-preview-javascript
-   (list (concat "https://github.com/highlightjs/highlight.js/"
-                 "9.15.6/highlight.min.js")
-         "<script>
-            $(document).on('mdContentChange', function() {
-              $('pre code').each(function(i, block)  {
-                hljs.highlightBlock(block);
-              });
-            });
-          </script>"))
-  (markdown-preview-stylesheets
-   (list (concat "https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/"
-                 "3.0.1/github-markdown.min.css")
-         (concat "https://github.com/highlightjs/highlight.js/"
-                 "9.15.6/styles/github.min.css")
-
-         "<style>
-            .markdown-body {
-              box-sizing: border-box;
-              min-width: 200px;
-              max-width: 980px;
-              margin: 0 auto;
-              padding: 45px;
-            }
-
-            @media (max-width: 767px) { .markdown-body { padding: 15px; } }
-          </style>")))
-#+end_src
-
-** PHP and HTML
-
-#+begin_src emacs-lisp
-  ;;(use-package web-mode
-;;    :delight ""
-  ;;  :preface
-    ;; (defun enable-minor-mode (my-pair)
-    ;;   "Enable minor mode if filename match the regexp."
-    ;;   (if (buffer-file-name)
-    ;;       (if (string-match (car my-pair) buffer-file-name)
-    ;;           (funcall (cdr my-pair)))))
-    ;; :mode ("\\.\\(html\\|jsx\\|php\\|css\\)\\'" . web-mode)
-    ;; :hook (web-mode . (lambda ()
-    ;;                     (enable-minor-mode
-    ;;                      '("\\.jsx?\\'" . prettier-js-mode))))
-    ;;
-    ;; (defun my/web-mode-hook ()
-    ;;   "Hooks for web-mode."
-    ;;   (setq web-mode-markup-indent-offset 2)
-    ;;   (setq web-mode-attr-indent-offset 2)
-    ;;   (setq web-mode-block-padding 2)
-    ;;   (setq web-mode-css-indent-offset 2)
-    ;;   (setq web-mode-code-indent-offset 2)
-    ;;   (setq web-mode-comment-style 2))
-    ;; :hook (web-mode . my/web-mode-hook)
-    ;; :config
-    ;; (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-    ;; (add-to-list 'auto-mode-alist '("\\.css?\\'" . web-mode))
-    ;; (setq web-mode-enable-current-element-highlight t)
-    ;; )
-#+end_src
-
-** Python
-
-#+begin_src emacs-lisp
-  (use-package python
-    :delight "π"
-    :preface
-    (defun python-remove-unused-imports()
-      "Remove unused imports and unused variables with autoflake."
-      (interactive)
-      (if (executable-find "autoflake")
-          (progn
-            (shell-command (format "autoflake --remove-all-unused-imports -i %s"
-                                   (shell-quote-argument (buffer-file-name))))
-            (revert-buffer t t t))
-        (warn "[✗] python-mode: Cannot find autoflake executable.")))
-    :bind (:map python-mode-map
-                ("M-[" . python-nav-backward-block)
-                ("M-]" . python-nav-forward-block)
-                ("M-|" . python-remove-unused-imports))
-    :custom
-    (flycheck-pylintrc "~/.pylintrc")
-    (flycheck-python-pylint-executable "/usr/bin/pylint"))
-
-  (use-package lsp-pyright
-    :if (executable-find "pyright")
-    ;; To properly load 'lsp-pyright', the 'require' instruction is important.
-    :hook (python-mode . (lambda ()
-                           (require 'lsp-pyright)
-                           (lsp-deferred)))
-    :custom
-    (lsp-pyright-python-executable-cmd "python3")
-    (lsp-pyright-venv-path "~/.cache/pypoetry/virtualenvs/"))
-
-  (use-package blacken
-    :delight
-    :hook (python-mode . blacken-mode)
-    :custom (blacken-line-length 79))
-
-  (use-package py-isort
-    :hook ((before-save . py-isort-before-save)
-           (python-mode . pyvenv-mode)))
-
-  (use-package pyvenv
-    :after python
-    :custom
-    (pyvenv-default-virtual-env-name (expand-file-name (format "%s/myenv/" xdg-data)))
-    (pyvenv-workon (expand-file-name (format "%s/myenv/" xdg-data)))
-    :config (pyvenv-tracking-mode))
-
-  (use-package pyenv-mode
-    :hook ((python-mode . pyenv-mode)
-           (projectile-switch-project . projectile-pyenv-mode-set))
-    :custom (pyenv-mode-set "3.8.5")
-    :preface
-    (defun projectile-pyenv-mode-set ()
-      "Set pyenv version matching project name."
-      (let ((project (projectile-project-name)))
-        (if (member project (pyenv-mode-versions))
-            (pyenv-mode-set project)
-          (pyenv-mode-unset)))))
-#+end_src
-
-** Stylesheet
-
-Since GNU Emacs already has good built-in packages for stylesheet languages (e.g. CSS, LESS, SCSS), we only need to install an appropriate LSP server. The best one is [[https://github.com/vscode-langservers/vscode-css-languageserver][vscode-css-languageserver]] (=css-ls=), even though it does not support the LESS language.
-
-#+begin_src emacs-lisp
-  ;;(use-package css-mode
-;;    :after flycheck
-    ;;:mode "\\.css\\'"
-    ;;:custom (css-indent-offset 2))
-#+end_src
-
-** Typescript
-
-#+begin_src emacs-lisp
-  (use-package typescript-mode
-    :hook ((typescript-mode . prettier-js-mode)
-         (typescript-mode . lsp-deferred))
-  :mode ("\\.\\(ts\\|tsx\\)\\'")
-  :custom
-  ;; TSLint is depreciated in favor of ESLint.
-  (flycheck-disable-checker 'typescript-tslint)
-  (lsp-clients-typescript-server-args '("--stdio" "--tsserver-log-file" "/dev/stderr"))
-  (typescript-indent-level 2)
-  :config
-  (flycheck-add-mode 'javascript-eslint 'typescript-mode))
-#+end_src
-
-** XML
-
-#+begin_src emacs-lisp
-  (use-package nxml-mode
-  :straight nil
-  :hook (nxml-mode . lsp-deferred)
-  :mode ("\\.\\(xml\\|xsd\\|wsdl\\)\\'"))
-#+end_src
-
-** YAML
+* YAML
 
 #+begin_src emacs-lisp
   (use-package yaml-mode
-  :delight "ψ"
-  :hook (yaml-mode . lsp-deferred)
-  :mode ("\\.\\(yaml\\|yml\\)\\'"))
+    :delight "ψ"
+    :hook (yaml-mode . lsp-deferred)
+    :mode
+    ("\\.\\(yaml\\|yml\\|clangd\\)\\'"))
 #+end_src
 
-* Advanced Configuration
+* XML
 
-** Browser
+#+begin_src emacs-lisp
+  (use-package nxml-mode
+    :straight nil
+    :hook (nxml-mode . lsp-deferred)
+    :mode ("\\.\\(xml\\|xsd\\|wsdl\\)\\'"))
+#+end_src
 
-GNU Emacs provides the =browse-url= package to open a browser within itself. Even though using a dedicated browser is preferred, sometimes it is useful to not leave from the environment.
+* Browser
 
 #+begin_src emacs-lisp
   (use-package browse-url
@@ -1479,15 +1087,7 @@ GNU Emacs provides the =browse-url= package to open a browser within itself. Eve
     (browse-url-generic-program "firefox"))
 #+end_src
 
-** Calculator
-
-Sometimes, we might need to do calculations and conversions. With the built-in =calc= package (=C-x * c=), we can do it from within GNU Emacs.
-
-Some useful commands to know within =calc= are:
-- =calc-algebraic-entry= :: allows us to enter a value and its unit to later convert it or associate it with an operation.
-- =calc-convert-units= (=u c=) :: converts the output of an algebraic entry (e.g. =25m= → =25000mm=).
-- =calc-simplify-units= (=u s=) :: simplifies the output of and algebraic entry (e.g. =5 m + 23 cm= → =5.023 m=).
-- =calc-view-units-table= (=u V=) :: displays a table of units supported by =calc=.
+* Calculator
 
 #+begin_src emacs-lisp
   (use-package calc
@@ -1502,11 +1102,11 @@ Some useful commands to know within =calc= are:
        (Mib "1024 * Kib" "Mega Bit")
        (Kib "1024 * b" "Kilo Bit")
        (b "B / 8" "Bit")))
-    ;; Resets the calc's cache
+    ;; Resets the calc's cache.
     (math-units-table nil))
 #+end_src
 
-** Calendar
+* Calendar
 
 #+begin_src emacs-lisp
   (use-package calendar
@@ -1515,7 +1115,9 @@ Some useful commands to know within =calc= are:
     :custom
     (calendar-mark-holidays-flag t)
     (calendar-week-start-day 1))
+#+end_src
 
+#+begin_src emacs-lisp
   (use-package holidays
     :straight nil
     :custom
@@ -1533,7 +1135,7 @@ Some useful commands to know within =calc= are:
        (holiday-easter-etc 49 "Pentecost")
        (holiday-fixed 8 15 "Assumption")
        (holiday-fixed 11 1 "All Saints' Day")
-       (holiday-fixed 11 2 "Day Of The Dead")
+       (holiday-fixed 11 2 "Day of the Dead")
        (holiday-fixed 11 22 "Saint Cecilia's Day")
        (holiday-fixed 12 1 "Saint Eloi's Day")
        (holiday-fixed 12 4 "Saint Barbara")
@@ -1545,18 +1147,16 @@ Some useful commands to know within =calc= are:
        (holiday-fixed 3 8 "International Women's Day")
        (holiday-fixed 10 31 "Halloween")
        (holiday-fixed 11 11 "Armistice of 1918")))
-    ;; Need to fix these
     (holiday-local-holidays
      '((holiday-fixed 5 1 "Labor Day")
        (holiday-float 3 0 0 "Grandmothers' Day")
        (holiday-float 4 4 3 "Secretary's Day")
        (holiday-float 5 0 2 "Mother's Day")
-       (holiday-float 6 0 3 "Father's Day"))))
+       (holiday-float 6 0 2 "Father's Day")
+       (holiday-fixed 7 21 "Belgian National Day"))))
 #+end_src
 
-** Color Display in Text
-
-To automatically display a color when typing a color or a hex code value, the [[https://elpa.gnu.org/packages/rainbow-mode.html][rainbow-mode]] package is useful.
+* Color display
 
 #+begin_src emacs-lisp
   (use-package rainbow-mode
@@ -1564,13 +1164,13 @@ To automatically display a color when typing a color or a hex code value, the [[
     :hook ((prog-mode text-mode) . rainbow-mode))
 #+end_src
 
-** Dashboard
+* Dashboard
 
 #+begin_src emacs-lisp
   (use-package dashboard
     :demand t
     :custom
-    (dashboard-banner-logo-title "With Great Power Comes Great Responsibility")
+    (dashboard-banner-logo-title "The Only Thing We Ever Need")
     (dashboard-center-content t)
     (dashboard-items '((agenda)
                        (projects . 10)))
@@ -1581,9 +1181,9 @@ To automatically display a color when typing a color or a hex code value, the [[
     (dashboard-set-navigator t)
     (dashboard-startup-banner 'logo)
     :config (dashboard-setup-startup-hook))
-  #+end_src
+#+end_src
 
-** Which Key
+* Display keybindings
 
 #+begin_src emacs-lisp
   (use-package which-key
@@ -1592,9 +1192,7 @@ To automatically display a color when typing a color or a hex code value, the [[
     :custom (which-key-idle-delay 0.5))
 #+end_src
 
-** Helpful
-
-To have a more user-friendly documentation we will use the [[https://github.com/Wilfred/helpful][helpful]] package.
+* Documentation
 
 #+begin_src emacs-lisp
   (use-package helpful
@@ -1614,7 +1212,318 @@ To have a more user-friendly documentation we will use the [[https://github.com/
     ([remap describe-command] . helpful-command))
 #+end_src
 
-** Indentations
+* History
+
+#+begin_src emacs-lisp
+  (use-package savehist
+    :straight nil
+    :custom
+    (history-delete-duplicates t)
+    (history-length 25)
+    (savehist-file (expand-file-name (format "%s/emacs/history" xdg-cache)))
+    :config (savehist-mode))
+#+end_src
+
+* Hydra
+
+#+begin_src emacs-lisp
+  (use-package hydra
+    :bind (("C-c I" . hydra-image/body)
+           ("C-c L" . hydra-ledger/body)
+           ("C-c M" . hydra-merge/body)
+           ("C-c T" . hydra-tool/body)
+           ("C-c b" . hydra-btoggle/body)
+           ("C-c c" . hydra-clock/body)
+           ("C-c f" . hydra-flycheck/body)
+           ("C-c g" . hydra-go-to-file/body)
+           ("C-c m" . hydra-magit/body)
+           ("C-c o" . hydra-org/body)
+           ("C-c p" . hydra-projectile/body)
+           ("C-c s" . hydra-spelling/body)
+           ("C-c t" . hydra-tex/body)
+           ("C-c u" . hydra-upload/body)
+           ("C-c w" . hydra-windows/body)))
+
+  (use-package major-mode-hydra
+    :after hydra
+    :preface
+    (defun with-alltheicon (icon str &optional height v-adjust face)
+      "Display an icon from all-the-icon."
+      (s-concat (all-the-icons-alltheicon icon :v-adjust (or v-adjust 0) :height (or height 1) :face face) " " str))
+
+    (defun with-faicon (icon str &optional height v-adjust face)
+      "Display an icon from Font Awesome icon."
+      (s-concat (all-the-icons-faicon icon ':v-adjust (or v-adjust 0) :height (or height 1) :face face) " " str))
+
+    (defun with-fileicon (icon str &optional height v-adjust face)
+      "Display an icon from the Atom File Icons package."
+      (s-concat (all-the-icons-fileicon icon :v-adjust (or v-adjust 0) :height (or height 1) :face face) " " str))
+
+    (defun with-octicon (icon str &optional height v-adjust face)
+      "Display an icon from the GitHub Octicons."
+      (s-concat (all-the-icons-octicon icon :v-adjust (or v-adjust 0) :height (or height 1) :face face) " " str)))
+
+  (pretty-hydra-define hydra-btoggle
+  (:hint nil :color amaranth :quit-key "q" :title (with-faicon "toggle-on" "Toggle" 1 -0.05))
+  ("Basic"
+   (("a" abbrev-mode "abbrev" :toggle t)
+    ("h" global-hungry-delete-mode "hungry delete" :toggle t))
+   "Coding"
+   (("e" electric-operator-mode "electric operator" :toggle t)
+    ("F" flyspell-mode "flyspell" :toggle t)
+    ("f" flycheck-mode "flycheck" :toggle t)
+    ("l" lsp-mode "lsp" :toggle t)
+    ("s" smartparens-mode "smartparens" :toggle t))
+   "UI"
+   (("i" ivy-rich-mode "ivy-rich" :toggle t))))
+
+  (pretty-hydra-define hydra-clock
+  (:hint nil :color teal :quit-key "q" :title (with-faicon "clock-o" "Clock" 1 -0.05))
+  ("Action"
+   (("c" org-clock-cancel "cancel")
+    ("d" org-clock-display "display")
+    ("e" org-clock-modify-effort-estimate "effort")
+    ("i" org-clock-in "in")
+    ("j" org-clock-goto "jump")
+    ("o" org-clock-out "out")
+    ("p" org-pomodoro "pomodoro")
+    ("r" org-clock-report "report"))))
+
+  (pretty-hydra-define hydra-flycheck
+  (:hint nil :color teal :quit-key "q" :title (with-faicon "plane" "Flycheck" 1 -0.05))
+  ("Checker"
+   (("?" flycheck-describe-checker "describe")
+    ("d" flycheck-disable-checker "disable")
+    ("m" flycheck-mode "mode")
+    ("s" flycheck-select-checker "select"))
+   "Errors"
+   (("<" flycheck-previous-error "previous" :color pink)
+    (">" flycheck-next-error "next" :color pink)
+    ("f" flycheck-buffer "check")
+    ("l" flycheck-list-errors "list"))
+   "Other"
+   (("M" flycheck-manual "manual")
+    ("v" flycheck-verify-setup "verify setup"))))
+
+  (pretty-hydra-define hydra-go-to-file
+  (:hint nil :color teal :quit-key "q" :title (with-octicon "file-symlink-file" "Go To" 1 -0.05))
+  ("Agenda"
+   (("ac" (find-file "~/.personal/agenda/contacts.org") "contacts")
+    ("ah" (find-file "~/.personal/agenda/home.org") "home")
+    ("ai" (find-file "~/.personal/agenda/inbox.org") "inbox")
+    ("ag" (find-file "~/.personal/agenda/goals.org") "goals")
+    ("ap" (find-file "~/.personal/agenda/people.org") "people")
+    ("ar" (find-file "~/.personal/agenda/routine.org") "routine")
+    ("aR" (find-file "~/.personal/agenda/review.org") "review")
+    ("as" (find-file "~/.personal/agenda/someday.org") "someday")
+    ("aw" (find-file "~/.personal/agenda/work.org") "work"))
+   "Config"
+   (("ca" (find-file (format "%s/sh/aliases" xdg-config)) "aliases")
+    ("ce" (find-file "~/.emacs.d/config.org") "emacs")
+    ("cE" (find-file (format "%s/sh/environ" xdg-config)) "environ")
+    ("cf" (find-file (format "%s/foot/foot.ini" xdg-config)) "foot")
+    ("cn" (find-file (format "%s/neofetch/config.conf" xdg-config)) "neofetch")
+    ("cq" (find-file (format "%s/qutebrowser/config.py" xdg-config)) "qutebrowser")
+    ("cr" (find-file (format "%s/ranger/rc.conf" xdg-config)) "ranger")
+    ("cs" (find-file (format "%s/sway/config" xdg-config)) "sway")
+    ("ct" (find-file (format "%s/tmux/tmux.conf" xdg-config)) "tmux")
+    ("cw" (find-file (format "%s/waybar/config" xdg-config)) "waybar")
+    ("cx" (find-file (format "%s/sh/xdg" xdg-config)) "xdg"))
+   "Item"
+   (("ib" (find-file "~/.personal/items/books.org") "book")
+    ("il" (find-file "~/.personal/items/learning.org") "learning")
+    ("im" (find-file "~/.personal/items/movies.org") "movies")
+    ("ip" (find-file "~/.personal/items/purchases.org") "purchases"))
+   "Notes"
+   (("na" (find-file (format "~/.personal/notes/affirmations.pdf" xdg-config)) "affirmations"))
+   "Other"
+   (("ol" (find-file "~/.personal/other/long-goals.org") "long-terms goals")
+    ("os" (find-file "~/.personal/other/short-goals.org") "short-terms goals")
+    ("ou" (find-file "~/.personal/other/usb.org") "usb"))))
+
+  (pretty-hydra-define hydra-image
+  (:hint nil :color pink :quit-key "q" :title (with-faicon "file-image-o" "Images" 1 -0.05))
+  ("Action"
+   (("r" image-rotate "rotate")
+    ("s" image-save "save" :color teal))
+    "Zoom"
+    (("-" image-decrease-size "out")
+     ("+" image-increase-size "in")
+     ("=" image-transform-reset "reset"))))
+
+  (pretty-hydra-define hydra-ledger
+  (:hint nil :color teal :quit-key "q" :title (with-faicon "usd" "Ledger" 1 -0.05))
+  ("Action"
+   (("b" leadger-add-transaction "add")
+    ("c" ledger-mode-clean-buffer "clear")
+    ("i" ledger-copy-transaction-at-point "copy")
+    ("s" ledger-delete-current-transaction "delete")
+    ("r" ledger-report "report"))))
+
+  (pretty-hydra-define hydra-magit
+  (:hint nil :color teal :quit-key "q" :title (with-octicon "mark-github" "Magit" 1 -0.05))
+  ("Action"
+   (("b" magit-blame "blame")
+    ("c" magit-clone "clone")
+    ("i" magit-init "init")
+    ("l" magit-log-buffer-file "commit log (current file)")
+    ("L" magit-log-current "commit log (project)")
+    ("s" magit-status "status"))))
+
+  (pretty-hydra-define hydra-merge
+  (:hint nil :color pink :quit-key "q" :title (with-octicon "mark-github" "Magit" 1 -0.05))
+  ("Move"
+   (("n" smerge-next "next")
+    ("p" smerge-prev "previous"))
+   "Keep"
+   (("RET" smerge-keep-current "current")
+    ("a" smerge-keep-all "all")
+    ("b" smerge-keep-base "base")
+    ("l" smerge-keep-lower "lower")
+    ("u" smerge-keep-upper "upper"))
+   "Diff"
+   (("<" smerge-diff-base-upper "upper/base")
+    ("=" smerge-diff-upper-lower "upper/lower")
+    (">" smerge-diff-base-lower "base/lower")
+    ("R" smerge-refine "redefine")
+    ("E" smerge-ediff "ediff"))
+   "Other"
+   (("C" smerge-combine-with-next "combine")
+    ("r" smerge-resolve "resolve")
+    ("k" smerge-kill-current "kill current"))))
+
+  (pretty-hydra-define hydra-org
+  (:hint nil :color teal :quit-key "q" :title (with-fileicon "org" "Org" 1 -0.05))
+  ("Action"
+   (("A" my/org-archive-done-tasks "archive")
+    ("a" org-agenda "agenda")
+    ("c" org-capture "capture")
+    ("d" org-decrypt-entry "decrypt")
+    ("i" org-insert-link-global "insert-link")
+    ("j" org-capture-goto-last-stored "jump-capture")
+    ("k" org-cut-subtree "cut-subtree")
+    ("o" org-open-at-point-global "open-link")
+    ("r" org-refile "refile")
+    ("s" org-store-link "store-link")
+    ("t" org-show-todo-tree "todo-tree"))))
+
+  (pretty-hydra-define hydra-projectile
+  (:hint nil :color teal :quit-key "q" :title (with-faicon "rocket" "Projectile" 1 -0.05))
+  ("Buffers"
+   (("b" projectile-switch-to-buffer "list")
+    ("k" projectile-kill-buffers "kill all")
+    ("S" projectile-save-project-buffers "save all"))
+   "Find"
+   (("d" projectile-find-dir "directory")
+    ("D" projectile-dired "root")
+    ("f" projectile-find-file "file")
+    ("p" consult-projectile "project"))
+   "Other"
+   (("i" projectile-invalidate-cache "reset cache"))
+   "Search"
+   (("r" projectile-replace "replace")
+    ("R" projectile-replace-regexp "regexp replace")
+    ("s" consult-git-grep "search"))))
+
+  (pretty-hydra-define hydra-notes
+  (:hint nil :color teal :quit-key "q" :title (with-octicon "pencil" "Notes" 1 -0.05))
+  ("Notes"
+   (("c" org-roam-dailies-capture-today "capture")
+    ("C" org-roam-dailies-capture-tomorrow "capture tomorrow")
+    ("g" org-roam-graph "graph")
+    ("f" org-roam-node-find "find")
+    ("i" org-roam-node-insert "insert"))
+   "Go To"
+   ((">" org-roam-dailies-goto-next-note "next note")
+    ("<" org-roam-dailies-goto-previous-note "previous note")
+    ("d" org-roam-dailies-goto-date "date")
+    ("t" org-roam-dailies-goto-today "today")
+    ("T" org-roam-dailies-goto-tomorrow "tomorrow")
+    ("y" org-roam-dailies-goto-yesterday "yesterday"))))
+
+  (pretty-hydra-define hydra-spelling
+  (:hint nil :color teal :quit-key "q" :title (with-faicon "magic" "Spelling" 1 -0.05))
+  ("Checker"
+   (("c" langtool-correct-buffer "correction")
+    ("C" langtool-check-done "clear")
+    ("d" ispell-change-dictionary "dictionary")
+    ("l" (message "Current language: %s (%s)" langtool-default-language ispell-current-dictionary) "language")
+    ("s" my/switch-language "switch")
+    ("w" wiki-summary "wiki"))
+   "Errors"
+   (("<" flyspell-correct-previous "previous" :color pink)
+    (">" flyspell-correct-next "next" :color pink)
+    ("f" langtool-check "find"))))
+
+  (pretty-hydra-define hydra-tex
+  (:hint nil :color teal :quit-key "q" :title (with-fileicon "tex" "LaTeX" 1 -0.05))
+  ("Action"
+   (("g" reftex-goto-label "goto")
+    ("r" reftex-query-replace-document "replace")
+    ("s" counsel-rg "search")
+    ("t" reftex-toc "table of content"))))
+
+  (pretty-hydra-define hydra-tool
+  (:hint nil :color teal :quit-key "q" :title (with-faicon "briefcase" "Tool" 1 -0.05))
+  ("Network"
+   (("c" ipcalc "subnet calculator")
+    ("i" ipinfo "ip info"))))
+
+  (defhydra hydra-typescript (:color blue)
+  "
+  ^
+  ^TypeScript^          ^Do^
+  ^──────────^──────────^──^───────────
+  _q_ quit             _b_ back
+  ^^                   _e_ errors
+  ^^                   _j_ jump
+  ^^                   _r_ references
+  ^^                   _R_ restart
+  ^^                   ^^
+  "
+  ("q" nil)
+  ("b" tide-jump-back)
+  ("e" tide-project-errors)
+  ("j" tide-jump-to-definition)
+  ("r" tide-references)
+  ("R" tide-restart-server))
+
+  (pretty-hydra-define hydra-upload
+  (:hint nil :color teal :quit-key "q" :title (with-faicon "cloud-upload" "Upload" 1 -0.05))
+  ("Action"
+   (("b" webpaste-paste-buffer "buffer")
+    ("i" imgbb-upload "image")
+    ("r" webpaste-paste-region "region"))))
+
+  (pretty-hydra-define hydra-windows
+  (:hint nil :forein-keys warn :quit-key "q" :title (with-faicon "windows" "Windows" 1 -0.05))
+  ("Window"
+   (("b" balance-windows "balance")
+    ("c" centered-window-mode "center")
+    ("i" enlarge-window "heighten")
+    ("j" shrink-window-horizontally "narrow")
+    ("k" shrink-window "lower")
+    ("u" winner-undo "undo")
+    ("r" winner-redo "redo")
+    ("l" enlarge-window-horizontally "widen")
+    ("s" switch-window-then-swap-buffer "swap" :color teal))
+   "Zoom"
+   (("-" text-scale-decrease "out")
+    ("+" text-scale-increase "in")
+    ("=" (text-scale-increase 0) "reset"))))
+#+end_src
+
+* Icons
+
+#+begin_src emacs-lisp
+  (use-package all-the-icons
+    :if (display-graphic-p)
+    :commands all-the-icons-install-fonts
+    :config (unless (find-font (font-spec :name "all-the-icons"))
+              (all-the-icons-install-fonts t)))
+#+end_src
+
+* Indentations
 
 #+begin_src emacs-lisp
   (use-package aggressive-indent
@@ -1625,7 +1534,7 @@ To have a more user-friendly documentation we will use the [[https://github.com/
     :custom (highlight-indent-guides-method 'character))
 #+end_src
 
-** Linters
+* Linters
 
 #+begin_src emacs-lisp
   (use-package flycheck
@@ -1636,12 +1545,215 @@ To have a more user-friendly documentation we will use the [[https://github.com/
                 ("M-'" . flycheck-previous-error)
                 ("M-\\" . flycheck-next-error))
     :custom
-    (flycheck-display-errors-delay 0.3)
-    (flycheck-stylelintrc "~/.stylelintrc.json")
-    (flycheck-scss-stylelint-executable "~/node_modules/stylelint/bin/stylelint.js"))
+    (flycheck-display-errors-delay 0.3))
 #+end_src
 
-** Parentheses
+* Mails
+
+#+begin_src emacs-lisp
+(use-package mu4e
+  :straight nil
+  :load-path "/usr/share/emacs/site-lisp/mu4e"
+  :commands mu4e
+  :hook (mu4e-compose-mode . turn-off-auto-fill)
+  :bind (:map mu4e-headers-mode-map
+              ("M-[" . scroll-down-command)
+              ("M-]" . scroll-up-command))
+  :preface
+  (defun my/set-email-account (label letvars)
+    "Registers an email address for mu4e."
+    (setq mu4e-contexts
+          (cl-loop for context in mu4e-contexts
+                   unless (string= (mu4e-context-name context) label)
+                   collect context))
+    (let ((context (make-mu4e-context
+                    :name label
+                    :enter-func (lambda () (mu4e-message "Switched context"))
+                    :leave-func #'mu4e-clear-caches
+                    :match-func
+                    (lambda (msg)
+                      (when msg
+                        (string-prefix-p (format "/%s" msg)
+                                         (mu4e-message-field msg :maildir))))
+                    :vars letvars)))
+      (push context mu4e-contexts)
+      context))
+  :custom
+  (mu4e-attachment-dir "~/downloads")
+  ;; To avoid synchronization issues/ with mbsync
+  (mu4e-change-filenames-when-moving t)
+  (mu4e-confirm-quit nil)
+  (mu4e-completing-read-function 'ivy-read)
+  (mu4e-compose-complete-only-after (format-time-string
+                                     "%Y-%m-%d"
+                                     (time-subtract (current-time) (days-to-time 150))))
+  (mu4e-compose-context-policy 'ask-if-none)
+  (mu4e-compose-dont-reply-to-self t)
+  (mu4e-compose-format-flowed t)
+  (mu4e-get-mail-command (format "mbsync -c '%s/isync/mbsyncrc' -a" xdg-config))
+  (mu4e-headers-date-format "%F")
+  (mu4e-headers-fields
+   '((:account    . 10)
+     (:human-date . 12)
+     (:flags      . 6)
+     (:from       . 22)
+     (:subject    . nil)))
+  (mu4e-headers-time-format "%R")
+  (mu4e-html2text-command "iconv -c -t utf-8 | pandoc -f html -t plain")
+  (mu4e-maildir "~/mails")
+  (mu4e-org-contacts-file "~/.personal/agenda/contacts.org")
+  (mu4e-update-interval (* 5 60))
+  (mu4e-use-fancy-chars t)
+  (mu4e-view-prefer-html t)
+  (mu4e-view-show-addresses t)
+  (mu4e-view-show-images t)
+  :config
+  (my/set-email-account "erroriamnotfound"
+                        '((mu4e-drafts-folder . "/personal/erroriamnotfound/drafts")
+                          (mu4e-refile-folder . "/personal/erroriamnotfound/all")
+                          (mu4e-sent-folder   . "/personal/erroriamnotfound/sent")
+                          (mu4e-trash-folder  . "/personal/erroriamnotfound/trash")
+                          (mu4e-maildir-shortcuts . ((:maildir "/personal/erroriamnotfound/all"    :key ?a)
+                                                     (:maildir "/personal/erroriamnotfound/inbox"  :key ?i)
+                                                     (:maildir "/personal/erroriamnotfound/drafts" :key ?d)
+                                                     (:maildir "/personal/erroriamnotfound/sent"   :key ?s)
+                                                     (:maildir "/personal/erroriamnotfound/trash"  :key ?t)))
+                          (smtpmail-smtp-user . "erroriamnotfound@gmail.com")
+                          (smtpmail-smtp-server . "smtp.gmail.com")
+                          (smtpmail-smtp-service . 465)
+                          (smtpmail-stream-type . ssl)
+                          (user-mail-address . "erroriamnotfound@gmail.com")
+                          (user-full-name . "Who Cares")))
+  (my/set-email-account "terencio.agozzino"
+                        '((mu4e-drafts-folder . "/personal/terencio-agozzino/drafts")
+                          (mu4e-refile-folder . "/personal/terencio-agozzino/all")
+                          (mu4e-sent-folder   . "/personal/terencio-agozzino/sent")
+                          (mu4e-trash-folder  . "/personal/terencio-agozzino/trash")
+                          (mu4e-maildir-shortcuts . ((:maildir "/personal/terencio-agozzino/all"    :key ?a)
+                                                     (:maildir "/personal/terencio-agozzino/inbox"  :key ?i)
+                                                     (:maildir "/personal/terencio-agozzino/drafts" :key ?d)
+                                                     (:maildir "/personal/terencio-agozzino/sent"   :key ?s)
+                                                     (:maildir "/personal/terencio-agozzino/trash"  :key ?t)))
+                          (smtpmail-smtp-user . "terencio.agozzino@gmail.com")
+                          (smtpmail-smtp-server . "smtp.gmail.com")
+                          (smtpmail-smtp-service . 465)
+                          (smtpmail-stream-type . ssl)
+                          (user-mail-address . "terencio.agozzino@gmail.com")
+                          (user-full-name . "Terencio Agozzino")))
+  (setq mu4e-headers-attach-mark    `("a" . ,(with-faicon "paperclip" "" 0.75 -0.05 "all-the-icons-lyellow"))
+        mu4e-headers-draft-mark     `("D" . ,(with-octicon "pencil" "" 0.75 -0.05 "all-the-icons-lsilver"))
+        mu4e-headers-encrypted-mark `("x" . ,(with-faicon "lock" "" 0.75 -0.05 "all-the-icons-lred"))
+        mu4e-headers-flagged-mark   `("F" . ,(with-faicon "flag" "" 0.75 -0.05 "all-the-icons-maroon"))
+        mu4e-headers-new-mark       `("N" . ,(with-faicon "check-circle" "" 0.75 -0.05 "all-the-icons-silver"))
+        mu4e-headers-passed-mark    `("P" . ,(with-faicon "share" "" 0.75 -0.05 "all-the-icons-purple "))
+        mu4e-headers-replied-mark   `("R" . ,(with-faicon "reply" "" 0.75 -0.05 "all-the-icons-lgreen"))
+        mu4e-headers-seen-mark      `("S" . ,(with-octicon "check" "" 1 -0.05 "all-the-icons-lgreen"))
+        mu4e-headers-signed-mark    `("s" . ,(with-faicon "key" "" 0.75 -0.05 "all-the-icons-cyan"))
+        mu4e-headers-trashed-mark   `("T" . ,(with-faicon "trash" "" 0.75 -0.05 "all-the-icons-lred"))
+        mu4e-headers-unread-mark    `("u" . ,(with-faicon "envelope" "" 0.75 -0.05 "all-the-icons-silver")))
+  (add-to-list 'mu4e-header-info-custom
+               '(:account
+                 :name "Account"
+                 :shortname "Account"
+                 :help "Which account this email belongs to"
+                 :function
+                 (lambda (msg)
+                   (let ((maildir (mu4e-message-field msg :maildir)))
+                     (format "%s" (substring maildir 1 (string-match-p "/" maildir 1)))))))
+  (add-to-list 'mu4e-headers-actions '("org-contact-add" . mu4e-action-add-org-contact) t)
+  (add-to-list 'mu4e-view-actions '("org-contact-add" . mu4e-action-add-org-contact) t))
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package org-mime
+    :after mu4e
+    :hook (message-send . org-mime-htmlize)
+    :bind (:map mu4e-compose-mode-map
+                ("C-c '" . org-mime-edit-mail-in-org-mode))
+    :config
+    (add-hook 'org-mime-html-hook (lambda ()
+                                    (goto-char (point-max))
+                                    (insert "--<br>
+                   <strong>Terencio Agozzino</strong><br>
+                   Data Scientist
+                   <br>
+                   <span style='text-decoration:none; color:#000;'>(+32) 495 45 29 07</span>")))
+    (add-hook 'org-mime-html-hook (lambda ()
+                                    (org-mime-change-element-style "p" (format "color: %s" "#1a1a1a"))))
+
+    (add-hook 'org-mime-html-hook (lambda ()
+                                    (org-mime-change-element-style "strong" (format "color: %s" "#000"))))
+
+    (add-hook 'org-mime-html-hook (lambda ()
+                                    (org-mime-change-element-style
+                                     "pre" "background: none repeat scroll 0% 0% rgb(61, 61, 61);
+                                                   border-radius: 15px;
+                                                   color: #eceff4;
+                                                   font-family: Courier, 'Courier New', monospace;
+                                                   font-size: small;
+                                                   font-weight: 400;
+                                                   line-height: 1.3em;
+                                                   padding: 20px;
+                                                   quotes: '«' '»';
+                                                   width: 41%;")))
+    (setq org-mime-export-options '(:preserve-breaks t
+                                                     :section-numbers nil
+                                                     :with-author nil
+                                                     :with-toc nil)))
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package mu4e-alert
+    :hook ((after-init . mu4e-alert-enable-mode-line-display)
+           (after-init . mu4e-alert-enable-notifications))
+    :config (mu4e-alert-set-default-style 'libnotify))
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package message
+    :straight nil
+    :after mu4e
+    :custom
+    (message-citation-line-format "On %B %e, %Y at %l:%M %p, %f (%n) wrote:\n")
+    (message-citation-line-function 'message-insert-formatted-citation-line)
+    (message-kill-buffer-on-exit t)
+    (message-send-mail-function 'smtpmail-send-it)
+    (mml-secure-openpgp-signers '("208FCDBB98190562")))
+#+end_src
+
+* Money
+
+#+begin_src emacs-lisp
+  (use-package ledger-mode
+    :mode ("\\.\\(dat\\|ledger\\)\\'")
+    :preface
+    (defun my/ledger-save ()
+      "Clean the ledger buffer at each save."
+      (interactive)
+      (ledger-mode-clean-buffer)
+      (save-buffer))
+    :bind (:map ledger-mode-map
+                ("C-x C-s" . my/ledger-save))
+    :hook (ledger-mode . ledger-flymake-enable)
+    :custom
+    (ledger-clear-whole-transactions t)
+    (ledger-reconcile-default-commodity "EUR")
+    (ledger-reports
+     '(("account statement" "%(binary) reg --real [[ledger-mode-flags]] -f %(ledger-file) ^%(account)")
+       ("balance sheet" "%(binary) --real [[ledger-mode-flags]] -f %(ledger-file) bal ^assets ^liabilities ^equity")
+       ("budget" "%(binary) --empty -S -T [[ledger-mode-flags]] -f %(ledger-file) bal ^assets:bank ^assets:receivables ^assets:cash ^assets:budget")
+       ("budget goals" "%(binary) --empty -S -T [[ledger-mode-flags]] -f %(ledger-file) bal ^assets:bank ^assets:receivables ^assets:cash ^assets:'budget goals'")
+       ("budget obligations" "%(binary) --empty -S -T [[ledger-mode-flags]] -f %(ledger-file) bal ^assets:bank ^assets:receivables ^assets:cash ^assets:'budget obligations'")
+       ("budget debts" "%(binary) --empty -S -T [[ledger-mode-flags]] -f %(ledger-file) bal ^assets:bank ^assets:receivables ^assets:cash ^assets:'budget debts'")
+       ("cleared" "%(binary) cleared [[ledger-mode-flags]] -f %(ledger-file)")
+       ("equity" "%(binary) --real [[ledger-mode-flags]] -f %(ledger-file) equity")
+       ("income statement" "%(binary) --invert --real -S -T [[ledger-mode-flags]] -f %(ledger-file) bal ^income ^expenses -p \"this month\""))
+     (ledger-report-use-header-line nil)))
+
+  (use-package flycheck-ledger :after ledger-mode)
+#+end_src
+
+* Parentheses
 
 #+begin_src emacs-lisp
   (use-package faces
@@ -1669,7 +1781,24 @@ To have a more user-friendly documentation we will use the [[https://github.com/
     :custom (sp-escape-quotes-after-insert nil))
 #+end_src
 
-** PDF
+* Paste
+
+#+begin_src emacs-lisp
+(use-package webpaste
+  :defer 0.4
+  :bind (("C-c C-p C-b" . webpaste-paste-buffer)
+         ("C-c C-p C-p" . webpaste-paste-buffer-or-region)
+         ("C-c C-p C-r" . webpaste-paste-region))
+  :custom (webpaste-provider-priority '("dpaste.org" "dpaste.com" "ix.io")))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package imgbb
+  :commands imgbb-upload
+  :bind ("C-c C-p C-i" . imgbb-upload))
+#+end_src
+
+* PDF
 
 #+begin_src emacs-lisp
   (use-package pdf-tools
@@ -1678,42 +1807,45 @@ To have a more user-friendly documentation we will use the [[https://github.com/
 #+end_src
 
 #+begin_src emacs-lisp
-    (use-package pdf-view
-      :straight nil
-      :after pdf-tools
-      :bind (:map pdf-view-mode-map
-                  ("C-s" . isearch-forward)
-                  ("d" . pdf-annot-delete)
-                  ("h" . pdf-annot-add-highlight-markup-annotation)
-                  ("t" . pdf-annot-add-text-annotation))
-      :custom
-      (pdf-view-display-size 'fit-page)
-      (pdf-view-resize-factor 1.1)
-      ;; Avoid searching for unicodes to speed up pdf-tools.
-      (pdf-view-use-unicode-ligther nil)
-      ;; Enable HiDPI support, at the cost of memory.
-      (pdf-view-use-scaling t))
+  (use-package pdf-view
+    :straight nil
+    :after pdf-tools
+    :bind (:map pdf-view-mode-map
+                ("C-s" . isearch-forward)
+                ("d" . pdf-annot-delete)
+                ("h" . pdf-annot-add-highlight-markup-annotation)
+                ("t" . pdf-annot-add-text-annotation))
+    :custom
+    (pdf-view-display-size 'fit-page)
+    (pdf-view-resize-factor 1.1)
+    ;; Avoid searching for unicodes to speed up pdf-tools.
+    (pdf-view-use-unicode-ligther nil)
+    ;; Enable HiDPI support, at the cost of memory.
+    (pdf-view-use-scaling t))
 #+end_src
 
-** Projectile
+* Project
 
 #+begin_src emacs-lisp
   (use-package projectile
-    ;;:demand t
     :delight (projectile-mode)
+    :init (projectile-global-mode)
     :config (projectile-mode)
     :custom
+    (projectile-cache-file (expand-file-name (format "%s/emacs/projectile.cache" xdg-cache)))
     (projectile-enable-caching t)
     (projectile-keymap-prefix (kbd "C-c C-p"))
+    (projectile-known-projects-file (expand-file-name (format "%s/emacs/projectile-bookmarks.eld" xdg-cache)))
     (projectile-mode-line '(:eval (projectile-project-name)))
     (projectile-project-search-path '("~/Programming"))
-    (projectile-switch-project-action #'projectile-dired)
-    :config (projectile-global-mode))
+    (projectile-switch-project-action #'projectile-dired))
+#+end_src
 
+#+begin_src emacs-lisp
   (use-package consult-projectile
     :after (consult projectile)
     :straight (consult-projectile :type git :host gitlab :repo
-                  "OlMon/consult-projectile" :branch "master")
+                                  "OlMon/consult-projectile" :branch "master")
     :commands (consult-projectile))
 #+end_src
 
@@ -1724,23 +1856,11 @@ To have a more user-friendly documentation we will use the [[https://github.com/
     (defun my/ibuffer-projectile ()
       (ibuffer-projectile-set-filter-groups)
       (unless (eq ibuffer-sorting-mode 'alphabetic)
-	(ibuffer-do-sort-by-alphabetic)))
+        (ibuffer-do-sort-by-alphabetic)))
     :hook (ibuffer . my/ibuffer-projectile))
 #+end_src
 
-** Perspective
-
-#+begin_src emacs-lisp
-  (use-package perspective
-    :demand t
-    :custom (persp-mode-prefix-key (kbd "C-c M-p"))
-    :init (persp-mode))
-
-  (use-package persp-projectile
-    :after (perspective))
-#+end_src
-
-** Yasnippet
+* Snippets
 
 #+begin_src emacs-lisp
   (use-package yasnippet-snippets
@@ -1756,11 +1876,7 @@ To have a more user-friendly documentation we will use the [[https://github.com/
     (defun my/disable-yas-if-no-snippets ()
       (when (and yas-minor-mode (null (yas--get-snippet-tables)))
         (yas-minor-mode -1))))
-#+end_src
 
-Provides snippets for consult.
-
-#+begin_src emacs-lisp
   (use-package consult-yasnippet
     :straight (consult-yasnippet
                :type git
@@ -1769,14 +1885,73 @@ Provides snippets for consult.
     :bind ("C-c y" . consult-yasnippet))
 #+end_src
 
-** Version Control
+* Spaces around Operators
 
 #+begin_src emacs-lisp
-    (use-package magit
+  (use-package electric-operator
+    :hook ((css-mode java-mode js2-mode
+                     python-mode sql-mode typescript-mode) . electric-operator-mode))
+#+end_src
+
+* Recent Files
+
+#+begin_src emacs-lisp
+  (use-package recentf
+    :straight nil
+    :bind ("C-x C-r" . recentf-open-files)
+    :init (recentf-mode)
+    :custom
+    (recentf-exclude (list "/scp:"
+                           "/ssh:"
+                           "/sudo:"
+                           "/tmp/"
+                           "~$"
+                           "COMMIT_EDITMSG"))
+    (recentf-max-menu-items 15)
+    (recentf-max-saved-items 200)
+    (recentf-save-file (expand-file-name (format "%s/emacs/recentf" xdg-cache)))
+    ;; Save recent files every 5 minutes to manage abnormal output.
+    :config (run-at-time nil (* 5 60) 'recentf-save-list))
+#+end_src
+
+* Term definitions
+
+#+begin_src emacs-lisp
+  (use-package wiki-summary
+    :commands (wiki-summary wiki-summary-insert)
+    :bind ("C-c W" . wiki-summary)
+    :preface
+    (defun my/format-summary-in-buffer (summary)
+      "Given a summary, sticks it in the *wiki-summary* buffer and displays
+       the buffer."
+      (let ((buf (generate-new-buffer "*wiki-summary*")))
+        (with-current-buffer buf
+          (princ summary buf)
+          (fill-paragraph)
+          (goto-char (point-min))
+          (view-mode))
+        (pop-to-buffer buf)))
+    :config
+    (advice-add 'wiki-summary/format-summary-in-buffer
+                :override #'my/format-summary-in-buffer))
+#+end_src
+
+* Try packages
+
+#+begin_src emacs-lisp
+  (use-package try :commands try)
+#+end_src
+
+* VCS
+
+#+begin_src emacs-lisp
+  (use-package magit
       :commands magit-status
       :custom
       (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
+#+end_src
 
+#+begin_src emacs-lisp
   (use-package git-commit
     :straight nil
     :preface
@@ -1786,7 +1961,9 @@ Provides snippets for consult.
       (setq-local comment-auto-fill-only-comments nil))
     :hook (git-commit-mode . my/git-commit-auto-fill-everywhere)
     :custom (git-commit-summary-max-length 50))
+#+end_src
 
+#+begin_src emacs-lisp
   (use-package smerge-mode
     ;;:after hydra
     :delight "∓"
@@ -1796,17 +1973,18 @@ Provides snippets for consult.
                 ("M-g p" . smerge-prev))
     ;;:hook (magit-diff-visit-file . hydra-merge/body)
     )
+#+end_src
 
+#+begin_src emacs-lisp
   (use-package git-gutter
     :delight
     :config (global-git-gutter-mode))
 
     ;; Might use forge for magit
-    ;; (use-package forge)
+  ;; (use-package forge)
 #+end_src
 
-
-** Whitespace and Kill
+* Whitespace and kill
 
 #+begin_src emacs-lisp
   (use-package simple
@@ -1827,1043 +2005,428 @@ Provides snippets for consult.
            ((prog-mode text-mode) . turn-on-auto-fill))
     :bind ("C-w" . my/kill-region-or-line)
     :custom (set-mark-command-repeat-pop t))
+#+end_src
 
+#+begin_src emacs-lisp
   (use-package hungry-delete
     :demand t
     :delight
     :config (global-hungry-delete-mode))
 #+end_src
 
-** Undo-tree
+* Org
 
 #+begin_src emacs-lisp
-  (use-package undo-tree
-    :delight
-    ;;:bind ("C--" . undo-tree-redo)
-    :init (global-undo-tree-mode)
-    :custom
-    (undo-tree-visualizer-timestamps t)
-    (undo-tree-visualizer-diff t))
-#+end_src
-
-** Hydra
-
-#+begin_src emacs-lisp
-  (use-package hydra
-    :bind (("C-c I" . hydra-image/body)
-           ("C-c L" . hydra-ledger/body)
-           ("C-c M" . hydra-merge/body)
-           ("C-c T" . hydra-tool/body)
-           ("C-c b" . hydra-btoggle/body)
-           ("C-c c" . hydra-clock/body)
-           ("C-c f" . hydra-flycheck/body)
-           ("C-c g" . hydra-go-to-file/body)
-           ("C-c m" . hydra-magit/body)
-           ("C-c o" . hydra-org/body)
-           ("C-c p" . hydra-projectile/body)
-           ("C-c s" . hydra-spelling/body)
-           ("C-c t" . hydra-tex/body)
-           ("C-c u" . hydra-upload/body)
-           ("C-c w" . hydra-windows/body)))
-
-  (use-package major-mode-hydra
-    :after hydra
-    :preface
-    (defun with-alltheicon (icon str &optional height v-adjust face)
-      "Display an icon from all-the-icons."
-      (s-concat (all-the-icons-alltheicon icon :v-adjust (or v-adjust 0) :height (or height 1) :face face) " " str))
-    (defun with-faicon (icon str &optional height v-adjust face)
-      "Display an icon from Font Awesome."
-      (s-concat (all-the-icons-faicon icon :v-adjust (or v-adjust 0) :height (or height 1) :face face) " " str))
-    (defun with-fileicon (icon str &optional height v-adjust face)
-      "Display an icon from Atome File Icons."
-      (s-concat (all-the-icons-fileicon icon :v-adjust (or v-adjust 0) :height (or height 1) :face face) " " str))
-    (defun with-octicon (icon str &optional height v-adjust face)
-      "Display an icon from GitHub Octicons."
-      (s-concat (all-the-icons-octicon icon :v-adjust (or v-adjust 0) :height (or height 1) :face face) " " str))
-    )
-#+end_src
-
-*** Hydra BToggle
-
-#+begin_src emacs-lisp
-  (pretty-hydra-define hydra-btoggle
-  (:hint nil :color amaranth :quit-key "q" :title (with-faicon "toggle-on" "Toggle" 1 -0.05))
-  ("Basic"
-   (("a" abbrev-mode "abbrev" :toggle t)
-    ("h" global-hungry-delete-mode "hungry delete" :toggle t))
-   "Coding"
-   (("e" electric-operator-mode "electric operator" :toggle t)
-    ("F" flyspell-mode "flyspell" :toggle t)
-    ("f" flycheck-mode "flycheck" :toggle t)
-    ("l" lsp-mode "lsp" :toggle t)
-    ("s" smartparens-mode "smartparens" :toggle t))
-   "UI"
-   (("i" ivy-rich-mode "ivy-rich" :toggle t))))
-#+end_src
-
-*** Hydra Clock
-
-#+begin_src emacs-lisp
-  (pretty-hydra-define hydra-clock
-  (:hint nil :color teal :quit-key "q" :title (with-faicon "clock-o" "Clock" 1 -0.05))
-  ("Action"
-   (("c" org-clock-cancel "cancel")
-    ("d" org-clock-display "display")
-    ("e" org-clock-modify-effort-estimate "effort")
-    ("i" org-clock-in "in")
-    ("j" org-clock-goto "jump")
-    ("o" org-clock-out "out")
-    ("p" org-pomodoro "pomodoro")
-    ("r" org-clock-report "report"))))
-#+end_src
-
-*** Hydra Flycheck
-
-#+begin_src emacs-lisp
-  (pretty-hydra-define hydra-flycheck
-    (:hint nil :color teal :quit-key "q" :title (with-faicon "plane" "Flycheck" 1 -0.05))
-    ("Checker"
-     (("?" flycheck-describe-checker "describe")
-      ("d" flycheck-disable-checker "disable")
-      ("m" flycheck-mode "mode")
-      ("s" flycheck-select-checker "select"))
-     "Errors"
-     (("<" flycheck-previous-error "previous" :color pink)
-      (">" flycheck-next-error "next" :color pink)
-      ("f" flycheck-buffer "check")
-      ("l" flycheck-list-errors "list"))
-     "Other"
-     (("M" flycheck-manual "manual")
-      ("v" flycheck-verify-setup "verify setup"))))
-#+end_src
-
-*** Hydra Go-to
-
-#+begin_src emacs-lisp
-  (pretty-hydra-define hydra-go-to-file
-  (:hint nil :color teal :quit-key "q" :title (with-octicon "file-symlink-file" "Go To" 1 -0.05))
-  ("Agenda"
-   (("ac" (find-file "~/.personal/agenda/contacts.org") "contacts")
-    ("ah" (find-file "~/.personal/agenda/home.org") "home")
-    ("ai" (find-file "~/.personal/agenda/inbox.org") "inbox")
-    ("ag" (find-file "~/.personal/agenda/goals.org") "goals")
-    ("ap" (find-file "~/.personal/agenda/people.org") "people")
-    ("ar" (find-file "~/.personal/agenda/routine.org") "routine")
-    ("aR" (find-file "~/.personal/agenda/review.org") "review")
-    ("as" (find-file "~/.personal/agenda/someday.org") "someday")
-    ("aw" (find-file "~/.personal/agenda/work.org") "work"))
-   "Config"
-   (("cA" (find-file (format "%s/sh/aliases" xdg-config)) "aliases")
-    ("ce" (find-file (format "%s/emacs/config.org" xdg-config)) "emacs")
-    ("cE" (find-file (format "%s/sh/environ" xdg-config)) "environ")
-    ("cf" (find-file (format "%s/foot/foot.ini" xdg-config)) "foot")
-    ("cn" (find-file (format "%s/neofetch/config.conf" xdg-config)) "neofetch")
-    ("cr" (find-file (format "%s/ranger/rc.conf" xdg-config)) "ranger")
-    ("cs" (find-file (format "%s/sway/config" xdg-config)) "sway")
-    ("ct" (find-file (format "%s/tmux/tmux.conf" xdg-config)) "tmux")
-    ("cw" (find-file (format "%s/waybar/config" xdg-config)) "waybar")
-    ("cx" (find-file (format "%s/sh/xdg" xdg-config)) "xdg"))
-   "Items"
-    (("ib" (find-file "~/.personal/items/books.org") "book")
-     ("il" (find-file "~/.personal/items/learning.org") "learning")
-     ("im" (find-file "~/.personal/items/movies.org"))
-     ("ip" (find-file "~/.personal/items/purchases.org") "purchase"))
-    "Notes"
-    (("na" (find-file (format "~/.personal/notes/affirmations.pdf" xdg-config)) "Affirmations"))
-    "Other"
-   (("ol" (find-file "~/.personal/other/long-goals.org") "long-terms goals")
-    ("os" (find-file "~/.personal/other/short-goals.org") "short-terms goals")
-    ("ou" (find-file "~/.personal/other/usb.org") "usb"))))
-#+end_src
-
-*** Hydra Image
-
-#+begin_src emacs-lisp
-  (pretty-hydra-define hydra-image
-  (:hint nil :color pink :quit-key "q" :title (with-faicon "file-image-o" "Images" 1 -0.05))
-  ("Action"
-   (("r" image-rotate "rotate")
-    ("s" image-save "save" :color teal))
-    "Zoom"
-    (("-" image-decrease-size "out")
-     ("+" image-increase-size "in")
-     ("=" image-transform-reset "reset"))))
-#+end_src
-
-*** Hydra Ledger
-
-#+begin_src emacs-lisp
-  (pretty-hydra-define hydra-ledger
-  (:hint nil :color teal :quit-key "q" :title (with-faicon "usd" "Ledger" 1 -0.05))
-  ("Action"
-   (("b" leadger-add-transaction "add")
-    ("c" ledger-mode-clean-buffer "clear")
-    ("i" ledger-copy-transaction-at-point "copy")
-    ("s" ledger-delete-current-transaction "delete")
-    ("r" ledger-report "report"))))
-#+end_src
-
-*** Hydra Projectile
-
-#+begin_src emacs-lisp
-  (pretty-hydra-define hydra-projectile
-    (:hint nil :color teal :quit-key "q" :title (with-faicon "rocket" "Projectile" 1 -0.05))
-    ("Buffers"
-     (("b" projectile-switch-to-buffer "list")
-      ("k" projectile-kill-buffers "kill all")
-      ("S" projectile-save-project-buffers "save all"))
-     "Find"
-     (("d" projectile-find-dir "directory")
-      ("D" projectile-dired "root")
-      ("f" projectile-find-file "file")
-      ("p" projectile-persp-switch-project "project"))
-     "Other"
-     (("i" projectile-invalidate-cache "reset cache"))
-     "Search"
-     (("r" projectile-replace "replace")
-      ("R" projectile-replace-regexp "regex replace")
-      ("s" consult-git-grep "search"))))
-#+end_src
-
-*** Hydra Magit
-
-  #+begin_src emacs-lisp
-    (pretty-hydra-define hydra-magit
-      (:hint nil :color teal :quit-key "q" :title (with-octicon "mark-github" "Magit" 1 -0.05))
-      ("Action"
-       (("b" magit-blame "blame")
-        ("c" magit-clone "clone")
-        ("i" magit-init "init")
-        ("l" magit-log-buffer-file "commit log (current file)")
-        ("L" magit-log-current "commit log (project)")
-        ("s" magit-status "status"))))
-#+end_src
-
-*** Hydra Merge
-
-#+begin_src emacs-lisp
-    (pretty-hydra-define hydra-merge
-    (:hint nil :color pink :quit-key "q" :title (with-octicon "mark-github" "Magit" 1 -0.05))
-    ("Move"
-     (("n" smerge-next "next")
-      ("p" smerge-prev "previous"))
-     "Keep"
-     (("RET" smerge-keep-current "current")
-      ("a" smerge-keep-all "all")
-      ("b" smerge-keep-base "base")
-      ("l" smerge-keep-lower "lower")
-      ("u" smerge-keep-upper "upper"))
-     "Diff"
-     (("<" smerge-diff-base-upper "upper/base")
-      ("=" smerge-diff-upper-lower "upper/lower")
-      (">" smerge-diff-base-lower "base/lower")
-      ("R" smerge-refine "redefine")
-      ("E" smerge-ediff "ediff"))
-     "Other"
-     (("C" smerge-combine-with-next "combine")
-      ("r" smerge-resolve "resolve")
-      ("k" smerge-kill-current "kill current"))))
-#+end_src
-
-*** Hydra Org
-
-#+begin_src emacs-lisp
-  (pretty-hydra-define hydra-org
-  (:hint nil :color teal :quit-key "q" :title (with-fileicon "org" "Org" 1 -0.05))
-  ("Action"
-   (("A" my/org-archive-done-tasks "archive")
-    ("a" org-agenda "agenda")
-    ("c" org-capture "capture")
-    ("d" org-decrypt-entry "decrypt")
-    ("i" org-insert-link-global "insert-link")
-    ("j" org-capture-goto-last-stored "jump-capture")
-    ("k" org-cut-subtree "cut-subtree")
-    ("o" org-open-at-point-global "open-link")
-    ("r" org-refile "refile")
-    ("s" org-store-link "store-link")
-    ("t" org-show-todo-tree "todo-tree"))))
-  #+end_src
-
-*** Hydra Roam
-
-  #+begin_src emacs-lisp
-    (pretty-hydra-define hydra-notes
-    (:hint nil :color teal :quit-key "q" :title (with-octicon "pencil" "Notes" 1 -0.05))
-    ("Notes"
-     (("c" org-roam-dailies-capture-today "capture")
-      ("C" org-roam-dailies-capture-tomorrow "capture tomorrow")
-      ("g" org-roam-graph "graph")
-      ("f" org-roam-node-find "find")
-      ("i" org-roam-node-insert "insert"))
-     "Go To"
-     ((">" org-roam-dailies-goto-next-note "next note")
-      ("<" org-roam-dailies-goto-previous-note "previous note")
-      ("d" org-roam-dailies-goto-date "date")
-      ("t" org-roam-dailies-goto-today "today")
-      ("T" org-roam-dailies-goto-tomorrow "tomorrow")
-      ("y" org-roam-dailies-goto-yesterday "yesterday"))))
-    #+end_src
-
-*** Hydra Spelling
-
-#+begin_src emacs-lisp
-  (pretty-hydra-define hydra-spelling
-  (:hint nil :color teal :quit-key "q" :title (with-faicon "magic" "Spelling" 1 -0.05))
-  ("Checker"
-   (("c" langtool-correct-buffer "correction")
-    ("C" langtool-check-done "clear")
-    ("d" ispell-change-dictionary "dictionary")
-    ("l" (message "Current language: %s (%s)" langtool-default-language ispell-current-dictionary) "language")
-    ("s" my/switch-language "switch")
-    ("w" wiki-summary "wiki"))
-   "Errors"
-   (("<" flyspell-correct-previous "previous" :color pink)
-    (">" flyspell-correct-next "next" :color pink)
-    ("f" langtool-check "find"))))
-  #+end_src
-
-*** Hydra Windows
-
-#+begin_src emacs-lisp
-  (pretty-hydra-define hydra-windows
-    (:hint nil :forein-keys warn :quit-key "q" :title (with-faicon "windows" "Windows" 1 -0.05))
-    ("Window"
-     (("b" balance-windows "balance")
-      ("c" centered-window-mode "center")
-      ("i" enlarge-window "heighten")
-      ("j" shrink-window-horizontally "narrow")
-      ("k" shrink-window "lower")
-      ("u" winner-undo "undo")
-      ("r" winner-redo "redo")
-      ("l" enlarge-window-horizontally "widen")
-      ("s" switch-window-then-swap-buffer "swap" :color teal))
-     "Zoom"
-     (("-" text-scale-decrease "out")
-      ("+" text-scale-increase "in")
-      ("=" (text-scale-increase 0) "reset"))))
-#+end_src
-
-*** Hydra TeX
-
-#+begin_src emacs-lisp
-(pretty-hydra-define hydra-tex
-  (:hint nil :color teal :quit-key "q" :title (with-fileicon "tex" "LaTeX" 1 -0.05))
-  ("Action"
-   (("g" reftex-goto-label "goto")
-    ("r" reftex-query-replace-document "replace")
-    ("s" counsel-rg "search")
-    ("t" reftex-toc "table of content"))))
-    #+end_src
-
-*** Hydra Tool
-
-#+begin_src emacs-lisp
-(pretty-hydra-define hydra-tool
-  (:hint nil :color teal :quit-key "q" :title (with-faicon "briefcase" "Tool" 1 -0.05))
-  ("Network"
-   (("c" ipcalc "subnet calculator")
-    ("i" ipinfo "ip info"))))
-    #+end_src
-
-*** Hydra Typescript
-
-#+begin_src emacs-lisp
-(defhydra hydra-typescript (:color blue)
-  "
-  ^
-  ^TypeScript^          ^Do^
-  ^──────────^──────────^──^───────────
-  _q_ quit             _b_ back
-  ^^                   _e_ errors
-  ^^                   _j_ jump
-  ^^                   _r_ references
-  ^^                   _R_ restart
-  ^^                   ^^
-  "
-  ("q" nil)
-  ("b" tide-jump-back)
-  ("e" tide-project-errors)
-  ("j" tide-jump-to-definition)
-  ("r" tide-references)
-  ("R" tide-restart-server))
-  #+end_src
-
-*** Hydra Upload
-
-#+begin_src emacs-lisp
-(pretty-hydra-define hydra-upload
-  (:hint nil :color teal :quit-key "q" :title (with-faicon "cloud-upload" "Upload" 1 -0.05))
-  ("Action"
-   (("b" webpaste-paste-buffer "buffer")
-    ("i" imgbb-upload "image")
-    ("r" webpaste-paste-region "region"))))
-    #+end_src
-
-* Ledger
-
-#+begin_src emacs-lisp
-(use-package ledger-mode
-  :mode ("\\.\\(dat\\|ledger\\)\\'")
-  :preface
-  (defun my/ledger-save ()
-    "Clean the ledger buffer at each save."
-    (interactive)
-    (ledger-mode-clean-buffer)
-    (save-buffer))
-  :bind (:map ledger-mode-map
-              ("C-x C-s" . my/ledger-save))
-  :hook (ledger-mode . ledger-flymake-enable)
-  :custom
-  (ledger-clear-whole-transactions t)
-  (ledger-reconcile-default-commodity "EUR")
-  (ledger-reports
-   '(("account statement" "%(binary) reg --real [[ledger-mode-flags]] -f %(ledger-file) ^%(account)")
-     ("balance sheet" "%(binary) --real [[ledger-mode-flags]] -f %(ledger-file) bal ^assets ^liabilities ^equity")
-     ("budget" "%(binary) --empty -S -T [[ledger-mode-flags]] -f %(ledger-file) bal ^assets:bank ^assets:receivables ^assets:cash ^assets:budget")
-     ("budget goals" "%(binary) --empty -S -T [[ledger-mode-flags]] -f %(ledger-file) bal ^assets:bank ^assets:receivables ^assets:cash ^assets:'budget goals'")
-     ("budget obligations" "%(binary) --empty -S -T [[ledger-mode-flags]] -f %(ledger-file) bal ^assets:bank ^assets:receivables ^assets:cash ^assets:'budget obligations'")
-     ("budget debts" "%(binary) --empty -S -T [[ledger-mode-flags]] -f %(ledger-file) bal ^assets:bank ^assets:receivables ^assets:cash ^assets:'budget debts'")
-     ("cleared" "%(binary) cleared [[ledger-mode-flags]] -f %(ledger-file)")
-     ("equity" "%(binary) --real [[ledger-mode-flags]] -f %(ledger-file) equity")
-     ("income statement" "%(binary) --invert --real -S -T [[ledger-mode-flags]] -f %(ledger-file) bal ^income ^expenses -p \"this month\""))
-   (ledger-report-use-header-line nil)))
-
-   (use-package flycheck-ledger :after ledger-mode)
-   #+end_src
-
-* Org Mode Configuration
-
-#+begin_src emacs-lisp
-    (use-package org-contrib
-      :demand t)
-
-    (use-package org
-      :delight "θ"
-      :hook (org-mode . turn-off-auto-fill)
-      :bind ("C-c i" . org-insert-structure-template)
-      :preface
-      (defun my/org-archive-done-tasks ()
-        "Archive finished or cancelled tasks."
-        (interactive)
-        (org-map-entries
-         (lambda ()
-           (org-archive-subtree)
-           (setq org-map-continue-from (outline-previous-heading)))
-         "TODO=\"DONE\"|TODO=\"CANCELLED\"" (if (org-before-first-heading-p) 'file 'tree)))
-
-      (defun my/org-jump ()
-        "Jump to a specific task."
-        (interactive)
-        (let ((current-prefix-arg '(4)))
-          (call-interactively 'org-refile)))
-
-      (defun my/org-use-speed-commands-for-headings-and-lists ()
-        "Activate speed commands on list items too."
-        (or (and (looking-at org-outline-regexp) (looking-back "^\**"))
-            (save-excursion (and (looking-at (org-item-re)) (looking-back "^[ \t]*")))))
-
-      (defmacro ignore-args (fnc)
-        "Return function that ignores its arguments and invokes FNC."
-        `(lambda (&rest _rest)
-           (funcall ,fnc)))
-      :hook ((after-save . my/config-tangle)
-             (org-mode . visual-line-mode))
-      :custom
-      (org-archive-location "~/.personal/archives/%s::")
-      (org-blank-before-new-entry '((heading . t) (plain-list-item . t)))
-      (org-confirm-babel-evaluate nil)
-      (org-cycle-include-plain-lists 'integrate)
-      (org-ellipsis " ▾")
-      (org-export-backends '(ascii beamer html icalendar latex man md org texinfo))
-      (org-hide-emphasis-markers t)
-      (org-lod-done 'time)
-      (org-log-into-drrawer t)
-      (org-modules '(org-crypt
-                     org-habit
-                     org-mouse
-                     org-protocol
-                     org-tempo))
-      (org-refile-allow-creating-parent-nodes 'confirm)
-      (org-refile-targets '((org-agenda-files :maxlevel . 1)
-                            ("~/.personal/agenda/home.org" :maxlevel . 2)
-                            ("~/.personal/agenda/work.org" :maxlevel . 2)))
-      (org-refile-use-cache nil)
-      (org-refile-use-outline-path nil)
-      (org-startup-indented t)
-      (org-startup-with-inline-images t)
-      (org-tag-alist '((:startgroup . "Context")
-                       ("@errands" . ?e)
-                       ("@home" . ?h)
-                       ("@work" . ?w)
-                       (:endgroup)
-                       (:startgroup . "Difficulty")
-                       ("easy" . ?E)
-                       ("medium" . ?M)
-                       ("challenging" . ?C)
-                       (:endgroup)
-                       ("bug" . ?b)
-                       ("car" . ?v)
-                       ("future" . ?F)
-                       ("goal" . ?g)
-                       ("health" . ?H)
-                       ("house" . ?O)
-                       ("meeting" . ?m)
-                       ("planning" . ?p)
-                       ("phone" . ?0)
-                       ("purchase" . ?P)
-                       ("reading" . ?r)
-                       ("review" . ?R)
-                       ("study" . ?s)
-                       ("sport" . ?S)
-                       ("talk" . ?T)
-                       ("tech" . ?t)
-                       ("trip" . ?I)
-                       ("thinking" . ?i)
-                       ("update" . ?u)
-                       ("watch" . ?l)
-                       ("writing" . ?W)))
-      (org-tags-exclude-from-inheritance '("crypt" "project"))
-      (org-todo-keywords '((sequence "TODO(t)"
-                                     "STARTED(s)"
-                                     "NEXT(n)"
-                                     "SOMEDAY(.)"
-                                     "WAITING(w)""|" "DONE(x!)" "CANCELLED(c@)")))
-      (org-use-effective-time t)
-      (org-use-speed-commands 'my/org-use-speed-commands-for-headings-and-lists)
-      (org-yank-adjusted-subtrees t)
-      :config
-      (add-to-list 'org-global-properties '("Effort_ALL" . "0:05 0:15 0:30 1:00 2:00 3:00 4:00"))
-      (add-to-list 'org-speed-commands '("$" call-interactively 'org-archive-subtree))
-      (add-to-list 'org-speed-commands '("i" call-interactively 'org-clock-in))
-      (add-to-list 'org-speed-commands '("o" call-interactively 'org-clock-out))
-      (add-to-list 'org-speed-commands '("s" call-interactively 'org-schedule))
-      (add-to-list 'org-speed-commands '("x" org-todo "DONE"))
-      (add-to-list 'org-speed-commands '("y" org-todo-yesterday "DONE"))
-      (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
-      (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
-      (add-to-list 'org-structure-template-alist '("py" . "src python"))
-      (advice-add 'org-deadline :after (ignore-args #'org-save-all-org-buffers))
-      (advice-add 'org-schedule :after (ignore-args #'org-save-all-org-buffers))
-      (advice-add 'org-store-log-note :after (ignore-args #'org-save-all-org-buffers))
-      (advice-add 'org-refile :after 'org-save-all-org-buffers)
-      (advice-add 'org-todo :after (ignore-args #'org-save-all-org-buffers))
-      (font-lock-add-keywords 'org-mode
-                              '(("^ *\\([-]\\) "
-                                 (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
-      (org-clock-persistence-insinuate)
-      (org-load-modules-maybe t))
-
-    (use-package toc-org
-      :after org
-      :hook (org-mode . toc-org-enable))
-#+end_src
-
-#+begin_src emacs-lisp
-  (use-package async
+  (use-package toc-org
     :after org
-    :preface
-    (defvar config-file (expand-file-name "config.org" user-emacs-directory)
-      "The configuration file.")
-    (defvar config-last-change (nth 5 (file-attributes config-file))
-      "Last modification time of the configuration file.")
-    (defvar show-async-tangle-results nil
-      "Keeps *emacs* async buffers around for later inspection.")
-    (defun my/config-updated ()
-      "Check if the configuration file has been updated since the last time."
-      (time-less-p config-last-change
-                   (nth 5 (file-attributes config-file))))
-    (defun my/config-tangle ()
-      "Tangles the org file asynchronously."
-      (when (my/config-updated)
-        (setq config-last-change
-              (nth 5 (file-attributes config-file)))
-        (my/async-babel-tangle config-file)))
-    (defun my/async-babel-tangle (org-file)
-      "Tangles the org file asynchronously."
-      (let ((init-tangle-start-time (current-time))
-            (file (buffer-file-name))
-            (async-quiet-switch "-q"))
-        (async-start
-         `(lambda ()
-            (require 'org)
-            (org-babel-tangle-file ,org-file))
-         (unless show-async-tangle-results
-           `(lambda (result)
-              (if result
-                  (message "[✓] %s successfully tangled (%.2fs)"
-                           ,org-file
-                           (float-time (time-subtract (current-time)
-                                                      ',init-tangle-start-time)))
-                (message "[✗] %s as tangle failed." ,org-file))))))))
-
-  (use-package org-tempo
-    :straight nil
-    :after org)
-
-  (with-eval-after-load 'org
-    (require 'org-tempo)
-    (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp")))
+    :hook (org-mode . toc-org-enable))
 #+end_src
 
 * Agenda
 
 #+begin_src emacs-lisp
-  (use-package org-agenda
-    :straight nil
-    :bind (:map org-agenda-mode-map
-                ("C-n" . org-agenda-next-item)
-                ("C-p" . org-agenda-previous-item)
-                ("j" . org-agenda-goto)
-                ("X" . my/org-agenda-mark-done-next)
-                ("x" . my/org-agenda-mark-done))
-    :preface
-    (defun my/org-agenda-mark-done (&optional arg)
-      "Mark the current TODO as done in org-agenda."
-      (interactive "P")
-      (org-agenda-todo "DONE"))
+(use-package org-agenda
+  :straight nil
+  :bind (:map org-agenda-mode-map
+              ("C-n" . org-agenda-next-item)
+              ("C-p" . org-agenda-previous-item)
+              ("j" . org-agenda-goto)
+              ("X" . my/org-agenda-mark-done-next)
+              ("x" . my/org-agenda-mark-done))
+  :preface
+  (defun my/org-agenda-mark-done (&optional arg)
+    "Mark the current TODO as done in org-agenda."
+    (interactive "P")
+    (org-agenda-todo "DONE"))
 
-    (defun my/org-agenda-mark-done-next ()
-      "Mark the current TODO as done and add another task after it."
-      (interactive)
-      (org-agenda-todo "DONE")
-      (org-agenda-switch-to)
-      (org-capture 0 "t"))
-    :custom
-    (org-agenda-category-icon-alist
-     `(("home" ,(list (all-the-icons-faicon "home" :v-adjust -0.05)) nil nil :ascent center :mask heuristic)
-       ("inbox" ,(list (all-the-icons-faicon "inbox" :v-adjust -0.1)) nil nil :ascent center :mask heuristic)
-       ("people" ,(list (all-the-icons-material "people" :v-adjust -0.25)) nil nil :ascent center :mask heuristic)
-       ("work" ,(list (all-the-icons-material "work" :v-adjust -0.25)) nil nil :ascent center :mask heuristic)
-       ("routine" ,(list (all-the-icons-material "repeat" :v-adjust -0.25)) nil nil :ascent center :mask heuristic)
-       ))
-    (org-agenda-custom-commands
-     '(("d" "Dashboard"
-        ((agenda "" ((org-deadline-warning-days 7)))
-         (todo "NEXT"
-               ((org-agenda-overriding-header "Next Tasks")))
-         (tags-todo "agenda/ACTIVE" ((org-agenda-overriding-header "Active Projects")))))
-       ("n" "Next Tasks"
-        ((agenda "" ((org-deadline-warning-days 7)))
-         (todo "NEXT"
-               ((org-agenda-overriding-header "Next Tasks")))))
-       ("h" "Home Tasks" tags-todo "@home")
-       ("w" "Work Tasks" tags-todo "@work")
+  (defun my/org-agenda-mark-done-next ()
+    "Mark the current TODO as done and add another task after it."
+    (interactive)
+    (org-agenda-todo "DONE")
+    (org-agenda-switch-to)
+    (org-capture 0 "t"))
+  :custom
+  (org-agenda-category-icon-alist
+   `(("home" ,(list (all-the-icons-faicon "home" :v-adjust -0.05)) nil nil :ascent center :mask heuristic)
+     ("inbox" ,(list (all-the-icons-faicon "inbox" :v-adjust -0.1)) nil nil :ascent center :mask heuristic)
+     ("people" ,(list (all-the-icons-material "people" :v-adjust -0.25)) nil nil :ascent center :mask heuristic)
+     ("work" ,(list (all-the-icons-material "work" :v-adjust -0.25)) nil nil :ascent center :mask heuristic)
+     ("routine" ,(list (all-the-icons-material "repeat" :v-adjust -0.25)) nil nil :ascent center :mask heuristic)
+     ))
+  (org-agenda-custom-commands
+   '(("d" "Dashboard"
+      ((agenda "" ((org-deadline-warning-days 7)))
+       (todo "NEXT"
+             ((org-agenda-overriding-header "Next Tasks")))
+       (tags-todo "agenda/ACTIVE" ((org-agenda-overriding-header "Active Projects")))))
 
-       ("E" "Easy Tasks" tags-todo "easy")
-       ("C" "Challenging Tasks" tags-todo "challenging")
+     ("n" "Next Tasks"
+      ((agenda "" ((org-deadline-warning-days 7)))
+       (todo "NEXT"
+             ((org-agenda-overriding-header "Next Tasks")))))
 
-       ("e" tags-todo "+TODO=\"NEXT\"+Effort<15&+Effort>0"
-        ((org-agenda-overriding-header "Low Effort Tasks")
-         (org-agenda-max-todos 20)
-         (org-agenda-files org-agenda-files)))))
-    (org-agenda-dim-blocked-tasks t)
-    (org-agenda-files '("~/.personal/agenda"))
-    (org-agenda-inhibit-startup t)
-    (org-agenda-show-log t)
-    (org-agenda-skip-deadline-if-done t)
-    (org-agenda-skip-deadline-prewarning-if-scheduled 'pre-scheduled)
-    (org-agenda-skip-scheduled-if-done t)
-    (org-agenda-span 2)
-    (org-agenda-start-on-weekday 6)
-    (org-agenda-start-with-log-mode t)
-    (org-agenda-sticky nil)
-    (org-agenda-tags-column 90)
-    (org-agenda-time-grid '((daily today require-timed)))
-    (org-agenda-use-tag-inheritance t)
-    (org-columns-default-format "%14SCHEDULED %Effort{:} %1PRIORITY %TODO %50ITEM %TAGS")
-    (org-default-notes-file "~/.personal/agenda/inbox.org")
-    (org-directory "~/.personal")
-    (org-enforce-todo-dependencies t)
-    (org-habit-completed-glyph ?✓)
-    (org-habit-graph-column 80)
-    (org-habit-show-habits-only-for-today nil)
-    (org-habit-today-glyph ?‖)
-    (org-track-ordered-property-with-tag t))
+     ("h" "Home Tasks" tags-todo "@home")
+     ("w" "Work Tasks" tags-todo "@work")
 
-  (use-package org-wild-notifier
-    :after org
-    :custom
-    (alert-default-style 'libnotify)
-    (org-wild-notifier-notification-title "Agenda Reminder")
-    :config (org-wild-notifier-mode))
+     ("E" "Easy Tasks" tags-todo "easy")
+     ("C" "Challenging Tasks" tags-todo "challenging")
+
+     ("e" tags-todo "+TODO=\"NEXT\"+Effort<15&+Effort>0"
+      ((org-agenda-overriding-header "Low Effort Tasks")
+       (org-agenda-max-todos 20)
+       (org-agenda-files org-agenda-files)))))
+  (org-agenda-dim-blocked-tasks t)
+  (org-agenda-files '("~/.personal/agenda"))
+  (org-agenda-inhibit-startup t)
+  (org-agenda-show-log t)
+  (org-agenda-skip-deadline-if-done t)
+  (org-agenda-skip-deadline-prewarning-if-scheduled 'pre-scheduled)
+  (org-agenda-skip-scheduled-if-done t)
+  (org-agenda-span 2)
+  (org-agenda-start-on-weekday 6)
+  (org-agenda-start-with-log-mode t)
+  (org-agenda-sticky nil)
+  (org-agenda-tags-column 90)
+  (org-agenda-time-grid '((daily today require-timed)))
+  (org-agenda-use-tag-inheritance t)
+  (org-columns-default-format "%14SCHEDULED %Effort{:} %1PRIORITY %TODO %50ITEM %TAGS")
+  (org-default-notes-file "~/.personal/agenda/inbox.org")
+  (org-directory "~/.personal")
+  (org-enforce-todo-dependencies t)
+  (org-habit-completed-glyph ?✓)
+  (org-habit-graph-column 80)
+  (org-habit-show-habits-only-for-today nil)
+  (org-habit-today-glyph ?‖)
+  (org-track-ordered-property-with-tag t))
 #+end_src
-
-** Bullets
 
 #+begin_src emacs-lisp
-    ;;(use-package org-bullets
-  ;;    :hook (org-mode . org-bullets-mode)
-      ;;:custom (org-bullets-bullet-list '("●" "►" "▸")))
-  (use-package org-modern
-    :straight (org-modern :type git :host github :repo "minad/org-modern" :branch "main")
-    :hook (org-mode . org-modern-mode))
+(use-package org-wild-notifier
+  :after org
+  :custom
+  (alert-default-style 'libnotify)
+  (org-wild-notifier-notification-title "Agenda Reminder")
+  :config (org-wild-notifier-mode))
 #+end_src
 
-** Capture
+* Bullets
 
 #+begin_src emacs-lisp
-  (use-package org-capture
-    :straight nil
-    :demand t
-    :preface
-    (defvar my/org-active-task-template
-      (concat "* NEXT %^{Task}\n"
-              ":PROPERTIES:\n"
-              ":Effort: %^{effort|1:00|0:05|0:15|0:30|2:00|4:00}\n"
-              ":CAPTURED: %<%Y-%m-%d %H:%M>\n"
-              ":END:") "Template for basic task.")
-    (defvar my/org-appointment
-      (concat "* TODO %^{Appointment}\n"
-              "SCHEDULED: %t\n") "Template for appointment task.")
-    (defvar my/org-basic-task-template
-      (concat "* TODO %^{Task}\n"
-              ":PROPERTIES:\n"
-              ":Effort: %^{effort|1:00|0:05|0:15|0:30|2:00|4:00}\n"
-              ":CAPTURED: %<%Y-%m-%d %H:%M>\n"
-              ":END:") "Template for basic task.")
-    (defvar my/org-contacts-template
-      (concat "* %(org-contacts-template-name)\n"
-              ":PROPERTIES:\n"
-              ":BIRTHDAY: %^{YYYY-MM-DD}\n"
-              ":END:") "Template for a contact.")
-    :custom
-    (org-capture-templates
-     `(("c" "Contact" entry (file+headline "~/.personal/agenda/contacts.org" "Inbox"),
-        my/org-contacts-template :empty-lines 1)
-       ("p" "People" entry (file+headline "~/.personal/agenda/people.org" "Tasks"),
-        my/org-basic-task-template :empty-lines 1)
-       ("a" "Appointment" entry (file+headline "~/.personal/agenda/people.org" "Appointments"),
-        my/org-appointment :empty-lines 1)
-       ("m" "Meeting" entry (file+headline "~/.personal/agenda/people.org" "Meetings")
-        "* Meeting with %? :meeting:\n%U" :clock-in t :clock-resume t :empty-lines 1)
-       ("P" "Phone Call" entry (file+headline "~/.personal/agenda/people.org" "Phone Calls")
-        "* Phone %? :phone:\n%U" :clock-in t :clock-resume t)
-
-       ("i" "New Item")
-       ("ib" "Book" checkitem (file+headline "~/.personal/items/books.org" "Books")
-        "- [ ] %^{Title} -- %^{Author}\n  %U"
-        :immediate-finish t)
-       ("il" "Learning" checkitem (file+headline "~/.personal/items/learning.org" "Things")
-        "- [ ] %^{Thing}\n  %U"
-        :immediate-finish t)
-       ("im" "Movie" checkitem (file+headline "~/.personal/items/movies.org" "Movies")
-        "- [ ] %^{Title}\n  %U"
-        :immediate-finish t)
-       ("ip" "Purchase" checkitem (file+headline "~/.personal/items/purchases.org" "Purchases")
-        "- [ ] %^{Item}\n  %U"
-        :immediate-finish t)
-
-       ("t" "New Task")
-       ("ta" "Active" entry (file+headline "~/.personal/agenda/inbox.org" "Active"),
-        my/org-active-task-template
-        :empty-lines 1
-        :immediate-finish t)
-  ("tb" "Backlog" entry (file+headline "~/.personal/agenda/inbox.org" "Backlog"),
-              my/org-basic-task-template
-              :empty-lines 1
-              :immediate-finish t))))
+(use-package org-bullets
+  :hook (org-mode . org-bullets-mode)
+  :custom (org-bullets-bullet-list '("●" "►" "▸")))
 #+end_src
 
-** Clock
+* Capture
 
 #+begin_src emacs-lisp
-  (use-package org-clock
-    :straight nil
-    :after org
-    :preface
-    (defun my/org-mode-ask-effort ()
-      "Ask for an effort estimate when clocking in."
-      (unless (org-entry-get (point) "Effort")
-        (let ((effort
-               (completing-read
-                "Effort: "
-                (org-entry-get-multivalued-property (point) "Effort"))))
-          (unless (equal effort "")
-            (org-set-property "Effort" effort)))))
-    :hook (org-clock-in-prepare-hook . my/org-mode-ask-effort)
-    :custom
-    (org-clock-clocktable-default-properties
-     '(:block day :maxlevel 2 :scope agenda :link t :compact t :formula %
-              :step day :fileskip0 t :stepskip0 t :narrow 80
-              :properties ("Effort" "CLOCKSUM" "CLOCKSUM_T" "TODO")))
-    (org-clock-continuously nil)
-    (org-clock-in-switch-to-state "STARTED")
-    (org-clock-out-remove-zero-time-clocks t)
-    (org-clock-persist t)
-    (org-clock-persist-query-resume nil)
-    (org-clock-report-include-clocking-task t)
-    (org-show-notification-handler (lambda (msg) (alert msg))))
+(use-package org-capture
+  :straight nil
+  :preface
+  (defvar my/org-active-task-template
+    (concat "* NEXT %^{Task}\n"
+            ":PROPERTIES:\n"
+            ":Effort: %^{effort|1:00|0:05|0:15|0:30|2:00|4:00}\n"
+            ":CAPTURED: %<%Y-%m-%d %H:%M>\n"
+            ":END:") "Template for basic task.")
+  (defvar my/org-appointment
+    (concat "* TODO %^{Appointment}\n"
+            "SCHEDULED: %t\n") "Template for appointment task.")
+  (defvar my/org-basic-task-template
+    (concat "* TODO %^{Task}\n"
+            ":PROPERTIES:\n"
+            ":Effort: %^{effort|1:00|0:05|0:15|0:30|2:00|4:00}\n"
+            ":CAPTURED: %<%Y-%m-%d %H:%M>\n"
+            ":END:") "Template for basic task.")
+  (defvar my/org-contacts-template
+    (concat "* %(org-contacts-template-name)\n"
+            ":PROPERTIES:\n"
+            ":BIRTHDAY: %^{YYYY-MM-DD}\n"
+            ":END:") "Template for a contact.")
+  :custom
+  (org-capture-templates
+   `(
+     ("c" "Contact" entry (file+headline "~/.personal/agenda/contacts.org" "Inbox"),
+      my/org-contacts-template
+      :empty-lines 1)
 
-  (use-package org-pomodoro
-    :after org
-    :custom
-    (alert-user-configuration (quote ((((:category . "org-pomodoro")) libnotify nil))))
-    (org-pomodoro-audio-player "/usr/bin/mpv")
-    (org-pomodoro-finished-sound "~/Audio/pomodoro_finished.mp3")
-    (org-pomodoro-format " %s")
-    (org-pomodoro-killed-sound "~/Audio/pomodoro_killed.mp3")
-    (org-pomodoro-long-break-sound "~/Audio/pomodoro_long.mp3")
-    (org-pomodoro-overtime-sound "~/Audio/pomodoro_overtime.mp3")
-    (org-pomodoro-short-break-sound "~/Audio/pomodoro_short.mp3")
-    (org-pomodoro-start-sound "~/Audio/pomodoro_start.mp3")
-    (org-pomodoro-start-sound-p t))
+     ("p" "People" entry (file+headline "~/.personal/agenda/people.org" "Tasks"),
+      my/org-basic-task-template
+      :empty-lines 1)
+     ("a" "Appointment" entry (file+headline "~/.personal/agenda/people.org" "Appointments"),
+      my/org-appointment
+      :empty-lines 1)
+     ("m" "Meeting" entry (file+headline "~/.personal/agenda/people.org" "Meetings")
+      "* Meeting with %? :meeting:\n%U" :clock-in t :clock-resume t :empty-lines 1)
+     ("P" "Phone Call" entry (file+headline "~/.personal/agenda/people.org" "Phone Calls")
+      "* Phone %? :phone:\n%U" :clock-in t :clock-resume t)
+
+     ("i" "New Item")
+     ("ib" "Book" checkitem (file+headline "~/.personal/items/books.org" "Books")
+      "- [ ] %^{Title} - %^{Author}\n  %U"
+      :immediate-finish t)
+     ("il" "Learning" checkitem (file+headline "~/.personal/items/learning.org" "Things")
+      "- [ ] %^{Thing}\n  %U"
+      :immediate-finish t)
+     ("im" "Movie" checkitem (file+headline "~/.personal/items/movies.org" "Movies")
+      "- [ ] %^{Title}\n  %U"
+      :immediate-finish t)
+     ("ip" "Purchase" checkitem (file+headline "~/.personal/items/purchases.org" "Purchases")
+      "- [ ] %^{Item}\n  %U"
+      :immediate-finish t)
+
+     ("t" "New Task")
+     ("ta" "Active" entry (file+headline "~/.personal/agenda/inbox.org" "Active"),
+      my/org-active-task-template
+      :empty-lines 1
+      :immediate-finish t)
+     ("tb" "Backlog" entry (file+headline "~/.personal/agenda/inbox.org" "Backlog"),
+      my/org-basic-task-template
+      :empty-lines 1
+      :immediate-finish t))))
 #+end_src
 
-** Contacts
+* Clock
+
+#+begin_src emacs-lisp
+(use-package org-clock
+  :straight nil
+  :after org
+  :preface
+  (defun my/org-mode-ask-effort ()
+    "Ask for an effort estimate when clocking in."
+    (unless (org-entry-get (point) "Effort")
+      (let ((effort
+             (completing-read
+              "Effort: "
+              (org-entry-get-multivalued-property (point) "Effort"))))
+        (unless (equal effort "")
+          (org-set-property "Effort" effort)))))
+  :hook (org-clock-in-prepare-hook . my/org-mode-ask-effort)
+  :custom
+  (org-clock-clocktable-default-properties
+   '(:block thisweek :maxlevel 2 :scope agenda :link t :compact t :formula %
+            :step week :fileskip0 t :stepskip0 t :narrow 50
+            :properties ("Effort" "CLOCKSUM" "TODO")))
+  (org-clock-continuously nil)
+  (org-clock-in-switch-to-state "STARTED")
+  (org-clock-out-remove-zero-time-clocks t)
+  (org-clock-persist t)
+  (org-clock-persist-file (expand-file-name (format "%s/emacs/org-clock-save.el" xdg-cache)))
+  (org-clock-persist-query-resume nil)
+  (org-clock-report-include-clocking-task t)
+  (org-show-notification-handler (lambda (msg) (alert msg))))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package org-pomodoro
+  :after org
+  :custom
+  (alert-user-configuration (quote ((((:category . "org-pomodoro")) libnotify nil))))
+  (org-pomodoro-audio-player "/usr/bin/mpv")
+  (org-pomodoro-finished-sound "~/audio/pomodoro_finished.mp3")
+  (org-pomodoro-format " %s")
+  (org-pomodoro-killed-sound "~/audio/pomodoro_killed.mp3")
+  (org-pomodoro-long-break-sound "~/audio/pomodoro_long.mp3")
+  (org-pomodoro-overtime-sound "~/audio/pomodoro_overtime.mp3")
+  (org-pomodoro-short-break-sound "~/audio/pomodoro_short.mp3")
+  (org-pomodoro-start-sound "~/audio/pomodoro_start.mp3")
+  (org-pomodoro-start-sound-p t))
+#+end_src
+
+* Contacts
 
 #+begin_src emacs-lisp
   (use-package org-contacts
-    ;;:straight nil
     :after org
+    :straight nil
     :custom (org-contacts-files '("~/.personal/agenda/contacts.org")))
 #+end_src
 
-** Faces
+* Faces
 
 #+begin_src emacs-lisp
-  (use-package org-faces
-    :straight nil
+(use-package org-faces
+  :straight nil
+  :custom
+  (org-todo-keyword-faces
+   '(("DONE"    . (:foreground "#8abeb7" :weight bold))
+     ("NEXT"    . (:foreground "#f0c674" :weight bold))
+     ("SOMEDAY" . (:foreground "#b294bb" :weight bold))
+     ("TODO"    . (:foreground "#b5bd68" :weight bold))
+     ("WAITING" . (:foreground "#de935f" :weight bold)))))
+#+end_src
+
+* Encryption/Decryption
+
+#+begin_src emacs-lisp
+(use-package org-crypt
+  :straight nil
+  :init (org-crypt-use-before-save-magic)
+  :custom (org-crypt-key "E9AADC36E94A672D1A07D49B208FCDBB98190562"))
+
+(setq epa-file-encrypt-to "terencio.agozzino@gmail.com")
+(setq epa-file-select-keys "auto")
+#+end_src
+
+* Languages
+
+#+begin_src emacs-lisp
+(use-package jupyter :straight nil :after org)
+(use-package python :straight nil :after org)
+(use-package ob-C :straight nil :after org)
+(use-package ob-css :straight nil :after org)
+(use-package ob-dot :straight nil :after org)
+(use-package ob-ein :straight nil :after org)
+(use-package ob-emacs-lisp :straight nil :after org)
+(use-package ob-gnuplot :straight nil :after org)
+(use-package ob-java :straight nil :after org)
+(use-package ob-js :straight nil :after org)
+(use-package ob-latex
+  :straight nil
+  :after org
+  :custom (org-latex-compiler "xelatex"))
+(use-package ob-ledger :straight nil :after org)
+(use-package ob-makefile :straight nil :after org)
+(use-package ob-org :straight nil :after org)
+(use-package ob-plantuml
+  :straight nil
+  :after org
+  :custom (org-plantuml-jar-path (expand-file-name (format "%s/plantuml.jar" xdg-lib))))
+(use-package ob-python :straight nil :after org)
+(use-package ob-shell :straight nil :after org)
+(use-package ob-sql :straight nil :after org)
+#+end_src
+
+* Notes and Journal
+
+#+begin_src emacs-lisp
+(use-package org-roam
+  :after org
+  :init
+  (setq org-roam-v2-ack t)
+  (setq my/daily-note-filename "%<%Y-%m-%d>.org.gpg"
+        my/daily-note-header "#+title: %<%Y-%m-%d %a>\n\n[[roam:%<%Y-%B>]]\n\n")
+  :custom
+  (org-roam-capture-templates
+   '(("d" "default" plain "%?"
+      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+                         "#+title: ${title}\n")
+      :unnarrowed t)))
+  (org-roam-completion-everywhere t)
+  (org-roam-dailies-directory "journal/")
+  (org-roam-dailies-capture-templates
+   `(("d" "default" plain
+      "* %?"
+      :if-new (file+head ,my/daily-note-filename
+                         ,my/daily-note-header)
+      :empty-lines 1)
+
+     ("j" "journal" plain
+      "** %<%I:%M %p>  :journal:\n\n%?\n\n"
+      :if-new (file+head+olp ,my/daily-note-filename
+                             ,my/daily-note-header
+                             ("Journal"))
+      :empty-lines 1)
+     ("m" "meeting" entry
+      "** %<%I:%M %p> - %^{Meeting Title}  :meeting:\n\n%?\n\n"
+      :if-new (file+head+olp ,my/daily-note-filename
+                             ,my/daily-note-header
+                             ("Meetings"))
+      :empty-lines 1)))
+  (org-roam-directory "~/.personal/notes")
+  :custom (org-roam-graph-viewer "/usr/bin/qutebrowser")
+  :config (org-roam-setup))
+#+end_src
+
+
+* LSP
+
+#+begin_src emacs-lisp
+  (use-package lsp-mode
     :custom
-    (org-todo-keyword-faces
-     '(("DONE"    . (:foreground "#8abeb7" :weight bold))
-       ("NEXT"    . (:foreground "#f0c674" :weight bold))
-       ("SOMEDAY" . (:foreground "#b294bb" :weight bold))
-       ("TODO"    . (:foreground "#b5bd68" :weight bold))
-       ("WAITING" . (:foreground "#de935f" :weight bold)))))
-#+end_src
-
-** Encryption/Decryption
-
-#+begin_src emacs-lisp
-      (use-package org-crypt
-        :straight nil
-        :config
-        (require 'org)
-        (org-crypt-use-before-save-magic)
-        :custom
-        (org-crypt-key "CE498E212FC1FA5348B3FFF27A09A11BEB260B60"))
-
-      (setq epa-file-encrypt-to "karolos.triantafyllou@gmail.com")
-      (setq epa-file-select-keys "auto")
-#+end_src
-
-** Journal
-
-#+begin_src emacs-lisp
-  (use-package org-roam
-    :after org
+    (lsp-completion-provider :none) ;; We use corfu
     :init
-    (setq org-roam-v2-ack t)
-    (setq my/daily-note-filename "%<%Y-%m-%d>.org.gpg"
-          my/daily-note-header "#+title: %<%Y-%m-%d %a>\n\n[[roam:%<%Y-%B>]]\n\n")
+    (defun my/orderless-dispatch-flex-first (_pattern index _total)
+      (and (eq index 0) 'orderless-flex))
+    (defun my/lsp-mode-setup-completion ()
+      (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
+            '(orderless)))
+    (add-hook 'orderless-style-dispatchers #'my/orderless-dispatch-flex-first nil 'local)
+    (setq-local completion-at-point-functions (list (cape-capf-buster #'lsp-completion-at-point)))
+    :commands (lsp lsp-deferred)
+    :hook
+    ((prog-mode . lsp-deferred)
+     (lsp-mode . lsp-enable-which-key-integration)
+     (lsp-completion-mode . my/lsp-mode-setup-completion))
     :custom
-    (org-roam-capture-templates
-     '(("d" "default" plain "%?"
-        :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
-                           "#+title: ${title}\n")
-        :unnarrowed t)))
-    (org-roam-completion-everywhere t)
-    (org-roam-dailies-directory "journal/")
-    (org-roam-dailies-capture-templates
-     `(("d" "default" plain
-        "* %?"
-        :if-new (file+head ,my/daily-note-filename
-                           ,my/daily-note-header)
-        :empty-lines 1)
+    (lsp-keymap-prefix "C-c ;")
+    (read-process-output-max (* 1024 1024))
+    (lsp-warn-no-matched-clients nil))
 
-       ("j" "journal" plain
-        "** %<%I:%M %p>  :journal:\n\n%?\n\n"
-        :if-new (file+head+olp ,my/daily-note-filename
-                               ,my/daily-note-header
-                               ("Journal"))
-        :empty-lines 1)
-       ("m" "meeting" entry
-        "** %<%I:%M %p> - %^{Meeting Title}  :meeting:\n\n%?\n\n"
-        :if-new (file+head+olp ,my/daily-note-filename
-                               ,my/daily-note-header
-                               ("Meetings"))
-        :empty-lines 1)))
-    (org-roam-directory "~/.personal/notes")
-    :custom (org-roam-graph-viewer "/usr/bin/qutebrowser")
-    :config (org-roam-setup))
+  (use-package lsp-treemacs
+    :after lsp)
+
+  (require 'dap-cpptools)
+  ;;(require 'dap-lldb)
 #+end_src
 
-* Email
-
 #+begin_src emacs-lisp
-  (use-package mu4e
-      :straight nil
-      :load-path "/usr/share/emacs/site-lisp/mu4e"
-      :demand t
-      :commands mu4e
-      :hook (mu4e-compose-mode . turn-off-auto-fill)
-      :bind (:map mu4e-headers-mode-map
-                  ("M-[" . scroll-down-command)
-                  ("M-]" . scroll-up-command))
-      :preface
-      (defun my/set-email-account (label letvars)
-        "Registers an email address for mu4e."
-        (setq mu4e-contexts
-              (cl-loop for context in mu4e-contexts
-                       unless (string= (mu4e-context-name context) label)
-                       collect context))
-        (let ((context (make-mu4e-context
-                        :name label
-                        :enter-func (lambda () (mu4e-message "Switched context"))
-                        :leave-func #'mu4e-clear-caches
-                        :match-func
-                        (lambda (msg)
-                          (when msg
-                            (string-prefix-p (format "/%s" msg)
-                                             (mu4e-message-field msg :maildir))))
-                        :vars letvars)))
-          (push context mu4e-contexts)
-          context))
-      :custom
-      (mu4e-attachment-dir "~/Downloads")
-      ;; To avoid synchronization issues/ with mbsync
-      (mu4e-change-filenames-when-moving t)
-      (mu4e-confirm-quit nil)
-      ;; (mu4e-completing-read-function 'ivy-read)
-      (mu4e-compose-complete-only-after (format-time-string
-                                         "%Y-%m-%d"
-                                         (time-subtract (current-time) (days-to-time 150))))
-      (mu4e-compose-context-policy 'ask-if-none)
-      (mu4e-compose-dont-reply-to-self t)
-      (mu4e-compose-format-flowed t)
-      (mu4e-get-mail-command (format "mbsync -c ~/.config/isync/mbsyncrc -a"))
-      (mu4e-headers-date-format "%F")
-      (mu4e-headers-fields
-       '((:account    . 10)
-         (:human-date . 12)
-         (:flags      . 6)
-         (:from       . 22)
-         (:subject    . nil)))
-      (mu4e-headers-time-format "%R")
-      (mu4e-html2text-command "iconv -c -t utf-8 | pandoc -f html -t plain")
-      (mu4e-maildir "~/Mails")
-      (mu4e-org-contacts-file "~/.personal/agenda/contacts.org")
-      (mu4e-update-interval (* 5 60))
-      (mu4e-use-fancy-chars t)
-      (mu4e-view-prefer-html t)
-      (mu4e-view-show-addresses t)
-      (mu4e-view-show-images t)
-      :config
-      (my/set-email-account "charlie-roseman"
-                            '((mu4e-drafts-folder . "/personal/charlie-roseman/drafts")
-                              (mu4e-refile-folder . "/personal/charlie-roseman/all")
-                              (mu4e-sent-folder   . "/personal/charlie-roseman/sent")
-                              (mu4e-trash-folder  . "/personal/charlie-roseman/trash")
-                              (mu4e-maildir-shortcuts . ((:maildir "/personal/charlie-roseman/all"    :key ?a)
-                                                         (:maildir "/personal/charlie-roseman/inbox"  :key ?i)
-                                                         (:maildir "/personal/charlie-roseman/drafts" :key ?d)
-                                                         (:maildir "/personal/charlie-roseman/sent"   :key ?s)
-                                                         (:maildir "/personal/charlie-roseman/trash"  :key ?t)))
-                              (smtpmail-smtp-user . "charlie.roseman@yahoo.com")
-                              (smtpmail-smtp-server . "smtp.mail.yahoo.com")
-                              (smtpmail-smtp-service . 465)
-                              (smtpmail-stream-type . ssl)
-                              (user-mail-address . "charlie.roseman@yahoo.com")
-                              (user-full-name . "Karolos Triantafyllou")))
-      (my/set-email-account "karolos-triantafyllou"
-                            '((mu4e-drafts-folder . "/personal/karolos-triantafyllou/drafts")
-                              (mu4e-refile-folder . "/personal/karolos-triantafyllou/all")
-                              (mu4e-sent-folder   . "/personal/karolos-triantafyllou/sent")
-                              (mu4e-trash-folder  . "/personal/karolos-triantafyllou/trash")
-                              (mu4e-maildir-shortcuts . ((:maildir "/personal/karolos-triantafyllou/all"    :key ?a)
-                                                         (:maildir "/personal/karolos-triantafyllou/inbox"  :key ?i)
-                                                         (:maildir "/personal/karolos-triantafyllou/drafts" :key ?d)
-                                                         (:maildir "/personal/karolos-triantafyllou/sent"   :key ?s)
-                                                         (:maildir "/personal/karolos-triantafyllou/trash"  :key ?t)))
-                              (smtpmail-smtp-user . "karolos.triantafyllou@gmail.com")
-                              (smtpmail-smtp-server . "smtp.gmail.com")
-                              (smtpmail-smtp-service . 465)
-                              (smtpmail-stream-type . ssl)
-                              (user-mail-address . "karolos.triantafyllou@gmail.com")
-                              (user-full-name . "Karolos Triantafyllou")))
-       (setq mu4e-headers-attach-mark    `("a" . ,(with-faicon "paperclip" "" 0.75 -0.05 "all-the-icons-lyellow"))
-             mu4e-headers-draft-mark     `("D" . ,(with-octicon "pencil" "" 0.75 -0.05 "all-the-icons-lsilver"))
-             mu4e-headers-encrypted-mark `("x" . ,(with-faicon "lock" "" 0.75 -0.05 "all-the-icons-lred"))
-             mu4e-headers-flagged-mark   `("F" . ,(with-faicon "flag" "" 0.75 -0.05 "all-the-icons-maroon"))
-             mu4e-headers-new-mark       `("N" . ,(with-faicon "check-circle" "" 0.75 -0.05 "all-the-icons-silver"))
-             mu4e-headers-passed-mark    `("P" . ,(with-faicon "share" "" 0.75 -0.05 "all-the-icons-purple "))
-             mu4e-headers-replied-mark   `("R" . ,(with-faicon "reply" "" 0.75 -0.05 "all-the-icons-lgreen"))
-             mu4e-headers-seen-mark      `("S" . ,(with-octicon "check" "" 1 -0.05 "all-the-icons-lgreen"))
-             mu4e-headers-signed-mark    `("s" . ,(with-faicon "key" "" 0.75 -0.05 "all-the-icons-cyan"))
-             mu4e-headers-trashed-mark   `("T" . ,(with-faicon "trash" "" 0.75 -0.05 "all-the-icons-lred"))
-             mu4e-headers-unread-mark    `("u" . ,(with-faicon "envelope" "" 0.75 -0.05 "all-the-icons-silver")))
-      (add-to-list 'mu4e-header-info-custom
-                   '(:account
-                     :name "Account"
-                     :shortname "Account"
-                     :help "Which account this email belongs to"
-                     :function
-                     (lambda (msg)
-                       (let ((maildir (mu4e-message-field msg :maildir)))
-                         (format "%s" (substring maildir 1 (string-match-p "/" maildir 1)))))))
-      (add-to-list 'mu4e-headers-actions '("org-contact-add" . mu4e-action-add-org-contact) t)
-      (add-to-list 'mu4e-view-actions '("org-contact-add" . mu4e-action-add-org-contact) t))
-
-    (use-package org-mime
-    :after mu4e
-    :hook (message-send . org-mime-htmlize)
-    :bind (:map mu4e-compose-mode-map
-                ("C-c '" . org-mime-edit-mail-in-org-mode))
-    :config
-    (add-hook 'org-mime-html-hook (lambda ()
-                                    (goto-char (point-max))
-                                    (insert "--<br>
-                   <strong>Karolos Triantafyllou</strong><br>
-                    Programmer")))
-    (add-hook 'org-mime-html-hook (lambda ()
-                                    (org-mime-change-element-style "p" (format "color: %s" "#1a1a1a"))))
-
-    (add-hook 'org-mime-html-hook (lambda ()
-                                    (org-mime-change-element-style "strong" (format "color: %s" "#000"))))
-
-    (add-hook 'org-mime-html-hook (lambda ()
-                                    (org-mime-change-element-style
-                                     "pre" "background: none repeat scroll 0% 0% rgb(61, 61, 61);
-                                                   border-radius: 15px;
-                                                   color: #eceff4;
-                                                   font-family: Courier, 'Courier New', monospace;
-                                                   font-size: small;
-                                                   font-weight: 400;                                                 line-height: 1.3em;
-                                                   padding: 20px;
-                                                   quotes: '«' '»';
-                                                   width: 41%;")))
-    (setq org-mime-export-options '(:preserve-breaks t
-                                                     :section-numbers nil
-                                                     :with-author nil
-                                                     :with-toc nil)))
-
-    (use-package mu4e-alert
-    :hook ((after-init . mu4e-alert-enable-mode-line-display)
-           (after-init . mu4e-alert-enable-notifications))
-    :config (mu4e-alert-set-default-style 'libnotify))
-
-  (use-package message
-    :straight nil
-    :after mu4e
+  (use-package lsp-ui
+    :hook (lsp-mode . lsp-ui-mode)
     :custom
-    (message-citation-line-format "On %B %e, %Y at %l:%M %p, %f (%n) wrote:\n")
-    (message-citation-line-function 'message-insert-formatted-citation-line)
-    (message-kill-buffer-on-exit t)
-    (message-send-mail-function 'smtpmail-send-it)
-    (mml-secure-openpgp-signers '("7A09A11BEB260B60")))
+    (lsp-ui-doc-show-with-mouse nil)
+    (lsp-ui-doc-show-with-cursor 1)
+    (lsp-ui-doc-position 'bottom))
 #+end_src
 
-* Ebooks
-
 #+begin_src emacs-lisp
-  (use-package nov
-    :mode ("\\.epub\\'" . nov-mode)
-    :custom (nov-text-width 75))
+  (use-package consult-lsp
+    :after (consult lsp)
+    :commands (consult-lsp-diagnostics consult-lsp-symbols))
 #+end_src
 
-* Runtime Performance
+#+begin_src emacs-lisp
+  (use-package dap-mode
+    :after lsp-mode
+    :config (dap-mode t)
+    (dap-ui-mode t))
+#+end_src
+
+* Tempel
 
 #+begin_src emacs-lisp
-  (setq gc-cons-threshold (* 10 1000 1000))
+  (use-package tempel
+  ;; Require trigger prefix before template name when completing.
+  ;; :custom
+  ;; (tempel-trigger-prefix "<")
+
+  :bind (("M-+" . tempel-complete) ;; Alternative tempel-expand
+         ("M-*" . tempel-insert))
+
+  :init
+
+  ;; Setup completion at point
+  (defun tempel-setup-capf ()
+    ;; Add the Tempel Capf to `completion-at-point-functions'.
+    ;; `tempel-expand' only triggers on exact matches. Alternatively use
+    ;; `tempel-complete' if you want to see all matches, but then you
+    ;; should also configure `tempel-trigger-prefix', such that Tempel
+    ;; does not trigger too often when you don't expect it. NOTE: We add
+    ;; `tempel-expand' *before* the main programming mode Capf, such
+    ;; that it will be tried first.
+    (setq-local completion-at-point-functions
+                (cons #'tempel-expand
+                      completion-at-point-functions)))
+
+  (add-hook 'prog-mode-hook 'tempel-setup-capf)
+  (add-hook 'text-mode-hook 'tempel-setup-capf)
+
+  ;; Optionally make the Tempel templates available to Abbrev,
+  ;; either locally or globally. `expand-abbrev' is bound to C-x '.
+  ;; (add-hook 'prog-mode-hook #'tempel-abbrev-mode)
+  ;; (global-tempel-abbrev-mode)
+  )
+
+  (use-package tempel-collection)
 #+end_src

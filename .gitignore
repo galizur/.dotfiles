@@ -35,3 +35,9 @@
 /bin/.local/bin/cmake-language-server
 /bin/.local/bin/wheel
 /gnupg/.config/gnupg/*.charliehost.*
+/emacs/.config/emacs/.dap-breakpoints
+/emacs/.config/emacs/config.el
+/emacs/.config/emacs/projectile-bookmarks.eld
+/emacs/.config/emacs/.lsp-session-v1
+/emacs/.config/emacs/auto-save-list/
+/emacs/.config/emacs/transient/
