@@ -1,0 +1,12 @@
+#!/bin/bash
+
+set -e
+
+if [ -z "$(ykman list)" ]; then
+    fuzzel -R -p "👣 OTP Manager "
+    exit 1
+fi
+
+target=$(ykman oath list | fuzzel -d -p "👣" -theme yubi)
+ykman oath code "$target" | cut -d " " -f3 | wl-copy
+notify-send -t 5000 "OTP in clipboard" "Your $target OTP is currently in your clipboard."

@@ -1,0 +1,12 @@
+#!/bin/bash
+#
+# Allows you to find your local files.
+#
+# NOTE: this script use `locate` instead of `find` for better
+# performance. Thus, be careful to not forget to update your database
+# for `mlocate`.
+
+set -e
+
+target=$(locate -q home media | fuzzel -d -p "📁 Find: ")
+emacs -q "$target"
