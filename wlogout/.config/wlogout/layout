@@ -1,18 +1,18 @@
 {
   "label": "lock",
-  "action": "swaylock -f -i ~/Pictures/Wallpapers/1920x1080/sunset.jpg",
+  "action": "swaylock -e -F -l -s fill -i ~/Pictures/Wallpapers/blue-and-red-fire.jpg",
   "text": "Lock",
   "keybind": "l"
 }
 {
   "label": "hibernate",
-  "action": "swaylock -f -i '~/Pictures/Wallpapers/1920x1080/arch-splash.png' && systemctl hibernate",
+  "action": "swaylock -e -F -l -s fill -i ~/Pictures/Wallpapers/blue-and-red-fire.jpg && systemctl hibernate",
   "text": "Hibernate",
   "keybind": "h"
 }
 {
   "label": "logout",
-  "action": "loginctl terminate-user $USER",
+  "action": "loginctl terminate-session ''",
   "text": "Logout",
   "keybind": "e"
 }
@@ -24,7 +24,7 @@
 }
 {
   "label": "suspend",
-  "action": "swaylock -f -i '~/Pictures/Wallpapers/1920x1080/arch-splash.png' && systemctl suspend",
+  "action": "swaylock -e -F -l -s fill -i ~/Pictures/Wallpapers/blue-and-red-fire.jpg && systemctl suspend",
   "text": "Suspend",
   "keybind": "u"
 }
