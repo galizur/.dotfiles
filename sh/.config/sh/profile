@@ -31,5 +31,5 @@ cd ~ || exit
 pactl set-source-mute @DEFAULT_SOURCE@ toggle
 
 if [ "$(tty)" = "/dev/tty1" ]; then
-    pgrep -x sway | exec ssh-agent sway
+    pgrep -x sway | exec dbus-run-session ssh-agent sway
 fi

@@ -7,6 +7,8 @@
 
 # Fix issues with Java applications and Wayland.
 export _JAVA_AWT_WM_NONREPARENTING=1
+export JAVA_HOME="/usr/lib/jvm/default-runtime"
+export JDK_HOME="/usr/lib/jvm/default"
 
 # Use qutebrowser as default browser.
 export BROWSER="firefox"
@@ -46,10 +48,6 @@ export HISTIGNORE=${HISTIGNORE}:${HISTIGNORE_BASE}:${HISTIGNORE_LOCAL}
 # Number of lines to store in history file after session end.
 export HISTSIZE=$HISTFILESIZE
 
-# Related to Java.
-export JAVA_HOME="/usr/lib/jvm/default-runtime"
-export JDK_HOME="/usr/lib/jvm/default"
-
 # Enable code syntax coloring in `less`.
 export LESS='-R '
 export LESSOPEN="| /usr/bin/source-highlight-esc.sh %s"
@@ -63,7 +61,7 @@ export PASSWORD_STORE_GENERATED_LENGTH=50
 # Allows you to use $HOME/.local/bin's bash scripts anywhere.
 export PATH="$PATH:$HOME/.local/bin"
 
-# Allows Qt 5 to enable Wayland support.
+# Allows Qt 5/6 to enable Wayland support.
 export QT_QPA_PLATFORM=wayland
 export QT_WAYLAND_DISABLE_WINDOWDECORATION="1"
 export QT_WAYLAND_FORCE_DPI=physical
@@ -94,7 +92,3 @@ fi
 export NNN_PLUG='f:finder;o:fzopen;p:mocplay;d:diffs;t:nmount;v:imgview;g:getplugs'
 
 export LANG=en_US.UTF-8
-
-export LIBSEAT_BACKEND=logind
-
-export AMD_VULKAN_ICD=RADV

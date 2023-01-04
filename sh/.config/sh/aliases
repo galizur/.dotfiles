@@ -79,6 +79,7 @@ alias d='cd $XDG_DATA_HOME/docker/'
 alias g='cd $XDG_DATA_HOME/git/'
 alias q='cd $XDG_DATA_HOME/qemu/'
 alias n='cd $XDG_DATA_HOME/notebooks/'
+alias gtp='cd ~/Programming/cpp'
 
 # pacman
 alias inpac='pacman -Qmq | sort'
@@ -97,7 +98,7 @@ if have systemctl && [[ -d /run/systemd/system ]]; then
 	_status() { sudo SYSTEMD_PAGER='cat' systemctl status -a -n0 "$@"; }
 	status()  { SYSTEMD_PAGER='cat' systemctl status -a "$@"; }
 
-    alias services='systemctl list-unit-files | grep enabled && systemctl --user list-unit-files | grep enabled'
+  alias services='systemctl list-unit-files | grep enabled && systemctl --user list-unit-files | grep enabled'
 	alias list='systemctl list-units -t path,service,socket --no-legend'
 	alias userctl='systemctl --user'
 	alias u='systemctl --user'
@@ -129,6 +130,7 @@ if have trans; then
     alias fr='trans --brief :fr'
     alias it='trans --brief :it'
     alias nl='trans --brief :nl'
+    alias el='trans --brief :el'
 fi
 
 # youtube-dl
@@ -150,9 +152,6 @@ if have grim; then
     alias cpick='grim -g "$(slurp -p)" -t ppm - | convert - -format "%[pixel:p{0,0}]" txt:-'
 fi
 
-# Programming
-alias gtp='cd ~/Programming/cpp'
-
 # Update Pacman mirror list.
 if have reflector; then
     alias reflect='sudo reflector --latest 50 --verbose --protocol http --protocol https --sort rate --download-timeout 10 --save /etc/pacman.d/mirrorlist'
@@ -163,6 +162,3 @@ alias log="journalctl -u NetworkManager -b -n 1000"
 
 # Weather
 alias weather='http --print=b wttr.in'
-
-# OBS
-alias obs="VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/amd_pro_icd64.json:/usr/share/vulkan/icd.d/amd_pro_icd32.json obs"
