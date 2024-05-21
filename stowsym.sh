@@ -3,7 +3,7 @@
 # Simple script that creates symbolic links with the `stow` command for all the
 # configuration files on the repository for your system.
 
-DIRS=`ls -l --time-style="long-iso" . | egrep '^d' | awk '{print $8}'`
+DIRS=`ls -l --time-style="long-iso" . | grep -E '^d' | awk '{print $8}'`
 
 # Creates symbolinc links to configuration files.
 function create_symlinks() {

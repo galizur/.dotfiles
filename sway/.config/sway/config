@@ -1,19 +1,28 @@
-include sub/sets
-include sub/settings
-include sub/outputs
-include sub/inputs
-include sub/mappings
-include sub/workspaces
-include sub/programs
-include sub/layouts
-include sub/modes
-include sub/swaybar
+exec exec uwsm finalize SWAYSOCK I3SOCK XCURSOR_SIZE XCURSOR_THEME XDG_CURRENT_DESKTOP DISPLAY WAYLAND_DISPLAY
+include configs/variables.conf
+include configs/outputs.conf
+include configs/idle.conf
+include configs/inputs.conf
+include configs/keybinds.conf
+include configs/statusbar.conf
 
-# Startup programs
-exec --no-startup-id [ -f $XDG_BIN_HOME/autostart.sh ] && . "$XDG_BIN_HOME/autostart.sh"
+default_border pixel 2
 
-#exec systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK
-exec dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK
 
-# auto launch applications
-# exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
+set $gnome-schema org.gnome.desktop.interface
+
+exec_always {
+	gsettings set $gnome-schema gtk-theme 'Nordic'
+	gsettings set $gnome-schema font-name 'Roboto 11'
+
+
+#include /etc/sway/config.d/*
+
+exec uwsm app -- "usr/lib/polkit-kde-authentication-agent-1"
+exec uwsm app -- openrgb --startminimized -p main
+exec uwsm app -- wl-paste --type text --watch cliphist store
+exec uwsm app -- wl-paste --type image --watch cliphist store
+exec uwsm app -- corectrl --minimize-systray
+exec uwsm app -- udiskie -s
+exec uwsm app -- polychromatic-tray-applet
+#exec uwsm app -- mpd

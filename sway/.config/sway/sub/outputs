@@ -1,9 +1,0 @@
-# You can get the names of your outputs by running: swaymsg -t get_outputs
-# Read `man 5 sway-output` for more information about this section.
-
-# Monitor resolution
-output DP-3 resolution 1920x1080@75Hz
-# Wallpaper
-# output * bg `/home/charlie/.local/bin/wallpaper.py` fill
-output * bg /home/charlie/Pictures/Wallpapers/blue-and-red-fire.jpg fill
-focus output DP-3

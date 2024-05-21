@@ -1,5 +1,0 @@
-@theme "theme.rasi"
-
-listview {
-    columns: 2;
-}
