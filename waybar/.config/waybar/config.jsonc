@@ -24,8 +24,9 @@
     "power-profiles-daemon",
     "cpu",
     "temperature",
-    "memory",
+    "custom/gpu",
     "temperature#gpu",
+    "memory",
     "sway/language",
     "tray"
   ],
@@ -99,11 +100,11 @@
     "format-alt": "{:%Y-%m-%d}"
   },
   "cpu": {
-    "format": "{usage}% ",
+    "format": " {usage}%",
     "tooltip": false
   },
   "memory": {
-    "format": "{}% "
+    "format": "{}% "
   },
   "temperature": {
     // "thermal-zone": 2,
@@ -112,6 +113,12 @@
     // "format-critical": "{temperatureC}°C {icon}",
     "format": "{temperatureC}°C {icon}",
     "format-icons": ["", "", ""]
+  },
+  "custom/gpu": {
+    "exec": "cat /sys/class/hwmon/hwmon0/device/gpu_busy_percent",
+    "format": " {}%",
+    "return-type": "",
+    "interval": 1
   },
   "temperature#gpu": {
     // "thermal-zone": 2,
