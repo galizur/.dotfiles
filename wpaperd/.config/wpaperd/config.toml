@@ -1,0 +1,5 @@
+[default]
+path = "/home/charlie/Pictures/Wallpapers"
+duration = "10m"
+mode = "center"
+sorting = "random"
