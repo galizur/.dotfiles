@@ -1,3 +1,4 @@
+# -*- mode: i3wm-config -*-
 ### Input configuration
 #
 # Example configuration:
@@ -15,15 +16,15 @@
 input "type:keyboard" {
       xkb_layout us,gr
       xkb_numlock enabled
-      xkb_options grp:win_space_toggle,caps:ctrl_modifier
+      xkb_options grp:win_space_toggle
 }
 
 input "5426:96:Razer_Razer_Lancehead_Tournament_Edition" {
       accel_profile flat
 }
 
-input "5426:545:Razer_Razer_BlackWidow_Chroma_V2_Keyboard" {
-      xkb_variant altgr-intl
-}
+#input "5426:545:Razer_Razer_BlackWidow_Chroma_V2_Keyboard" {
+#      xkb_variant altgr-intl
+#}
 
 seat seat0 hide_cursor 5000

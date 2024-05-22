@@ -1,20 +1,23 @@
+# -*- mode: i3wm-config -*-
 exec exec uwsm finalize SWAYSOCK I3SOCK XCURSOR_SIZE XCURSOR_THEME XDG_CURRENT_DESKTOP DISPLAY WAYLAND_DISPLAY
-include configs/variables.conf
-include configs/outputs.conf
-include configs/idle.conf
-include configs/inputs.conf
-include configs/keybinds.conf
-include configs/statusbar.conf
 
-default_border pixel 2
-
+include configs/variables
+include configs/outputs
+include configs/idle
+include configs/inputs
+include configs/keybinds
+include configs/statusbar
+include configs/layouts
+include configs/modes
+include configs/mappings
+include configs/settings
 
 set $gnome-schema org.gnome.desktop.interface
 
 exec_always {
 	gsettings set $gnome-schema gtk-theme 'Nordic'
 	gsettings set $gnome-schema font-name 'Roboto 11'
-
+}
 
 #include /etc/sway/config.d/*
 
@@ -24,5 +27,7 @@ exec uwsm app -- wl-paste --type text --watch cliphist store
 exec uwsm app -- wl-paste --type image --watch cliphist store
 exec uwsm app -- corectrl --minimize-systray
 exec uwsm app -- udiskie -s
-exec uwsm app -- polychromatic-tray-applet
+#exec uwsm app -- polychromatic-tray-applet
 #exec uwsm app -- mpd
+exec uwsm app -s b -t service -- emacs --daemon
+exec uwsm app -s b -t service -- wpaperd -d
