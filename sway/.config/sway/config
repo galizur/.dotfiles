@@ -32,3 +32,5 @@ exec uwsm app -- udiskie -s
 #exec uwsm app -- mpd
 exec uwsm app -s b -t service -- emacs --daemon
 exec uwsm app -s b -t service -- wpaperd -d
+exec uwsm app -s b -t service -- sworkstyle &> /tmp/sworkstyle.log
+exec uwsm app -s b -t service -- swayosd-server
