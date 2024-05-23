@@ -17,11 +17,12 @@ set $gnome-schema org.gnome.desktop.interface
 exec_always {
 	gsettings set $gnome-schema gtk-theme 'Nordic'
 	gsettings set $gnome-schema font-name 'Roboto 11'
+	gsettings set $gnome-schema icon-theme 'Nordzy'
 }
 
 #include /etc/sway/config.d/*
 
-exec uwsm app -- "usr/lib/polkit-kde-authentication-agent-1"
+exec uwsm app -- usr/lib/polkit-kde-authentication-agent-1
 exec uwsm app -- openrgb --startminimized -p main
 exec uwsm app -- wl-paste --type text --watch cliphist store
 exec uwsm app -- wl-paste --type image --watch cliphist store
