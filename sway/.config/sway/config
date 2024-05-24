@@ -22,7 +22,7 @@ exec_always {
 
 #include /etc/sway/config.d/*
 
-exec uwsm app -- usr/lib/polkit-kde-authentication-agent-1
+exec uwsm app -- /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 exec uwsm app -- openrgb --startminimized -p main
 exec uwsm app -- wl-paste --type text --watch cliphist store
 exec uwsm app -- wl-paste --type image --watch cliphist store
