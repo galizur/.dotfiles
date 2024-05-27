@@ -180,4 +180,16 @@
   (nerd-icons-completion-mode)
   (add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup))
 
+(use-package i3wm-config-mode
+  :config
+  (add-to-list 'auto-mode-alist '("/sway/.*config.*/" . i3wm-config-mode))
+  (add-to-list 'auto-mode-alist '("/sway/configs\\'" . i3wm-config-mode)))
+
+(use-package rainbow-mode
+  :hook ((prog-mode text-mode) . rainbow-mode))
+
+(use-package ini-mode)
+
+(use-package fish-mode)
+
 ;;; init.el ends here
