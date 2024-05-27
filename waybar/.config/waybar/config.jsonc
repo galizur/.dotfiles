@@ -6,8 +6,9 @@
   // Choose the order of the modules
   "modules-left": [
     "sway/workspaces",
-    "sway/mode"
-    //"sway/scratchpad",
+    "sway/mode",
+    "privacy",
+    "sway/scratchpad"
     //"custom/media"
   ],
   "modules-center": [
@@ -24,6 +25,7 @@
     "custom/gpu",
     "temperature#gpu",
     "memory",
+    "disk",
     "sway/language",
     "tray"
   ],
@@ -46,6 +48,28 @@
   // },
   "sway/mode": {
     "format": "<span style=\"italic\">{}</span>"
+  },
+  "privacy": {
+    "icon-spacing": 4,
+    "icon-size": 18,
+    "transition-duration": 250,
+    "modules": [
+      {
+	"type": "screenshare",
+	"tooltip": true,
+	"tooltip-icon-size": 24
+      },
+      {
+	"type": "audio-out",
+	"tooltip": true,
+	"tooltip-icon-size": 24
+      },
+      {
+	"type": "audio-in",
+	"tooltip": true,
+	"tooltip-icon-size": 24
+      }
+    ]
   },
   "sway/scratchpad": {
     "format": "{icon} {count}",
@@ -98,7 +122,7 @@
     "format-alt": "{:L%Y-%m-%d, %A}",
     "interval": 1,
     "calendar": {
-      "mode": "year",
+      "mode": "month",
       "mode-mon-col": 4,
       "on-scroll" : 1,
       "weeks-pos" : "right",
@@ -146,6 +170,13 @@
     "gpu": "GPU2",
     "tooltip": false
   },
+  "disk": {
+    "interval": 30,
+    "format": " {percentage_used}%",
+    "tooltip": true,
+    "tooltip-format": "{used}/{total} on {path}\n{used}/{total}",
+    "unit": "GB"
+  },
   "power-profiles-daemon": {
     "format": "{icon}",
     "tooltip-format": "Power profile: {profile}\nDriver: {driver}",
@@ -159,22 +190,15 @@
   },
   "wireplumber": {
     // "scroll-step": 1, // %, can be a float
-    "format": "{volume}%",// {icon} {format_source}",
+    "format": "{icon} {volume}%",// {icon} {format_source}",
     // "format-bluetooth": "{volume}% {icon} {format_source}",
     // "format-bluetooth-muted": " {icon} {format_source}",
     "format-muted": "",// {format_source}",
     // "format-source": "{volume}% ",
     // "format-source-muted": "",
-    // "format-icons": {
-      // "headphone": "",
-      // "hands-free": "",
-      // "headset": "",
-      // "phone": "",
-      // "portable": "",
-      // "car": "",
-      // "default": ["", "", ""]
-    // },
-    "on-click": "pavucontrol"
+    "format-icons": ["", "", ""],
+    "on-click": "pavucontrol",
+    "on-click-right": "qpwgraph"
   },
   "custom/media": {
     "format": "{icon} {}",
