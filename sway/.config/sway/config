@@ -1,5 +1,4 @@
-# -*- mode: i3wm-config -*-
-exec exec uwsm finalize SWAYSOCK I3SOCK XCURSOR_SIZE XCURSOR_THEME XDG_CURRENT_DESKTOP DISPLAY WAYLAND_DISPLAY
+include config.d/*
 
 include configs/variables
 include configs/outputs
@@ -17,10 +16,10 @@ set $gnome-schema org.gnome.desktop.interface
 exec_always {
 	gsettings set $gnome-schema gtk-theme 'Nordic'
 	gsettings set $gnome-schema font-name 'Roboto 11'
-	gsettings set $gnome-schema icon-theme 'Nordzy'
+	gsettings set $gnome-schema icon-theme 'Nordzy-dark'
 }
 
-#include /etc/sway/config.d/*
+
 
 exec uwsm app -- /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 exec uwsm app -- openrgb --startminimized -p main
@@ -28,7 +27,6 @@ exec uwsm app -- wl-paste --type text --watch cliphist store
 exec uwsm app -- wl-paste --type image --watch cliphist store
 exec uwsm app -- corectrl --minimize-systray
 exec uwsm app -- udiskie -s
-#exec uwsm app -- polychromatic-tray-applet
 #exec uwsm app -- mpd
 exec uwsm app -s b -t service -- emacs --daemon
 exec uwsm app -s b -t service -- wpaperd -d
