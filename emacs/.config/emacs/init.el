@@ -61,9 +61,6 @@
     (scroll-bar-mode -1))
   (menu-bar-mode -1)
   (set-face-attribute 'default nil :font "Delugia" :height 110)
-  :custom
-  (treesit-language-source-alist
-   '((json "https://github.com/tree-sitter/tree-sitter-json")))
   :config
   (add-to-list 'default-frame-alist '(alpha-background . 90)))
 
@@ -82,11 +79,28 @@
 (use-package magit
   :commands magit-status)
 
+(use-package treesit
+  :ensure nil
+  :custom
+  (treesit-language-source-alist
+   '(
+     (c . "https://github.com/tree-sitter/tree-sitter-c")
+     (cpp . "https://github.com/tree-sitter/tree-sitter-cpp")
+     (json . "https://github.com/tree-sitter/tree-sitter-json")
+     ))
+  (major-mode-remap-alist
+   '(
+     (c-mode . c-ts-mode)
+     (c++-mode . c++-ts-mode)
+     (json-mode . json-ts-mode)
+     ))
+  (treesit-font-lock-level 4)
+  )
+
 (use-package json-ts-mode
   :ensure nil
   :mode ("\\.json\\|\\.jsonc\\'")
-  :hook ((before-save . my/json-mode-before-save-hook)
-	 (json-ts-mode . eglot-ensure))
+  :hook (before-save . my/json-mode-before-save-hook)
   :preface
   (defun my/json-mode-before-save-hook ()
     (when (eq major-mode 'json-ts-mode)
@@ -98,8 +112,7 @@
 		 (not (loop for x across arrays always (numberp x)))))
 	   (json-encoding-separator (if json-encoding-pretty-print "," ", ")))
       (funcall encode array)))
-  :config (advice-add 'json-encode-array :around #'my/json-array-of-numbers-on-one-line)
-  (add-to-list 'major-mode-remap-alist '(json-mode . json-ts-mode)))
+  :config (advice-add 'json-encode-array :around #'my/json-array-of-numbers-on-one-line))
 
 (use-package eldoc
   :ensure nil
@@ -112,6 +125,10 @@
 
 (use-package eglot
   :ensure nil
+  :hook
+  (c-ts-mode . eglot-ensure)
+  (c++-ts-mode . eglot-ensure)
+  (json-ts-mode . eglot-ensure)
   :init
   (setq eglot-stay-out-of '(flycheck))
   :bind (:map
