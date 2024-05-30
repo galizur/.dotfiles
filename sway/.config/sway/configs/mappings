@@ -5,6 +5,7 @@ bindsym --to-code $mod+Return exec exec uwsm app -- $term
 
 # Start fuzzel
 bindsym --to-code $mod+d exec exec $menu
+bindsym --to-code $mod+u exec exec uwsm app -- bemoji -n
 
 # Kill focused window
 bindsym --to-code $mod+Shift+q kill
