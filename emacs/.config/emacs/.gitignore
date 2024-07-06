@@ -1,3 +1,6 @@
 elpaca/
 elpa/
 tree-sitter/
+forge-database.sqlite
+history
+projects/
