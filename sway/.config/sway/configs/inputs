@@ -14,9 +14,10 @@
 # Read `man 5 sway-input` for more information about this section.
 
 input "type:keyboard" {
-      xkb_layout us,gr
-      xkb_numlock enabled
-      xkb_options grp:win_space_toggle
+      xkb_layout "us,gr,gr"
+      xkb_numlock "enabled"
+      xkb_options "grp:win_space_toggle"
+      xkb_variant "altgr-intl,,polytonic"
 }
 
 input "5426:96:Razer_Razer_Lancehead_Tournament_Edition" {

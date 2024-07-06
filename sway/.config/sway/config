@@ -25,10 +25,7 @@ exec uwsm app -- /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 exec uwsm app -- openrgb --startminimized -p main
 exec uwsm app -- wl-paste --type text --watch cliphist store
 exec uwsm app -- wl-paste --type image --watch cliphist store
-exec uwsm app -- corectrl --minimize-systray
 exec uwsm app -- udiskie -s
-#exec uwsm app -- mpd
-exec uwsm app -s b -t service -- emacs --daemon
 exec uwsm app -s b -t service -- wpaperd -d
 exec uwsm app -s b -t service -- sworkstyle &> /tmp/sworkstyle.log
 exec uwsm app -s b -t service -- swayosd-server
