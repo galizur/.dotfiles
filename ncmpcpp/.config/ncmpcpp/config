@@ -1,0 +1,17 @@
+lyrics_directory = "~/.local/share/lyrics"
+ncmpcpp_directory = "~/.config/ncmpcpp"
+mpd_music_dir = ~/Music
+
+audio_output {
+    type                    "fifo"
+    name                    "my_fifo"
+    path                    "/tmp/mpd.fifo"
+    format                  "44100:16:2"
+}
+
+visualizer_color = blue, cyan, green, yellow, magenta, red
+visualizer_data_source = /tmp/mpd.fifo
+visualizer_in_stereo = yes
+visualizer_look = ●▮
+visualizer_output_name = Visualizer feed
+visualizer_type = wave
